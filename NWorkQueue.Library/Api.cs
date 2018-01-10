@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Dapper;
 using LiteDB;
 using Microsoft.Data.Sqlite;
@@ -18,10 +19,7 @@ namespace NWorkQueue.Library
         private int _messageId = 0;
         private int _queueId = 0;
 
-        private Object _transLock = new Object();
-        private Object _queueLock = new Object();
-
-        private SortedList<string, int> _queueList;
+        private QueueList _queueList = new QueueList();
 
 
         //Settings
@@ -38,19 +36,16 @@ namespace NWorkQueue.Library
             _transId = GetTransId();
             //_messageId = GetMessageId();
             _queueId = GetQueueId();
-            _queueList = LoadQueueList();
+            _queueList.Reload(LoadQueueList());
         }
 
         #region Transactions
         public Transaction StartTransaction()
         {
             var sql = "INSERT INTO Transaction (Id, Active, StartDateTime, ExpiryDateTime) VALUES (@Id, 1, @StartDateTime, @ExpiryDateTime)";
-            lock (_transLock)
-            {
-                _transId++;
-            }
-            _con.Execute(sql, new { StartDateTime = DateTime.Now, ExpiryDateTime = DateTime.Now.AddMinutes(_expiryTimeInMinutes), Id = _transId });
-            return new Transaction() {Id = _transId, Api = this};
+            var newId = Interlocked.Increment(ref _transId);
+            _con.Execute(sql, new { StartDateTime = DateTime.Now, ExpiryDateTime = DateTime.Now.AddMinutes(_expiryTimeInMinutes), Id = newId });
+            return new Transaction() {Id = newId, Api = this};
         }
 
         public void UpdateTransaction(Transaction trans)
@@ -128,14 +123,11 @@ namespace NWorkQueue.Library
             if (fixedName.Length == 0)
                 throw new ArgumentException(nameof(name), "Queue name cannot be empty");
             if (_queueList.ContainsKey(fixedName))
-                throw new Exception("Queue name already exists");
+                    throw new Exception("Queue name already exists");
             var sql = "INSERT INTO Queues (Id, Name) VALUES (@Id, @Name);";
-            lock (_queueLock)
-            {
-                _queueId++;
-            }
-            _con.Execute(sql, new {Id = _queueId, Name = fixedName });
-            _queueList.Add(fixedName, _queueId);
+            var nextId = Interlocked.Increment(ref _queueId);
+            _con.Execute(sql, new {Id = nextId, Name = fixedName });
+            _queueList.Add(fixedName, nextId);
         }
 
         public void DeleteQueue(in String name)
@@ -143,14 +135,18 @@ namespace NWorkQueue.Library
             var fixedName = name.Trim();
             if (fixedName.Length == 0)
                 throw new ArgumentException(nameof(name), "Queue name cannot be empty");
-            if (!_queueList.TryGetValue(fixedName, out int id))
+            if (!_queueList.TryGetValue(fixedName, out var id))
                 throw new Exception("Queue name not found");
-            //Start db transaction
-            //Rollback queue transactions that were being used in message for this queue
-            //Delete Messages
+            var trans = _con.BeginTransaction();
+
+            //TODO: Rollback queue transactions that were being used in message for this queue
+            //TODO: Delete Messages
+
             //Delete Queue
             var sql = "DELETE FROM Queues WHERE Id = @Id;";
-            _con.Execute(sql, new { Id = id });
+            _con.Execute(sql, transaction: trans, param: new { Id = id });
+            trans.Commit();
+            _queueList.Delete(fixedName);
         }
 
         #endregion
