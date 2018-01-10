@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NWorkQueue", "NWorkQueue\NWorkQueue.csproj", "{F47197EF-329E-42F5-AFBB-3D3CD20AAC9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NWorkQueue", "NWorkQueue\NWorkQueue.csproj", "{F47197EF-329E-42F5-AFBB-3D3CD20AAC9C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "Benchmarks\Benchmarks.csproj", "{B9475FCF-283D-439B-AC4A-BB378D5EA163}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NWorkQueue.Library", "NWorkQueue.Library\NWorkQueue.Library.csproj", "{D4B7FB36-6027-457C-9A2F-2ED96ADD2998}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{F47197EF-329E-42F5-AFBB-3D3CD20AAC9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F47197EF-329E-42F5-AFBB-3D3CD20AAC9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F47197EF-329E-42F5-AFBB-3D3CD20AAC9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9475FCF-283D-439B-AC4A-BB378D5EA163}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9475FCF-283D-439B-AC4A-BB378D5EA163}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9475FCF-283D-439B-AC4A-BB378D5EA163}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9475FCF-283D-439B-AC4A-BB378D5EA163}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4B7FB36-6027-457C-9A2F-2ED96ADD2998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4B7FB36-6027-457C-9A2F-2ED96ADD2998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4B7FB36-6027-457C-9A2F-2ED96ADD2998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4B7FB36-6027-457C-9A2F-2ED96ADD2998}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
