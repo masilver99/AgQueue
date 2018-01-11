@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Dapper;
 using LiteDB;
@@ -21,10 +22,16 @@ namespace NWorkQueue.Library
 
         private QueueList _queueList = new QueueList();
 
+        static Regex _queueNameRegex = new Regex(@"[A-Z,a-z,0-9,\.,\-,_]+", RegexOptions.Compiled);
 
         //Settings
-        //How long until a transcation expires and it automatically rolled back
+        //How long until a transcation expires and is automatically rolled back
         private int _expiryTimeInMinutes = 30;
+
+        public Api()
+        {
+            InitializeDb();
+        }
 
         private void InitializeDb()
         {
@@ -48,6 +55,10 @@ namespace NWorkQueue.Library
             return new Transaction() {Id = newId, Api = this};
         }
 
+        /// <summary>
+        /// Updates the specified transaction, reseting it's timeout
+        /// </summary>
+        /// <param name="trans"></param>
         public void UpdateTransaction(Transaction trans)
         {
             var sql = "SELECT * FROM Transactions WHERE Id = @Id";
@@ -88,18 +99,40 @@ namespace NWorkQueue.Library
 
         private void CreateTables()
         {
-            var sql = "Create table IF NOT EXISTS Transactions" +
+            var sql = "PRAGMA foreign_keys = ON;"+
+                      "Create table IF NOT EXISTS Transactions" +
                       "(Id INTEGER PRIMARY KEY," +
                       " Active INTEGER NOT NULL," +
                       " StartDateTime DATETIME NOT NULL," +
-                      " ExpiryDateTime DATETIME NOT NULL);"+
+                      " ExpiryDateTime DATETIME NOT NULL);" +
 
                       "Create table IF NOT EXISTS Queues" +
                       "(Id INTEGER PRIMARY KEY," +
-                      " Name TEXT NOT NULL" +
-                      " ExpiryDateTime DATETIME NOT NULL);";
-            _con.Execute(sql);
+                      " Name TEXT NOT NULL," +
+                      " ExpiryDateTime DATETIME NOT NULL);" +
+
+                      "Create TABLE IF NOT EXISTS Messages" +
+                      "(Id INTEGER PRIMARY KEY," +
+                      " QueueId INTEGER NOT NULL," +
+                      " TransactionId INTEGER," +
+                      " TransactionAction INTEGER," +
+                      " AddDateTime DATETIME NOT NULL," +
+                      " CloseDateTime DATETIME, " +
+                      " Priority INTEGER NOT NULL, " +
+                      " MaxRetries INTEGER NOT NULL, " +
+                      " Retries INTEGER NOT NULL, " +
+                      " ExpiryDate DateTime NOT NULL, " +
+                      " CorrelationId INTEGER, " +
+                      " GroupName TEXT, " +
+                      " Data BLOB," +
+                      " FOREIGN KEY(QueueId) REFERENCES Queues(Id)," +
+                      " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
+
+
+        _con.Execute(sql);
         }
+
+
 
         #region Queues
         private int GetQueueId()
@@ -109,6 +142,12 @@ namespace NWorkQueue.Library
             if (id.HasValue)
                 return id.Value;
             return 0;
+        }
+
+        private void ValidateQueueName(in string queueName)
+        {
+            if (!_queueNameRegex.IsMatch(queueName))
+                throw new ArgumentException("Queue name can only contain a-Z, 0-9, ., -, or _");
         }
 
         private SortedList<string, int> LoadQueueList()
@@ -182,12 +221,50 @@ namespace NWorkQueue.Library
 
     internal class MessageModel
     {
+        /// <summary>
+        /// Generated unique message id
+        /// </summary>
         public int Id { get; set; }
+        public int QueueId { get; set; }
+        public int TransactionId { get; set; }
+        public int TransactionAction { get; set; }
+        public DateTime AddDateTime { get; set; }
+        public DateTime CloseDateTime { get; set; }
+        public int Priority { get; set; }
+
+        /// <summary>
+        /// Numerber of attempts to have message processed, i.e. commited
+        /// </summary>
+        public int MaxRetries { get; set; }
+        /// <summary>
+        /// Number of Rollbacks or timeouts before the message expires
+        /// </summary>
+        public int Retries { get; set; } = 0;
+        /// <summary>
+        /// DateTime the message will expire
+        /// </summary>
+        public DateTime ExpiryDate { get; set; }
+        public int CorrelationId { get; set; }
+        public string Group { get; set; }
+
+        /// <summary>
+        /// Actual message data 
+        /// </summary>
+        public byte[] Data { get; set; }
+
     }
 
     internal class QueueModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
+    }
+
+    internal enum TransactionAction
+    {
+
+        Unknown = 0,
+        Add = 1,
+        Pull = 2
     }
 }
