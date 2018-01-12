@@ -22,29 +22,30 @@ namespace NWorkQueue.Library
 
         private QueueList _queueList = new QueueList();
 
-        static Regex _queueNameRegex = new Regex(@"[A-Z,a-z,0-9,\.,\-,_]+", RegexOptions.Compiled);
+        static Regex _queueNameRegex = new Regex(@"^[A-Za-z0-9\.\-_]+$", RegexOptions.Compiled);
 
         //Settings
         //How long until a transcation expires and is automatically rolled back
         private int _expiryTimeInMinutes = 30;
 
-        public Api()
+        public Api(bool freshDatabase = false)
         {
-            InitializeDb();
+            InitializeDb(freshDatabase);
         }
 
-        private void InitializeDb()
+        private void InitializeDb(bool wipeDatabase)
         {
             _con = new SqliteConnection(@"Data Source=SqlLite.db;");
             _con.Open();
-            //check tables exist
-            //If not call CreateTable
+            if (wipeDatabase)
+                DeleteAllTables();
             CreateTables();
             _transId = GetTransId();
-            //_messageId = GetMessageId();
+            _messageId = GetMessageId();
             _queueId = GetQueueId();
             _queueList.Reload(LoadQueueList());
         }
+
 
         #region Transactions
         public Transaction StartTransaction()
@@ -95,11 +96,20 @@ namespace NWorkQueue.Library
             return 0;
         }
 
+        private int GetMessageId()
+        {
+            var sql = "SELECT Max(ID) FROM Messages;";
+            var id = _con.ExecuteScalar<int?>(sql);
+            if (id.HasValue)
+                return id.Value;
+            return 0;
+        }
+
         #endregion
 
         private void CreateTables()
         {
-            var sql = "PRAGMA foreign_keys = ON;"+
+            var sql = "PRAGMA foreign_keys = ON;" +
                       "Create table IF NOT EXISTS Transactions" +
                       "(Id INTEGER PRIMARY KEY," +
                       " Active INTEGER NOT NULL," +
@@ -108,30 +118,37 @@ namespace NWorkQueue.Library
 
                       "Create table IF NOT EXISTS Queues" +
                       "(Id INTEGER PRIMARY KEY," +
-                      " Name TEXT NOT NULL," +
-                      " ExpiryDateTime DATETIME NOT NULL);" +
+                      " Name TEXT NOT NULL);" +
 
-                      "Create TABLE IF NOT EXISTS Messages" +
-                      "(Id INTEGER PRIMARY KEY," +
-                      " QueueId INTEGER NOT NULL," +
-                      " TransactionId INTEGER," +
-                      " TransactionAction INTEGER," +
-                      " AddDateTime DATETIME NOT NULL," +
-                      " CloseDateTime DATETIME, " +
-                      " Priority INTEGER NOT NULL, " +
-                      " MaxRetries INTEGER NOT NULL, " +
-                      " Retries INTEGER NOT NULL, " +
-                      " ExpiryDate DateTime NOT NULL, " +
-                      " CorrelationId INTEGER, " +
-                      " GroupName TEXT, " +
-                      " Data BLOB," +
-                      " FOREIGN KEY(QueueId) REFERENCES Queues(Id)," +
-                      " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
-
-
-        _con.Execute(sql);
+                "Create TABLE IF NOT EXISTS Messages " + 
+                "(Id INTEGER PRIMARY KEY," +
+                " QueueId INTEGER NOT NULL, "+
+                " TransactionId INTEGER," +
+                " TransactionAction INTEGER," +
+                " State INTEGER NOT NULL, " +
+                " AddDateTime DATETIME NOT NULL," +
+                " CloseDateTime DATETIME, " +
+                " Priority INTEGER NOT NULL, " +
+                " MaxRetries INTEGER NOT NULL, " +
+                " Retries INTEGER NOT NULL, " +
+                " ExpiryDate DateTime NOT NULL, " +
+                " CorrelationId INTEGER, " +
+                " GroupName TEXT, " +
+                " Data BLOB," +
+                " FOREIGN KEY(QueueId) REFERENCES Queues(Id), "+
+                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
+                
+            _con.Execute(sql);
         }
 
+        private void DeleteAllTables()
+        {
+            var sql =
+                "DROP TABLE IF EXISTS Messages; " +
+                "DROP TABLE IF EXISTS Queues;" +
+                "DROP table IF EXISTS Transactions;";
+            _con.Execute(sql);
+        }
 
 
         #region Queues
@@ -150,38 +167,54 @@ namespace NWorkQueue.Library
                 throw new ArgumentException("Queue name can only contain a-Z, 0-9, ., -, or _");
         }
 
-        private SortedList<string, int> LoadQueueList()
+        private SortedList<string, WorkQueueModel> LoadQueueList()
         {
             var sql = "SELECT Name, Id FROM Queues;";
-            return new SortedList<string, int>(_con.Query(sql).ToDictionary(row => (string) row.Name, row => (int) row.Id));
+            return new SortedList<string, WorkQueueModel>(_con.Query(sql).ToDictionary(row => (string) row.Name, row => new WorkQueueModel(){Id = row.Id, Name = row.Name }));
         }
 
-        public void CreateQueue(in String name)
+        public WorkQueue CreateQueue(String name)
         {
-            var fixedName = name.Trim();
-            if (fixedName.Length == 0)
-                throw new ArgumentException(nameof(name), "Queue name cannot be empty");
-            if (_queueList.ContainsKey(fixedName))
-                    throw new Exception("Queue name already exists");
+            if (name.Length == 0)
+                throw new ArgumentException("Queue name cannot be empty", nameof(name));
+            ValidateQueueName(in name);
+            if (_queueList.ContainsKey(name))
+                    throw new Exception("Queue already exists");
+            var trans = _con.BeginTransaction();
             var sql = "INSERT INTO Queues (Id, Name) VALUES (@Id, @Name);";
             var nextId = Interlocked.Increment(ref _queueId);
-            _con.Execute(sql, new {Id = nextId, Name = fixedName });
-            _queueList.Add(fixedName, nextId);
+            _con.Execute(sql, transaction: trans, param: new {Id = nextId, Name = name });
+            trans.Commit();
+            var queueModel = new WorkQueueModel() {Id = nextId, Name = name};
+            _queueList.Add(queueModel);
+            return new WorkQueue(this, queueModel);
         }
 
-        public void DeleteQueue(in String name)
+        public WorkQueue GetQueue(string queueName)
+        {
+            if (queueName.Length == 0)
+                throw new ArgumentException("Queue name cannot be empty", nameof(queueName));
+            ValidateQueueName(in queueName);
+            if (!_queueList.TryGetQueue(queueName, out WorkQueueModel workQueueModel))
+                throw new Exception("Queue does not exist");
+            return new WorkQueue(this, workQueueModel);
+        }
+
+        public void DeleteQueue(String name)
         {
             var fixedName = name.Trim();
             if (fixedName.Length == 0)
-                throw new ArgumentException(nameof(name), "Queue name cannot be empty");
-            if (!_queueList.TryGetValue(fixedName, out var id))
-                throw new Exception("Queue name not found");
+                throw new ArgumentException("Queue name cannot be empty", nameof(name));
+            if (!_queueList.TryGetQueueId(fixedName, out var id))
+                throw new Exception("Queue not found");
             var trans = _con.BeginTransaction();
 
             //TODO: Rollback queue transactions that were being used in message for this queue
             //TODO: Delete Messages
 
-            //Delete Queue
+            //TODO: Delete actual queue table
+
+            //Delete From Queue Table
             var sql = "DELETE FROM Queues WHERE Id = @Id;";
             _con.Execute(sql, transaction: trans, param: new { Id = id });
             trans.Commit();
@@ -189,6 +222,22 @@ namespace NWorkQueue.Library
         }
 
         #endregion
+    }
+
+    public class WorkQueue
+    {
+        internal Api Api { get; set; }
+        internal WorkQueueModel QueueModel { get; set; }
+        internal WorkQueue(Api api, WorkQueueModel queueModel)
+        {
+            Api = api;
+            QueueModel = queueModel;
+        }
+
+        public void AddMessage(Transaction trans, Object message, int priority)
+        {
+
+        }
     }
 
     internal class MessageWrapper
@@ -254,17 +303,24 @@ namespace NWorkQueue.Library
 
     }
 
-    internal class QueueModel
+    internal class WorkQueueModel
     {
-        public int Id { get; set; }
+        public Int64 Id { get; set; }
         public string Name { get; set; }
     }
 
     internal enum TransactionAction
     {
+        Add = 0,
+        Pull = 1
+    }
 
-        Unknown = 0,
-        Add = 1,
-        Pull = 2
+    internal enum MessageState
+    {
+        Active = 0,         //Message is waiting to be pulled
+        InTransaction = 1,  //Message is currently being processed
+        Processed = 2,      //Message pulled and trans was committed
+        Expired = 3,        //Passed expiry date
+        RetryExceeded = 4   //Retry count exceeded
     }
 }

@@ -9,7 +9,7 @@ namespace NWorkQueue
         {
             Console.WriteLine("Hello World!");
             var c = new Api();
-            
+            var tableName = "Testing-1-2-3";
 
             //Initialize storage
             //Perform cleanup

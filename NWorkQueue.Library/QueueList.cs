@@ -7,18 +7,30 @@ namespace NWorkQueue.Library
 {
     internal class QueueList
     {
-        private SortedList<string, int> _sortedList = new SortedList<string, int>();
-
+        private SortedList<string, WorkQueueModel> _sortedList;
+        
         private Object SortLock => (_sortedList as ICollection).SyncRoot;
 
+        public QueueList()
+        {
+            _sortedList = SortedListFactory();
+        }
 
-        public void Reload(SortedList<string, int> loadQueueList)
+        public void Reload(SortedList<string, WorkQueueModel> loadQueueList)
         {
             lock (SortLock)
             {
                 _sortedList.Clear();
-                _sortedList = new SortedList<string, int>(loadQueueList);
+                _sortedList = SortedListFactory(loadQueueList);
             }
+        }
+
+        internal SortedList<string, WorkQueueModel> SortedListFactory(SortedList<string, WorkQueueModel> list = null)
+        {
+            if (list == null)
+                return new SortedList<string, WorkQueueModel>(StringComparer.CurrentCultureIgnoreCase);
+            else
+                return new SortedList<string, WorkQueueModel>(list, StringComparer.CurrentCultureIgnoreCase);
         }
 
         internal bool ContainsKey(string fixedName)
@@ -29,21 +41,33 @@ namespace NWorkQueue.Library
             }
         }
 
-        public void Add(string fixedName, int queueId)
+        public void Add(WorkQueueModel workQueueModel)
         {
             lock (SortLock)
             {
-                _sortedList.Add(fixedName, queueId);
+                _sortedList.Add(workQueueModel.Name, workQueueModel);
             }
         }
 
-        public bool TryGetValue(string fixedName, out int id)
+        public bool TryGetQueueId(string fixedName, out Int64 id)
+        {
+            if (TryGetQueue(fixedName, out WorkQueueModel workQueueModel))
+            {
+                id = workQueueModel.Id;
+                return true;
+            }
+            id = 0;
+            return false;
+        }
+
+        public bool TryGetQueue(string fixedName, out WorkQueueModel workQueueModel)
         {
             lock (SortLock)
             {
-                return _sortedList.TryGetValue(fixedName, out id);
+                return _sortedList.TryGetValue(fixedName, out workQueueModel);
             }
         }
+
 
         public void Delete(string fixedName)
         {
