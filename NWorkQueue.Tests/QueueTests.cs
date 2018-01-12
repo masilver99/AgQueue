@@ -1,4 +1,5 @@
 using System;
+using System.Net.Sockets;
 using NUnit;
 using NUnit.Framework;
 using NWorkQueue.Library;
@@ -72,6 +73,48 @@ namespace NWorkQueue.Tests
             );
 
         }
+        [Test]
+        public void Add10000Messages()
+        {
+            var api = new Api(true);
+            var queue = api.CreateQueue("WiseMan");
+            var trans = api.StartTransaction();
+            for (int i = 0; i < 10000; i++)
+            {
+                queue.AddMessage(trans, new object(), 0);
+            }
+            trans.Commit();
+        }
 
+        [Test]
+        public void Add10000MessagesInTrans()
+        {
+            object[] array = new object[10000];
+            for (int i = 0; i < 10000; i++)
+            {
+                array[i] = new object();
+            }
+
+            var api = new Api(true);
+            var queue = api.CreateQueue("WiseMan");
+            var trans = api.StartTransaction();
+            queue.AddMessage(trans, array, 0);
+            trans.Commit();
+        }
+        [Test]
+        public void Add10000MessagesInTransPre()
+        {
+            object[] array = new object[10000];
+            for (int i = 0; i < 10000; i++)
+            {
+                array[i] = new object();
+            }
+
+            var api = new Api(true);
+            var queue = api.CreateQueue("WiseMan");
+            var trans = api.StartTransaction();
+            queue.AddMessagePre(trans, array, 0);
+            trans.Commit();
+        }
     }
 }

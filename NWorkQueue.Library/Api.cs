@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Dapper;
-using LiteDB;
 using Microsoft.Data.Sqlite;
+using SQLitePCL;
 
 
 namespace NWorkQueue.Library
 {
     public class Api
     {
-        private SqliteConnection _con;
+        internal SqliteConnection _con;
 
         private int _transId = 0;
-        private int _messageId = 0;
+        internal int _messageId = 0;
         private int _queueId = 0;
 
         private QueueList _queueList = new QueueList();
@@ -50,7 +51,7 @@ namespace NWorkQueue.Library
         #region Transactions
         public Transaction StartTransaction()
         {
-            var sql = "INSERT INTO Transaction (Id, Active, StartDateTime, ExpiryDateTime) VALUES (@Id, 1, @StartDateTime, @ExpiryDateTime)";
+            var sql = "INSERT INTO Transactions (Id, Active, StartDateTime, ExpiryDateTime) VALUES (@Id, 1, @StartDateTime, @ExpiryDateTime)";
             var newId = Interlocked.Increment(ref _transId);
             _con.Execute(sql, new { StartDateTime = DateTime.Now, ExpiryDateTime = DateTime.Now.AddMinutes(_expiryTimeInMinutes), Id = newId });
             return new Transaction() {Id = newId, Api = this};
@@ -110,6 +111,14 @@ namespace NWorkQueue.Library
         private void CreateTables()
         {
             var sql = "PRAGMA foreign_keys = ON;" +
+                      "PRAGMA TEMP_STORE = MEMORY;" +
+                      //"PRAGMA JOURNAL_MODE = PERSIST;" +  //Don't readd, causes transaction failures
+                      "PRAGMA SYNCHRONOUS = NORMAL;" +
+                      //"PRAGMA LOCKING_MODE = EXCLUSIVE;"+  //Don't readd, causes transaction failures
+                      //"PRAGMA journal_mode = MEMORY;"+   //Don't readd, causes transaction failures
+                      "PRAGMA CACHE_SIZE = 500;" +
+
+                      "BEGIN;" +
                       "Create table IF NOT EXISTS Transactions" +
                       "(Id INTEGER PRIMARY KEY," +
                       " Active INTEGER NOT NULL," +
@@ -136,7 +145,8 @@ namespace NWorkQueue.Library
                 " GroupName TEXT, " +
                 " Data BLOB," +
                 " FOREIGN KEY(QueueId) REFERENCES Queues(Id), "+
-                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
+                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));"+
+                "COMMIT;";
                 
             _con.Execute(sql);
         }
@@ -144,9 +154,11 @@ namespace NWorkQueue.Library
         private void DeleteAllTables()
         {
             var sql =
+                "BEGIN;"+
                 "DROP TABLE IF EXISTS Messages; " +
                 "DROP TABLE IF EXISTS Queues;" +
-                "DROP table IF EXISTS Transactions;";
+                "DROP table IF EXISTS Transactions;"+
+                "COMMIT;";
             _con.Execute(sql);
         }
 
@@ -228,16 +240,102 @@ namespace NWorkQueue.Library
     {
         internal Api Api { get; set; }
         internal WorkQueueModel QueueModel { get; set; }
+
+        private SqliteCommand cmd { get;set; }
         internal WorkQueue(Api api, WorkQueueModel queueModel)
         {
             Api = api;
             QueueModel = queueModel;
+            var sql = "BEGIN EXCLUSIVE;INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data) VALUES " +
+                      "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Data);COMMIT;";
+            cmd = Api._con.CreateCommand();
+            cmd.CommandText = sql;
+            cmd.Prepare();
+
         }
 
         public void AddMessage(Transaction trans, Object message, int priority)
         {
-
+            var nextId = Interlocked.Increment(ref Api._messageId);
+            //var dbTrans = Api._con.BeginTransaction();
+            //cmd.Transaction = dbTrans;
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@Id", nextId);
+            cmd.Parameters.AddWithValue("@QueueId", QueueModel.Id);
+            cmd.Parameters.AddWithValue("@TransactionId", trans.Id);
+            cmd.Parameters.AddWithValue("@TransactionAction", TransactionAction.Add.Value);
+            cmd.Parameters.AddWithValue("@State", MessageState.InTransaction.Value);
+            cmd.Parameters.AddWithValue("@AddDateTime", DateTime.Now);
+            cmd.Parameters.AddWithValue("@Priority", 0);
+            cmd.Parameters.AddWithValue("@MaxRetries", 3);
+            cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.MaxValue);
+            cmd.Parameters.AddWithValue("@Data", MessagePack.LZ4MessagePackSerializer.Serialize(message));
+            cmd.ExecuteNonQuery();
+            //dbTrans.Commit();
         }
+
+        public void AddMessage(Transaction trans, Object[] messages, int priority)
+        {
+
+            //Validate Transaction here
+            var dbTrans = Api._con.BeginTransaction();
+            var sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data) VALUES " +
+                      "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, @Retries, @ExpiryDate, @Data);";
+            foreach (var message in messages)
+            {
+                var nextId = Interlocked.Increment(ref Api._messageId);
+                Api._con.Execute(sql, transaction: dbTrans, param: new
+                {
+                    Id = nextId,
+                    QueueId = QueueModel.Id,
+                    TransactionId = trans.Id,
+                    TransactionAction = TransactionAction.Add.Value,
+                    State = MessageState.InTransaction.Value,
+                    AddDateTime = DateTime.Now,
+                    Priority = 0,
+                    MaxRetries = 3,
+                    Retries = 0,
+                    ExpiryDate = DateTime.MaxValue,
+                    Data = MessagePack.LZ4MessagePackSerializer.Serialize(message)
+                });
+            }
+
+            dbTrans.Commit();
+        }
+
+        public void AddMessagePre(Transaction trans, Object[] messages, int priority)
+        {
+            //Validate Transaction here
+            var dbTrans = Api._con.BeginTransaction();
+            var sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data) VALUES " +
+                      "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, @Retries, @ExpiryDate, @Data);";
+            var cmd = Api._con.CreateCommand();
+            cmd.CommandText = sql;
+            cmd.Prepare();
+            cmd.Transaction = dbTrans;
+
+            foreach (var message in messages)
+            {
+                var nextId = Interlocked.Increment(ref Api._messageId);
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Id", nextId);
+                cmd.Parameters.AddWithValue("@QueueId", QueueModel.Id);
+                cmd.Parameters.AddWithValue("@TransactionId", trans.Id);
+                cmd.Parameters.AddWithValue("@TransactionAction", TransactionAction.Add.Value);
+                cmd.Parameters.AddWithValue("@State", MessageState.InTransaction.Value);
+                cmd.Parameters.AddWithValue("@AddDateTime",  DateTime.Now);
+                cmd.Parameters.AddWithValue("@Priority",  0);
+                cmd.Parameters.AddWithValue("@MaxRetries", 3);
+                cmd.Parameters.AddWithValue("@Retries", 0);
+                cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.MaxValue);
+                cmd.Parameters.AddWithValue("@Data", MessagePack.LZ4MessagePackSerializer.Serialize(message));
+                cmd.ExecuteNonQuery();
+            }
+
+            dbTrans.Commit();
+        }
+
+
     }
 
     internal class MessageWrapper
@@ -309,18 +407,47 @@ namespace NWorkQueue.Library
         public string Name { get; set; }
     }
 
-    internal enum TransactionAction
+    internal sealed class TransactionAction
     {
-        Add = 0,
-        Pull = 1
+        public static readonly TransactionAction Add = new TransactionAction("Add", 0);
+        public static readonly TransactionAction Pull = new TransactionAction("Pull", 1);
+
+        public readonly string Name;
+        public readonly int Value;
+
+        private TransactionAction(string name, int value)
+        {
+            Name = name;
+            Value = value;
+        }
+
     }
 
-    internal enum MessageState
+    internal sealed class MessageState
     {
-        Active = 0,         //Message is waiting to be pulled
-        InTransaction = 1,  //Message is currently being processed
-        Processed = 2,      //Message pulled and trans was committed
-        Expired = 3,        //Passed expiry date
-        RetryExceeded = 4   //Retry count exceeded
+        public static readonly MessageState Active = new MessageState("Active", 0);
+        public static readonly MessageState InTransaction = new MessageState("InTransaction", 1);
+        public static readonly MessageState Processed = new MessageState("Processed", 2);
+        public static readonly MessageState Expired = new MessageState("Expired", 3);
+        public static readonly MessageState RetryExceeded = new MessageState("RetryExceeded", 4);
+
+        public readonly string Name;
+        public readonly int Value;
+
+        private MessageState(string name, int value)
+        {
+            Name = name;
+            Value = value;
+        }
+    }
+
+    internal class QueueQueries
+    {
+        public CommandQuery AddMessage { get; set; } = new CommandQuery() {Sql = ""};
+    }
+
+    internal class CommandQuery
+    {
+        public String Sql { get; set; }
     }
 }

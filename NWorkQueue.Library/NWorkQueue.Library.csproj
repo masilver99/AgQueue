@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="1.50.4" />
-    <PackageReference Include="LiteDB" Version="4.1.1" />
+    <PackageReference Include="MessagePack" Version="1.7.3.2" />
     <PackageReference Include="Microsoft.Data.SQLite" Version="2.0.0" />
     <PackageReference Include="Microsoft.Net.Compilers" Version="2.6.1" />
   </ItemGroup>
