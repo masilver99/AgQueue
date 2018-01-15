@@ -60,30 +60,32 @@ namespace NWorkQueue.Tests
         [Test]
         public void DeleteQueue()
         {
-            var api = new Api(true);
-            api.CreateQueue("WiseMan");
-            Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"), delegate {
-                    api.DeleteQueue("WISEMEN");
-                }
-            );
-            api.DeleteQueue("WiseMan");
-            Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"), delegate {
-                    api.DeleteQueue("WiseMan");
-                }
-            );
-
+            using (var api = new Api(true))
+            {
+                api.CreateQueue("WiseMan");
+                Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
+                    delegate { api.DeleteQueue("WISEMEN"); }
+                );
+                api.DeleteQueue("WiseMan");
+                Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
+                    delegate { api.DeleteQueue("WiseMan"); }
+                );
+            }
         }
         [Test]
         public void Add10000Messages()
         {
-            var api = new Api(true);
-            var queue = api.CreateQueue("WiseMan");
-            var trans = api.StartTransaction();
-            for (int i = 0; i < 10000; i++)
+            using (var api = new Api(true))
             {
-                queue.AddMessage(trans, new object(), 0);
+                var queue = api.CreateQueue("WiseMan");
+                var trans = api.StartTransaction();
+                for (int i = 0; i < 10000; i++)
+                {
+                    queue.AddMessage(trans, new object(), 0);
+                }
+
+                trans.Commit();
             }
-            trans.Commit();
         }
 
         [Test]
@@ -95,11 +97,13 @@ namespace NWorkQueue.Tests
                 array[i] = new object();
             }
 
-            var api = new Api(true);
-            var queue = api.CreateQueue("WiseMan");
-            var trans = api.StartTransaction();
-            queue.AddMessage(trans, array, 0);
-            trans.Commit();
+            using (var api = new Api(true))
+            {
+                var queue = api.CreateQueue("WiseMan");
+                var trans = api.StartTransaction();
+                queue.AddMessage(trans, array, 0);
+                trans.Commit();
+            }
         }
     }
 }

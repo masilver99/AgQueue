@@ -13,7 +13,7 @@ using SQLitePCL;
 
 namespace NWorkQueue.Library
 {
-    public class Api
+    public class Api : IDisposable
     {
         internal SqliteConnection _con;
 
@@ -140,28 +140,28 @@ namespace NWorkQueue.Library
 
         private void CreateTables()
         {
-            var sql = "PRAGMA foreign_keys = ON;" +
-                      "PRAGMA TEMP_STORE = MEMORY;" +
-                      //"PRAGMA JOURNAL_MODE = PERSIST;" +  //Don't readd, causes transaction failures
-                      "PRAGMA SYNCHRONOUS = NORMAL;" +
-                      //"PRAGMA LOCKING_MODE = EXCLUSIVE;"+  //Don't readd, causes transaction failures
-                      //"PRAGMA journal_mode = MEMORY;"+   //Don't readd, causes transaction failures
-                      "PRAGMA CACHE_SIZE = 500;" +
+            var sql =
+                "PRAGMA foreign_keys = ON;" +
+                "PRAGMA TEMP_STORE = MEMORY;" +
+                //"PRAGMA JOURNAL_MODE = PERSIST;" + //Slower than WAL
+                "PRAGMA SYNCHRONOUS = NORMAL;" +
+                "PRAGMA LOCKING_MODE = EXCLUSIVE;"+  //Could cause locks from open connections
+                "PRAGMA journal_mode = WAL;"+  
+                //"PRAGMA CACHE_SIZE = 500;" +
 
-                      "BEGIN;" +
-                      "Create table IF NOT EXISTS Transactions" +
-                      "(Id INTEGER PRIMARY KEY," +
-                      " Active INTEGER NOT NULL," +
-                      " StartDateTime DATETIME NOT NULL," +
-                      " ExpiryDateTime DATETIME NOT NULL);" +
-
-                      "Create table IF NOT EXISTS Queues" +
-                      "(Id INTEGER PRIMARY KEY," +
-                      " Name TEXT NOT NULL);" +
-
-                "Create TABLE IF NOT EXISTS Messages " + 
+                "Create table IF NOT EXISTS Transactions" +
                 "(Id INTEGER PRIMARY KEY," +
-                " QueueId INTEGER NOT NULL, "+
+                " Active INTEGER NOT NULL," +
+                " StartDateTime DATETIME NOT NULL," +
+                " ExpiryDateTime DATETIME NOT NULL);" +
+
+                "Create table IF NOT EXISTS Queues" +
+                "(Id INTEGER PRIMARY KEY," +
+                " Name TEXT NOT NULL);" +
+
+                "Create TABLE IF NOT EXISTS Messages " +
+                "(Id INTEGER PRIMARY KEY," +
+                " QueueId INTEGER NOT NULL, " +
                 " TransactionId INTEGER," +
                 " TransactionAction INTEGER," +
                 " State INTEGER NOT NULL, " +
@@ -174,9 +174,8 @@ namespace NWorkQueue.Library
                 " CorrelationId INTEGER, " +
                 " GroupName TEXT, " +
                 " Data BLOB," +
-                " FOREIGN KEY(QueueId) REFERENCES Queues(Id), "+
-                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));"+
-                "COMMIT;";
+                " FOREIGN KEY(QueueId) REFERENCES Queues(Id), " +
+                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
                 
             _con.Execute(sql);
         }
@@ -264,6 +263,11 @@ namespace NWorkQueue.Library
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            _con?.Dispose();
+        }
     }
 
     public class WorkQueue
