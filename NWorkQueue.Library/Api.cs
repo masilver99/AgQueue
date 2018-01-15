@@ -77,15 +77,45 @@ namespace NWorkQueue.Library
         internal void CommitTransaction(int tranId)
         {
             //Search all messages for trans
-            //possible options in a trans Add or Pull
-            //For adds, erase trans id from message
-            //For pulls, mark message complete
-            
+            var transaction = _con.BeginTransaction();
+
+            //Updated newly added messages
+            var sql =
+                "Update Messages SET STATE = @State AND TransactionId = NULL AND TransactionAction = NULL where TransactionId = @TranId  and TransactionAction = @TranAction;";
+            _con.Execute(sql, transaction: transaction, param: new {State = MessageState.Active.Value, TranId = tranId, TranAction = TransactionAction.Add.Value});
+
+            //Update newly completed messages
+            sql =
+                "Update Messages SET STATE = @State AND TransactionId = NULL AND TransactionAction = NULL AND CloseDateTime = @CloseDateTime where TransactionId = @TranId  and TransactionAction = @TranAction;";
+            _con.Execute(sql, transaction: transaction,
+                param: new
+                {
+                    State = MessageState.Processed.Value,
+                    TranId = tranId,
+                    TranAction = TransactionAction.Pull.Value,
+                    CloseDateTime = DateTime.Now
+                });
+
+            //Update Transaction record
+            sql = "UPDATE Transactions SET Active = 0 WHERE Id = @TranId;";
+            _con.Execute(sql, transaction: transaction, param: new { TranId = tranId });
+            transaction.Commit();
+
         }
 
         internal void RollbackTransaction(int tranId)
         {
-            
+            //Delete Messages WHERE TransactionId = {tranId} and TransactionAction = {TransactionAction.Add}
+            //Check if open messages are at the retry threshold, if so , mark as such
+            //Check if open messages are past the expiry date, if so mark as such
+            //All other records, increment retry count, mark record as active and ready to be pulled again
+
+            //Update Messages SET STATE={MessageState.Processed} AND TransactionId = NULL AND TransactionAction = NULL where TransactionId = {tranId} and TransactionAction = {TransactionAction.Pull}
+        }
+
+        private void ClearExpiredTransactions()
+        {
+            //If transaction is active, check if it has expired.
         }
 
         private int GetTransId()
@@ -238,98 +268,58 @@ namespace NWorkQueue.Library
 
     public class WorkQueue
     {
-        internal Api Api { get; set; }
+        private Api Api { get; set; }
         internal WorkQueueModel QueueModel { get; set; }
+        private QueueQueries _queries;
+
 
         private SqliteCommand cmd { get;set; }
         internal WorkQueue(Api api, WorkQueueModel queueModel)
         {
             Api = api;
             QueueModel = queueModel;
-            var sql = "BEGIN EXCLUSIVE;INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data) VALUES " +
-                      "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Data);COMMIT;";
-            cmd = Api._con.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.Prepare();
-
+            _queries = new QueueQueries(api._con);
         }
 
         public void AddMessage(Transaction trans, Object message, int priority)
         {
             var nextId = Interlocked.Increment(ref Api._messageId);
-            //var dbTrans = Api._con.BeginTransaction();
-            //cmd.Transaction = dbTrans;
-            cmd.Parameters.Clear();
-            cmd.Parameters.AddWithValue("@Id", nextId);
-            cmd.Parameters.AddWithValue("@QueueId", QueueModel.Id);
-            cmd.Parameters.AddWithValue("@TransactionId", trans.Id);
-            cmd.Parameters.AddWithValue("@TransactionAction", TransactionAction.Add.Value);
-            cmd.Parameters.AddWithValue("@State", MessageState.InTransaction.Value);
-            cmd.Parameters.AddWithValue("@AddDateTime", DateTime.Now);
-            cmd.Parameters.AddWithValue("@Priority", 0);
-            cmd.Parameters.AddWithValue("@MaxRetries", 3);
-            cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.MaxValue);
-            cmd.Parameters.AddWithValue("@Data", MessagePack.LZ4MessagePackSerializer.Serialize(message));
-            cmd.ExecuteNonQuery();
-            //dbTrans.Commit();
+            _queries.AddMessage.Command.Parameters.Clear();
+            _queries.AddMessage.Command.Parameters.Clear();
+            _queries.AddMessage.Command.Parameters.AddWithValue("@Id", nextId);
+            _queries.AddMessage.Command.Parameters.AddWithValue("@QueueId", QueueModel.Id);
+            _queries.AddMessage.Command.Parameters.AddWithValue("@TransactionId", trans.Id);
+            _queries.AddMessage.Command.Parameters.AddWithValue("@TransactionAction", TransactionAction.Add.Value);
+            _queries.AddMessage.Command.Parameters.AddWithValue("@State", MessageState.InTransaction.Value);
+            _queries.AddMessage.Command.Parameters.AddWithValue("@AddDateTime", DateTime.Now);
+            _queries.AddMessage.Command.Parameters.AddWithValue("@Priority", 0);
+            _queries.AddMessage.Command.Parameters.AddWithValue("@MaxRetries", 3);
+            _queries.AddMessage.Command.Parameters.AddWithValue("@ExpiryDate", DateTime.MaxValue);
+            _queries.AddMessage.Command.Parameters.AddWithValue("@Data", MessagePack.LZ4MessagePackSerializer.Serialize(message));
+            _queries.AddMessage.Command.ExecuteNonQuery();
         }
 
-        public void AddMessage(Transaction trans, Object[] messages, int priority)
-        {
-
-            //Validate Transaction here
-            var dbTrans = Api._con.BeginTransaction();
-            var sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data) VALUES " +
-                      "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, @Retries, @ExpiryDate, @Data);";
-            foreach (var message in messages)
-            {
-                var nextId = Interlocked.Increment(ref Api._messageId);
-                Api._con.Execute(sql, transaction: dbTrans, param: new
-                {
-                    Id = nextId,
-                    QueueId = QueueModel.Id,
-                    TransactionId = trans.Id,
-                    TransactionAction = TransactionAction.Add.Value,
-                    State = MessageState.InTransaction.Value,
-                    AddDateTime = DateTime.Now,
-                    Priority = 0,
-                    MaxRetries = 3,
-                    Retries = 0,
-                    ExpiryDate = DateTime.MaxValue,
-                    Data = MessagePack.LZ4MessagePackSerializer.Serialize(message)
-                });
-            }
-
-            dbTrans.Commit();
-        }
-
-        public void AddMessagePre(Transaction trans, Object[] messages, int priority)
+        public void AddMessages(Transaction trans, Object[] messages, int priority)
         {
             //Validate Transaction here
             var dbTrans = Api._con.BeginTransaction();
-            var sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data) VALUES " +
-                      "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, @Retries, @ExpiryDate, @Data);";
-            var cmd = Api._con.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.Prepare();
             cmd.Transaction = dbTrans;
-
             foreach (var message in messages)
             {
                 var nextId = Interlocked.Increment(ref Api._messageId);
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@Id", nextId);
-                cmd.Parameters.AddWithValue("@QueueId", QueueModel.Id);
-                cmd.Parameters.AddWithValue("@TransactionId", trans.Id);
-                cmd.Parameters.AddWithValue("@TransactionAction", TransactionAction.Add.Value);
-                cmd.Parameters.AddWithValue("@State", MessageState.InTransaction.Value);
-                cmd.Parameters.AddWithValue("@AddDateTime",  DateTime.Now);
-                cmd.Parameters.AddWithValue("@Priority",  0);
-                cmd.Parameters.AddWithValue("@MaxRetries", 3);
-                cmd.Parameters.AddWithValue("@Retries", 0);
-                cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.MaxValue);
-                cmd.Parameters.AddWithValue("@Data", MessagePack.LZ4MessagePackSerializer.Serialize(message));
-                cmd.ExecuteNonQuery();
+                _queries.AddMessage.Command.Parameters.Clear();
+                _queries.AddMessage.Command.Parameters.AddWithValue("@Id", nextId);
+                _queries.AddMessage.Command.Parameters.AddWithValue("@QueueId", QueueModel.Id);
+                _queries.AddMessage.Command.Parameters.AddWithValue("@TransactionId", trans.Id);
+                _queries.AddMessage.Command.Parameters.AddWithValue("@TransactionAction", TransactionAction.Add.Value);
+                _queries.AddMessage.Command.Parameters.AddWithValue("@State", MessageState.InTransaction.Value);
+                _queries.AddMessage.Command.Parameters.AddWithValue("@AddDateTime",  DateTime.Now);
+                _queries.AddMessage.Command.Parameters.AddWithValue("@Priority",  0);
+                _queries.AddMessage.Command.Parameters.AddWithValue("@MaxRetries", 3);
+                _queries.AddMessage.Command.Parameters.AddWithValue("@ExpiryDate", DateTime.MaxValue);
+                _queries.AddMessage.Command.Parameters.AddWithValue("@Data", MessagePack.LZ4MessagePackSerializer.Serialize(message));
+                _queries.AddMessage.Command.ExecuteNonQuery();
+                _queries.AddMessage.Command.Transaction = null;
             }
 
             dbTrans.Commit();
@@ -443,11 +433,26 @@ namespace NWorkQueue.Library
 
     internal class QueueQueries
     {
-        public CommandQuery AddMessage { get; set; } = new CommandQuery() {Sql = ""};
+        public CommandQuery AddMessage { get; set; }
+
+        public QueueQueries(SqliteConnection con)
+        {
+            var sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data) VALUES " +
+                      "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Data);";
+
+            AddMessage = new CommandQuery(con, sql);
+        }
     }
 
     internal class CommandQuery
     {
-        public String Sql { get; set; }
+        public SqliteCommand Command { get; set; }
+        public CommandQuery(SqliteConnection con, string sql)
+        {
+            var cmd = con.CreateCommand();
+            cmd.CommandText = sql;
+            cmd.Prepare();
+            Command = cmd;
+        }
     }
 }

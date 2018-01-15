@@ -101,20 +101,6 @@ namespace NWorkQueue.Tests
             queue.AddMessage(trans, array, 0);
             trans.Commit();
         }
-        [Test]
-        public void Add10000MessagesInTransPre()
-        {
-            object[] array = new object[10000];
-            for (int i = 0; i < 10000; i++)
-            {
-                array[i] = new object();
-            }
-
-            var api = new Api(true);
-            var queue = api.CreateQueue("WiseMan");
-            var trans = api.StartTransaction();
-            queue.AddMessagePre(trans, array, 0);
-            trans.Commit();
-        }
     }
 }
+ 
