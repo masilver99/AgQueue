@@ -61,33 +61,54 @@ namespace NWorkQueue.Library
         /// Updates the specified transaction, reseting it's timeout
         /// </summary>
         /// <param name="trans"></param>
-        public void UpdateTransaction(Transaction trans)
+        public TransactionResult UpdateTransaction(Transaction trans)
         {
             var sql = "SELECT * FROM Transactions WHERE Id = @Id";
             var transModel = _con.QueryFirstOrDefault<TransactionModel>(sql, new {Id = trans.Id});
             if (transModel == null)
-                throw new Exception("Unable to find transaction");
-            if (transModel.Active != 1)
-                throw new Exception("Cannot update closed transaction");
+                return TransactionResult.NotFound;
+            if (!transModel.Active)
+                return TransactionResult.Closed;
+            if (transModel.ExpiryDateTime <= DateTime.Now)
+            {
+                //Took too long to run transaction, so now we have to rollback :-(
+                RollbackTransaction(trans.Id);
+                return TransactionResult.Expired;
+            }
 
             sql = "UPDATE Transaction SET ExpiryDateTime = @DateTime WHERE Id = @Id";
             _con.Execute(sql, new {DateTime = DateTime.Now.AddMinutes(_expiryTimeInMinutes), Id = trans.Id});
+            return TransactionResult.Success;
         }
 
-        internal void CommitTransaction(int tranId)
+        internal TransactionResult CommitTransaction(int tranId)
         {
             //Search all messages for trans
-            var transaction = _con.BeginTransaction();
+            var sqliteTransaction = _con.BeginTransaction();
+
+            //Check if transaction has expired
+            var sql = "Select * FROM Transactions where Id = @tranId";
+            var transModel = _con.QueryFirstOrDefault<TransactionModel>(sql, new {tranId}, sqliteTransaction);
+            if (transModel == null)
+                return TransactionResult.NotFound;
+            if (!transModel.Active)
+                return TransactionResult.Closed;
+            if (transModel.ExpiryDateTime <= DateTime.Now)
+            {
+                //Took too long to run transaction, so now we have to rollback :-(
+                RollbackTransaction(tranId);
+                return TransactionResult.Expired;
+            }
 
             //Updated newly added messages
-            var sql =
+            sql =
                 "Update Messages SET STATE = @State AND TransactionId = NULL AND TransactionAction = NULL where TransactionId = @TranId  and TransactionAction = @TranAction;";
-            _con.Execute(sql, transaction: transaction, param: new {State = MessageState.Active.Value, TranId = tranId, TranAction = TransactionAction.Add.Value});
+            _con.Execute(sql, transaction: sqliteTransaction, param: new {State = MessageState.Active.Value, TranId = tranId, TranAction = TransactionAction.Add.Value});
 
             //Update newly completed messages
             sql =
                 "Update Messages SET STATE = @State AND TransactionId = NULL AND TransactionAction = NULL AND CloseDateTime = @CloseDateTime where TransactionId = @TranId  and TransactionAction = @TranAction;";
-            _con.Execute(sql, transaction: transaction,
+            _con.Execute(sql, transaction: sqliteTransaction,
                 param: new
                 {
                     State = MessageState.Processed.Value,
@@ -98,24 +119,32 @@ namespace NWorkQueue.Library
 
             //Update Transaction record
             sql = "UPDATE Transactions SET Active = 0 WHERE Id = @TranId;";
-            _con.Execute(sql, transaction: transaction, param: new { TranId = tranId });
-            transaction.Commit();
-
+            _con.Execute(sql, transaction: sqliteTransaction, param: new { TranId = tranId });
+            sqliteTransaction.Commit();
+            return TransactionResult.Success;
         }
 
         internal void RollbackTransaction(int tranId)
         {
-            //Delete Messages WHERE TransactionId = {tranId} and TransactionAction = {TransactionAction.Add}
-            //Check if open messages are at the retry threshold, if so , mark as such
+            var transaction = _con.BeginTransaction();
+            var sql = "Update Transactions SET ClosedDateTime = @ClosedDateTime where Id = @tranId";
+            _con.Execute(sql, new { tranId, ClosedDateTime = DateTime.Now }, transaction);
+
+            //Removed messages added during the transaction
+            sql = "Delete FROM Messages WHERE TransactionId = @tranId and TransactionAction = @TranAction";
+            _con.Execute(sql, new {tranId, TranAction = TransactionAction.Add.Value}, transaction);
+
+            //Check if open messages are at the retry threshold, if so , mark as closed
+            sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and Retries >= MaxRetries";
+            _con.Execute(sql, new { State = MessageState.RetryExceeded, tranId, TranAction = TransactionAction.Pull.Value }, transaction);
+
             //Check if open messages are past the expiry date, if so mark as such
+            sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and ExpiryDate <= @ExpiryDate";
+            _con.Execute(sql, new { State = MessageState.Expired, tranId, TranAction = TransactionAction.Pull.Value, ExpiryDate = DateTime.Now }, transaction);
+
             //All other records, increment retry count, mark record as active and ready to be pulled again
-
-            //Update Messages SET STATE={MessageState.Processed} AND TransactionId = NULL AND TransactionAction = NULL where TransactionId = {tranId} and TransactionAction = {TransactionAction.Pull}
-        }
-
-        private void ClearExpiredTransactions()
-        {
-            //If transaction is active, check if it has expired.
+            sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, Retries = Retries + 1 WHERE TransactionId = @tranId and TransactionAction = @TranAction;";
+            _con.Execute(sql, new { State = MessageState.Active, tranId, TranAction = TransactionAction.Pull.Value}, transaction);
         }
 
         private int GetTransId()
@@ -355,7 +384,7 @@ namespace NWorkQueue.Library
     internal class TransactionModel
     {
         public int Id { get; set; }
-        public int Active { get; set; }
+        public bool Active { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime ExpiryDateTime { get; set; }
     }
@@ -433,6 +462,15 @@ namespace NWorkQueue.Library
             Name = name;
             Value = value;
         }
+    }
+
+    //This may need to be in the public API
+    public enum TransactionResult
+    {
+        Success = 0, 
+        Expired = 1,
+        Closed = 2,
+        NotFound = 3
     }
 
     internal class QueueQueries
