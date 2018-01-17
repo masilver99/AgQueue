@@ -36,6 +36,7 @@ namespace NWorkQueue.Library
 
         private void InitializeDb(bool wipeDatabase)
         {
+            //_con = new SqliteConnection(@"Data Source=:memory:;"); //About 30% faster, and NO durability
             _con = new SqliteConnection(@"Data Source=SqlLite.db;");
             _con.Open();
             if (wipeDatabase)
@@ -172,9 +173,10 @@ namespace NWorkQueue.Library
             var sql =
                 "PRAGMA foreign_keys = ON;" +
                 "PRAGMA TEMP_STORE = MEMORY;" +
-                //"PRAGMA JOURNAL_MODE = PERSIST;" + //Slower than WAL
-                "PRAGMA SYNCHRONOUS = NORMAL;" +
-                "PRAGMA LOCKING_MODE = EXCLUSIVE;"+  //Could cause locks from open connections
+                //"PRAGMA JOURNAL_MODE = PERSIST;" + //Slower than WAL by about 20+x
+                //"PRAGMA SYNCHRONOUS = FULL;" +       //About 15x slower than NORMAL
+                "PRAGMA SYNCHRONOUS = NORMAL;" +   //
+                "PRAGMA LOCKING_MODE = EXCLUSIVE;"+  
                 "PRAGMA journal_mode = WAL;"+  
                 //"PRAGMA CACHE_SIZE = 500;" +
 
