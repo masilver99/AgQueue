@@ -6,11 +6,11 @@
             }
         },
         {
-            "CommunicationsServer",
+            "CommunicationsServer":
             {
-            "AssemblyName": "NWorkQueue.TcpServer"
+                "AssemblyName": "NWorkQueue.RestServer"
+            }
         }
-}
     ]
 
 

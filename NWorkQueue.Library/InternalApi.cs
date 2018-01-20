@@ -6,20 +6,18 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Dapper;
-using Microsoft.Data.Sqlite;
-using SQLitePCL;
 
 
 namespace NWorkQueue.Library
 {
     public class InternalApi : IDisposable
     {
-        internal SqliteConnection _con;
 
         private int _transId = 0;
         internal int _messageId = 0;
         private int _queueId = 0;
+
+        private IStorage storage;
 
         private QueueList _queueList = new QueueList();
 
@@ -29,24 +27,13 @@ namespace NWorkQueue.Library
         //How long until a transcation expires and is automatically rolled back
         private int _expiryTimeInMinutes = 30;
 
-        public InternalApi(bool freshDatabase = false)
+        public InternalApi(bool deleteExistingData = false)
         {
-            InitializeDb(freshDatabase);
+            //We can set this by config at a later time.  Currently, only Sqlite is supported
+            storage = new StorageSqlite();
+            storage.InitializeStorage(false, @"Data Source=SqlLite.db;");
         }
 
-        private void InitializeDb(bool wipeDatabase)
-        {
-            //_con = new SqliteConnection(@"Data Source=:memory:;"); //About 30% faster, and NO durability
-            _con = new SqliteConnection(@"Data Source=SqlLite.db;");
-            _con.Open();
-            if (wipeDatabase)
-                DeleteAllTables();
-            CreateTables();
-            _transId = GetTransId();
-            _messageId = GetMessageId();
-            _queueId = GetQueueId();
-            _queueList.Reload(LoadQueueList());
-        }
 
 
         #region Transactions
@@ -168,60 +155,6 @@ namespace NWorkQueue.Library
 
         #endregion
 
-        private void CreateTables()
-        {
-            var sql =
-                "PRAGMA foreign_keys = ON;" +
-                "PRAGMA TEMP_STORE = MEMORY;" +
-                //"PRAGMA JOURNAL_MODE = PERSIST;" + //Slower than WAL by about 20+x
-                //"PRAGMA SYNCHRONOUS = FULL;" +       //About 15x slower than NORMAL
-                "PRAGMA SYNCHRONOUS = NORMAL;" +   //
-                "PRAGMA LOCKING_MODE = EXCLUSIVE;"+  
-                "PRAGMA journal_mode = WAL;"+  
-                //"PRAGMA CACHE_SIZE = 500;" +
-
-                "Create table IF NOT EXISTS Transactions" +
-                "(Id INTEGER PRIMARY KEY," +
-                " Active INTEGER NOT NULL," +
-                " StartDateTime DATETIME NOT NULL," +
-                " ExpiryDateTime DATETIME NOT NULL);" +
-
-                "Create table IF NOT EXISTS Queues" +
-                "(Id INTEGER PRIMARY KEY," +
-                " Name TEXT NOT NULL);" +
-
-                "Create TABLE IF NOT EXISTS Messages " +
-                "(Id INTEGER PRIMARY KEY," +
-                " QueueId INTEGER NOT NULL, " +
-                " TransactionId INTEGER," +
-                " TransactionAction INTEGER," +
-                " State INTEGER NOT NULL, " +
-                " AddDateTime DATETIME NOT NULL," +
-                " CloseDateTime DATETIME, " +
-                " Priority INTEGER NOT NULL, " +
-                " MaxRetries INTEGER NOT NULL, " +
-                " Retries INTEGER NOT NULL, " +
-                " ExpiryDate DateTime NOT NULL, " +
-                " CorrelationId INTEGER, " +
-                " GroupName TEXT, " +
-                " Data BLOB," +
-                " FOREIGN KEY(QueueId) REFERENCES Queues(Id), " +
-                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
-                
-            _con.Execute(sql);
-        }
-
-        private void DeleteAllTables()
-        {
-            var sql =
-                "BEGIN;"+
-                "DROP TABLE IF EXISTS Messages; " +
-                "DROP TABLE IF EXISTS Queues;" +
-                "DROP table IF EXISTS Transactions;"+
-                "COMMIT;";
-            _con.Execute(sql);
-        }
-
 
         #region Queues
         private int GetQueueId()
@@ -297,7 +230,7 @@ namespace NWorkQueue.Library
 
         public void Dispose()
         {
-            _con?.Dispose();
+            storage.Dispose();
         }
     }
 
