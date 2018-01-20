@@ -12,7 +12,7 @@ namespace NWorkQueue.Tests
         [Test]
         public void InvalidCreateQueueName()
         {
-            var api = new Api(true);
+            var api = new InternalApi(true);
             Assert.Throws(Is.TypeOf<ArgumentException>(), delegate {
                 api.CreateQueue("(Peanuckle)");
             }
@@ -27,7 +27,7 @@ namespace NWorkQueue.Tests
         [Test]
         public void DuplicateQueueName()
         {
-            var api = new Api(true);
+            var api = new InternalApi(true);
             api.CreateQueue("WiseMan");
             Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"), delegate {
                     api.CreateQueue("WiseMan");
@@ -46,7 +46,7 @@ namespace NWorkQueue.Tests
         [Test]
         public void InvalidDeleteQueueName()
         {
-            var api = new Api(true);
+            var api = new InternalApi(true);
             Assert.Throws(Is.TypeOf<ArgumentException>(), delegate {
                     api.CreateQueue("(Peanuckle)");
                 }
@@ -60,7 +60,7 @@ namespace NWorkQueue.Tests
         [Test]
         public void DeleteQueue()
         {
-            using (var api = new Api(true))
+            using (var api = new InternalApi(true))
             {
                 api.CreateQueue("WiseMan");
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
@@ -75,7 +75,7 @@ namespace NWorkQueue.Tests
         [Test]
         public void Add10000Messages()
         {
-            using (var api = new Api(true))
+            using (var api = new InternalApi(true))
             {
                 var queue = api.CreateQueue("WiseMan");
                 var trans = api.StartTransaction();
@@ -97,7 +97,7 @@ namespace NWorkQueue.Tests
                 array[i] = new object();
             }
 
-            using (var api = new Api(true))
+            using (var api = new InternalApi(true))
             {
                 var queue = api.CreateQueue("WiseMan");
                 var trans = api.StartTransaction();

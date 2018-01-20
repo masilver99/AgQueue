@@ -1,15 +1,38 @@
 ﻿using System;
+using System.Threading;
 using NWorkQueue.Library;
+using NLog;
 
 namespace NWorkQueue
 {
     class Program
     {
+        
+        private static Boolean _performShutdown = false;
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            var c = new Api();
-            var tableName = "Testing-1-2-3";
+            LogManager.LoadConfiguration("nlog.config");
+            var log = LogManager.GetLogger("NWorkQueue");
+            log.Trace("Application starting...");
+
+            //Ensure we stop when asked to or CTRL-C is pressed
+            AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) => { log.Trace("Application shutdown requested.  Initiating shutdown..."); _performShutdown = true; };
+            Console.CancelKeyPress += (sender, eventArgs) => { log.Trace("Ctrl-C pressed.  Initiating shutdown..."); _performShutdown = true; };
+
+
+            log.Trace("Starting communication threads...");
+
+            log.Trace("Starting internal loop...");
+            //Loop here until Ctrl-C or shutdown is requested
+            while (!_performShutdown)
+            {
+
+                Thread.Sleep(500); 
+                Console.WriteLine("Waiting....");
+            }
+
+            //Perform cleanup
+            Console.Read();
 
             //Initialize storage
             //Perform cleanup
@@ -38,4 +61,5 @@ namespace NWorkQueue
         //transaction -> undoaction
 
     }
+
 }

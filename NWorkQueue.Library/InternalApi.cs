@@ -13,7 +13,7 @@ using SQLitePCL;
 
 namespace NWorkQueue.Library
 {
-    public class Api : IDisposable
+    public class InternalApi : IDisposable
     {
         internal SqliteConnection _con;
 
@@ -29,7 +29,7 @@ namespace NWorkQueue.Library
         //How long until a transcation expires and is automatically rolled back
         private int _expiryTimeInMinutes = 30;
 
-        public Api(bool freshDatabase = false)
+        public InternalApi(bool freshDatabase = false)
         {
             InitializeDb(freshDatabase);
         }
@@ -55,7 +55,7 @@ namespace NWorkQueue.Library
             var sql = "INSERT INTO Transactions (Id, Active, StartDateTime, ExpiryDateTime) VALUES (@Id, 1, @StartDateTime, @ExpiryDateTime)";
             var newId = Interlocked.Increment(ref _transId);
             _con.Execute(sql, new { StartDateTime = DateTime.Now, ExpiryDateTime = DateTime.Now.AddMinutes(_expiryTimeInMinutes), Id = newId });
-            return new Transaction() {Id = newId, Api = this};
+            return new Transaction() {Id = newId, InternalApi = this};
         }
 
         /// <summary>
@@ -303,22 +303,22 @@ namespace NWorkQueue.Library
 
     public class WorkQueue
     {
-        private Api Api { get; set; }
+        private InternalApi InternalApi { get; set; }
         internal WorkQueueModel QueueModel { get; set; }
         private QueueQueries _queries;
 
 
         private SqliteCommand cmd { get;set; }
-        internal WorkQueue(Api api, WorkQueueModel queueModel)
+        internal WorkQueue(InternalApi internalApi, WorkQueueModel queueModel)
         {
-            Api = api;
+            InternalApi = internalApi;
             QueueModel = queueModel;
-            _queries = new QueueQueries(api._con);
+            _queries = new QueueQueries(internalApi._con);
         }
 
         public void AddMessage(Transaction trans, Object message, int priority)
         {
-            var nextId = Interlocked.Increment(ref Api._messageId);
+            var nextId = Interlocked.Increment(ref InternalApi._messageId);
             _queries.AddMessage.Command.Parameters.Clear();
             _queries.AddMessage.Command.Parameters.Clear();
             _queries.AddMessage.Command.Parameters.AddWithValue("@Id", nextId);
@@ -337,11 +337,11 @@ namespace NWorkQueue.Library
         public void AddMessages(Transaction trans, Object[] messages, int priority)
         {
             //Validate Transaction here
-            var dbTrans = Api._con.BeginTransaction();
+            var dbTrans = InternalApi._con.BeginTransaction();
             cmd.Transaction = dbTrans;
             foreach (var message in messages)
             {
-                var nextId = Interlocked.Increment(ref Api._messageId);
+                var nextId = Interlocked.Increment(ref InternalApi._messageId);
                 _queries.AddMessage.Command.Parameters.Clear();
                 _queries.AddMessage.Command.Parameters.AddWithValue("@Id", nextId);
                 _queries.AddMessage.Command.Parameters.AddWithValue("@QueueId", QueueModel.Id);
@@ -370,16 +370,16 @@ namespace NWorkQueue.Library
     public class Transaction
     {
         internal int Id { get; set; }
-        internal Api Api;
+        internal InternalApi InternalApi;
 
         public void Commit()
         {
-            Api.CommitTransaction(Id);
+            InternalApi.CommitTransaction(Id);
         }
 
         public void Rollback()
         {
-            Api.RollbackTransaction(Id);
+            InternalApi.RollbackTransaction(Id);
         }
     }
 
