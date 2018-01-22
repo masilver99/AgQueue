@@ -9,6 +9,10 @@ Have you ever used MSMQ, only to be impacted by it's limitations?  For example, 
 
 Besides, for simple work queues, MSMQ may be overkill.  Same with RabbitMQ and others.
 
+### Example
+
+A classic example of when to use a work queue is sending email from a website.  You may not want to delay your users when they request a password reset (or anything else requiring an email to be sent), so you place a message into a queue, which is inifitely faster than sending the email, and your users won't be delayed.  In the background or on another machine, the message is picked up and and email is sent out.
+
 ## NWorkQueue Features
 
 * Transactions.  Transactions are mandatory.  Transactions have expiry timespans.  Transactions can be explicitly extended for long running processes.
