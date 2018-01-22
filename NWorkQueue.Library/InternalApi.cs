@@ -13,15 +13,17 @@ namespace NWorkQueue.Library
     public class InternalApi : IDisposable
     {
 
-        private int _transId = 0;
-        internal int _messageId = 0;
-        private int _queueId = 0;
+        private long _transId = 0;
+        internal long _messageId = 0;
+        private long _queueId = 0;
 
-        private IStorage storage;
+        private IStorage _storage;
 
         private QueueList _queueList = new QueueList();
 
-        static Regex _queueNameRegex = new Regex(@"^[A-Za-z0-9\.\-_]+$", RegexOptions.Compiled);
+        private static readonly DateTime MaxDateTime = DateTime.MaxValue;
+
+        static readonly Regex _queueNameRegex = new Regex(@"^[A-Za-z0-9\.\-_]+$", RegexOptions.Compiled);
 
         //Settings
         //How long until a transcation expires and is automatically rolled back
@@ -29,54 +31,58 @@ namespace NWorkQueue.Library
 
         public InternalApi(bool deleteExistingData = false)
         {
+            //Setup Storage
             //We can set this by config at a later time.  Currently, only Sqlite is supported
-            storage = new StorageSqlite();
-            storage.InitializeStorage(false, @"Data Source=SqlLite.db;");
+            _storage = new StorageSqlite();
+            _storage.InitializeStorage(false, @"Data Source=SqlLite.db;");
+
+            //Get starting Id's.  These are used to increment primary keys.
+            _transId = _storage.GetMaxTransId();
+            _messageId = _storage.GetMaxMessageId();
+            _queueId = _storage.GetMaxQueueId();
+
+            //Cache queue names/ids
+            _queueList.Reload(_storage.GetFullQueueList());
         }
 
-
-
-        #region Transactions
-        public Transaction StartTransaction()
+        internal long StartTransaction()
         {
-            var sql = "INSERT INTO Transactions (Id, Active, StartDateTime, ExpiryDateTime) VALUES (@Id, 1, @StartDateTime, @ExpiryDateTime)";
             var newId = Interlocked.Increment(ref _transId);
-            _con.Execute(sql, new { StartDateTime = DateTime.Now, ExpiryDateTime = DateTime.Now.AddMinutes(_expiryTimeInMinutes), Id = newId });
-            return new Transaction() {Id = newId, InternalApi = this};
+            _storage.StartTransaction(newId, _expiryTimeInMinutes);
+            return newId;
         }
 
         /// <summary>
         /// Updates the specified transaction, reseting it's timeout
         /// </summary>
-        /// <param name="trans"></param>
-        public TransactionResult UpdateTransaction(Transaction trans)
+        /// <param name="transId"></param>
+        internal TransactionResult UpdateTransaction(long transId)
         {
-            var sql = "SELECT * FROM Transactions WHERE Id = @Id";
-            var transModel = _con.QueryFirstOrDefault<TransactionModel>(sql, new {Id = trans.Id});
+            var transModel = _storage.GetTransactionById(transId);
+
+            //Validate Transaction
             if (transModel == null)
                 return TransactionResult.NotFound;
             if (!transModel.Active)
                 return TransactionResult.Closed;
             if (transModel.ExpiryDateTime <= DateTime.Now)
             {
-                //Took too long to run transaction, so now we have to rollback :-(
-                RollbackTransaction(trans.Id);
+                //Took too long to run transaction, so now we have to rollback, just in case :-(
+                RollbackTransaction(transId);
                 return TransactionResult.Expired;
             }
-
-            sql = "UPDATE Transaction SET ExpiryDateTime = @DateTime WHERE Id = @Id";
-            _con.Execute(sql, new {DateTime = DateTime.Now.AddMinutes(_expiryTimeInMinutes), Id = trans.Id});
+            
+            //Transaction is valid, so let's update it
+            _storage.UpdateTransaction(transId, _expiryTimeInMinutes);
             return TransactionResult.Success;
         }
 
-        internal TransactionResult CommitTransaction(int tranId)
+        internal TransactionResult CommitTransaction(int transId)
         {
-            //Search all messages for trans
-            var sqliteTransaction = _con.BeginTransaction();
+            var storageTransaction = _storage.BeginStorageTransaction();
 
             //Check if transaction has expired
-            var sql = "Select * FROM Transactions where Id = @tranId";
-            var transModel = _con.QueryFirstOrDefault<TransactionModel>(sql, new {tranId}, sqliteTransaction);
+            var transModel = _storage.GetTransactionById(transId, storageTransaction);
             if (transModel == null)
                 return TransactionResult.NotFound;
             if (!transModel.Active)
@@ -84,87 +90,50 @@ namespace NWorkQueue.Library
             if (transModel.ExpiryDateTime <= DateTime.Now)
             {
                 //Took too long to run transaction, so now we have to rollback :-(
-                RollbackTransaction(tranId);
+                RollbackTransaction(transId);
                 return TransactionResult.Expired;
             }
 
+            var commitDateTime = DateTime.Now;
+            
             //Updated newly added messages
-            sql =
-                "Update Messages SET STATE = @State AND TransactionId = NULL AND TransactionAction = NULL where TransactionId = @TranId  and TransactionAction = @TranAction;";
-            _con.Execute(sql, transaction: sqliteTransaction, param: new {State = MessageState.Active.Value, TranId = tranId, TranAction = TransactionAction.Add.Value});
+            _storage.CommitAddedMessages(transId, storageTransaction);
 
             //Update newly completed messages
-            sql =
-                "Update Messages SET STATE = @State AND TransactionId = NULL AND TransactionAction = NULL AND CloseDateTime = @CloseDateTime where TransactionId = @TranId  and TransactionAction = @TranAction;";
-            _con.Execute(sql, transaction: sqliteTransaction,
-                param: new
-                {
-                    State = MessageState.Processed.Value,
-                    TranId = tranId,
-                    TranAction = TransactionAction.Pull.Value,
-                    CloseDateTime = DateTime.Now
-                });
+            _storage.CommitPulledMessages(transId, storageTransaction, commitDateTime);
 
             //Update Transaction record
-            sql = "UPDATE Transactions SET Active = 0 WHERE Id = @TranId;";
-            _con.Execute(sql, transaction: sqliteTransaction, param: new { TranId = tranId });
-            sqliteTransaction.Commit();
+            _storage.CommitMessageTransaction(transId, storageTransaction, commitDateTime);
+
+            storageTransaction.Commit();
             return TransactionResult.Success;
         }
 
-        internal void RollbackTransaction(int tranId)
+        internal void RollbackTransaction(long transId)
         {
-            var transaction = _con.BeginTransaction();
-            var sql = "Update Transactions SET ClosedDateTime = @ClosedDateTime where Id = @tranId";
-            _con.Execute(sql, new { tranId, ClosedDateTime = DateTime.Now }, transaction);
+            var storageTrans = _storage.BeginStorageTransaction();
+            var closeDateTime = DateTime.Now;
 
+            //Close the transaction
+            _storage.CloseTransaction(transId, storageTrans, closeDateTime);
+            
             //Removed messages added during the transaction
-            sql = "Delete FROM Messages WHERE TransactionId = @tranId and TransactionAction = @TranAction";
-            _con.Execute(sql, new {tranId, TranAction = TransactionAction.Add.Value}, transaction);
+            _storage.DeleteNewMessagesByTransId(transId, storageTrans);
 
             //Check if open messages are at the retry threshold, if so , mark as closed
-            sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and Retries >= MaxRetries";
-            _con.Execute(sql, new { State = MessageState.RetryExceeded, tranId, TranAction = TransactionAction.Pull.Value }, transaction);
+            _storage.CloseRetriedMessages(transId, storageTrans);
 
             //Check if open messages are past the expiry date, if so mark as such
-            sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and ExpiryDate <= @ExpiryDate";
-            _con.Execute(sql, new { State = MessageState.Expired, tranId, TranAction = TransactionAction.Pull.Value, ExpiryDate = DateTime.Now }, transaction);
+            _storage.ExpireOlderMessages(transId, storageTrans, closeDateTime);
 
             //All other records, increment retry count, mark record as active and ready to be pulled again
-            sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, Retries = Retries + 1 WHERE TransactionId = @tranId and TransactionAction = @TranAction;";
-            _con.Execute(sql, new { State = MessageState.Active, tranId, TranAction = TransactionAction.Pull.Value}, transaction);
-        }
+            _storage.UpdateRetriesOnRollbackedMessages(transId, storageTrans);
 
-        private int GetTransId()
-        {
-            var sql = "SELECT Max(ID) FROM TRANSACTIONS;";
-            var id = _con.ExecuteScalar<int?>(sql);
-            if (id.HasValue)
-                return id.Value;
-            return 0;
+            storageTrans.Commit();
         }
-
-        private int GetMessageId()
-        {
-            var sql = "SELECT Max(ID) FROM Messages;";
-            var id = _con.ExecuteScalar<int?>(sql);
-            if (id.HasValue)
-                return id.Value;
-            return 0;
-        }
-
-        #endregion
 
 
         #region Queues
-        private int GetQueueId()
-        {
-            var sql = "SELECT Max(ID) FROM Queues;";
-            var id = _con.ExecuteScalar<int?>(sql);
-            if (id.HasValue)
-                return id.Value;
-            return 0;
-        }
 
         private void ValidateQueueName(in string queueName)
         {
@@ -172,29 +141,24 @@ namespace NWorkQueue.Library
                 throw new ArgumentException("Queue name can only contain a-Z, 0-9, ., -, or _");
         }
 
-        private SortedList<string, WorkQueueModel> LoadQueueList()
+        public long CreateQueue(String name)
         {
-            var sql = "SELECT Name, Id FROM Queues;";
-            return new SortedList<string, WorkQueueModel>(_con.Query(sql).ToDictionary(row => (string) row.Name, row => new WorkQueueModel(){Id = row.Id, Name = row.Name }));
-        }
-
-        public WorkQueue CreateQueue(String name)
-        {
+            //validation
             if (name.Length == 0)
                 throw new ArgumentException("Queue name cannot be empty", nameof(name));
             ValidateQueueName(in name);
             if (_queueList.ContainsKey(name))
                     throw new Exception("Queue already exists");
-            var trans = _con.BeginTransaction();
-            var sql = "INSERT INTO Queues (Id, Name) VALUES (@Id, @Name);";
+
+            //Add new queue
             var nextId = Interlocked.Increment(ref _queueId);
-            _con.Execute(sql, transaction: trans, param: new {Id = nextId, Name = name });
-            trans.Commit();
+            _storage.AddQueue(nextId, name);
             var queueModel = new WorkQueueModel() {Id = nextId, Name = name};
             _queueList.Add(queueModel);
-            return new WorkQueue(this, queueModel);
-        }
 
+            return nextId;
+        }
+        /* Not sure this is needed
         public WorkQueue GetQueue(string queueName)
         {
             if (queueName.Length == 0)
@@ -204,7 +168,7 @@ namespace NWorkQueue.Library
                 throw new Exception("Queue does not exist");
             return new WorkQueue(this, workQueueModel);
         }
-
+        */
         public void DeleteQueue(String name)
         {
             var fixedName = name.Trim();
@@ -212,7 +176,7 @@ namespace NWorkQueue.Library
                 throw new ArgumentException("Queue name cannot be empty", nameof(name));
             if (!_queueList.TryGetQueueId(fixedName, out var id))
                 throw new Exception("Queue not found");
-            var trans = _con.BeginTransaction();
+            var trans = _storage.BeginStorageTransaction();
 
             //TODO: Rollback queue transactions that were being used in message for this queue
             //TODO: Delete Messages
@@ -220,8 +184,7 @@ namespace NWorkQueue.Library
             //TODO: Delete actual queue table
 
             //Delete From Queue Table
-            var sql = "DELETE FROM Queues WHERE Id = @Id;";
-            _con.Execute(sql, transaction: trans, param: new { Id = id });
+            _storage.DeleteQueue(id, trans);
             trans.Commit();
             _queueList.Delete(fixedName);
         }
@@ -230,29 +193,26 @@ namespace NWorkQueue.Library
 
         public void Dispose()
         {
-            storage.Dispose();
+            _storage.Dispose();
         }
-    }
 
-    public class WorkQueue
-    {
-        private InternalApi InternalApi { get; set; }
         internal WorkQueueModel QueueModel { get; set; }
         private QueueQueries _queries;
 
 
-        private SqliteCommand cmd { get;set; }
-        internal WorkQueue(InternalApi internalApi, WorkQueueModel queueModel)
-        {
-            InternalApi = internalApi;
-            QueueModel = queueModel;
+/*        private SqliteCommand cmd { get;set; }
             _queries = new QueueQueries(internalApi._con);
         }
-
-        public void AddMessage(Transaction trans, Object message, int priority)
+        */
+        public void AddMessage(Int64 transId, Int64 queueId, Object message, string metaData, int priority = 0, int maxRetries = 3, DateTime? rawExpiryDateTime = null)
         {
-            var nextId = Interlocked.Increment(ref InternalApi._messageId);
-            _queries.AddMessage.Command.Parameters.Clear();
+
+            var addDateTime = DateTime.Now;
+            DateTime expiryDateTime = rawExpiryDateTime ?? DateTime.MaxValue;
+            var nextId = Interlocked.Increment(ref _messageId);
+            var compressedMessage = MessagePack.LZ4MessagePackSerializer.Serialize(message);
+            _storage.AddMessage(transId, queueId, compressedMessage, addDateTime, metaData)
+
             _queries.AddMessage.Command.Parameters.Clear();
             _queries.AddMessage.Command.Parameters.AddWithValue("@Id", nextId);
             _queries.AddMessage.Command.Parameters.AddWithValue("@QueueId", QueueModel.Id);
@@ -263,12 +223,13 @@ namespace NWorkQueue.Library
             _queries.AddMessage.Command.Parameters.AddWithValue("@Priority", 0);
             _queries.AddMessage.Command.Parameters.AddWithValue("@MaxRetries", 3);
             _queries.AddMessage.Command.Parameters.AddWithValue("@ExpiryDate", DateTime.MaxValue);
-            _queries.AddMessage.Command.Parameters.AddWithValue("@Data", MessagePack.LZ4MessagePackSerializer.Serialize(message));
+            _queries.AddMessage.Command.Parameters.AddWithValue("@Data", );
             _queries.AddMessage.Command.ExecuteNonQuery();
         }
 
         public void AddMessages(Transaction trans, Object[] messages, int priority)
         {
+            InternalApi._storage.
             //Validate Transaction here
             var dbTrans = InternalApi._con.BeginTransaction();
             cmd.Transaction = dbTrans;
@@ -292,29 +253,12 @@ namespace NWorkQueue.Library
 
             dbTrans.Commit();
         }
-
-
     }
 
     internal class MessageWrapper
     {
     }
 
-    public class Transaction
-    {
-        internal int Id { get; set; }
-        internal InternalApi InternalApi;
-
-        public void Commit()
-        {
-            InternalApi.CommitTransaction(Id);
-        }
-
-        public void Rollback()
-        {
-            InternalApi.RollbackTransaction(Id);
-        }
-    }
 
     internal class TransactionModel
     {
@@ -356,7 +300,6 @@ namespace NWorkQueue.Library
         /// Actual message data 
         /// </summary>
         public byte[] Data { get; set; }
-
     }
 
     internal class WorkQueueModel
@@ -378,7 +321,6 @@ namespace NWorkQueue.Library
             Name = name;
             Value = value;
         }
-
     }
 
     internal sealed class MessageState
