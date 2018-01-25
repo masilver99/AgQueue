@@ -12,49 +12,43 @@ namespace NWorkQueue.Tests
         [Test]
         public void InvalidCreateQueueName()
         {
-            var api = new InternalApi(true);
-            Assert.Throws(Is.TypeOf<ArgumentException>(), delegate {
-                api.CreateQueue("(Peanuckle)");
+            using (var api = new InternalApi(true))
+            {
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.CreateQueue("(Peanuckle)"); }
+                );
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.CreateQueue(""); }
+                );
             }
-            );
-            Assert.Throws(Is.TypeOf<ArgumentException>(), delegate {
-                    api.CreateQueue("");
-                }
-            );
-
         }
 
         [Test]
         public void DuplicateQueueName()
         {
-            var api = new InternalApi(true);
-            api.CreateQueue("WiseMan");
-            Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"), delegate {
-                    api.CreateQueue("WiseMan");
-                }
-            );
-            Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"), delegate {
-                    api.CreateQueue("wiseman");
-                }
-            );
-            Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"), delegate {
-                    api.CreateQueue("WISEMAN");
-                }
-            );
+            using (var api = new InternalApi(true))
+            {
+                api.CreateQueue("WiseMan");
+                Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"),
+                    delegate { api.CreateQueue("WiseMan"); }
+                );
+                Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"),
+                    delegate { api.CreateQueue("wiseman"); }
+                );
+                Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"),
+                    delegate { api.CreateQueue("WISEMAN"); }
+                );
+            }
         }
 
         [Test]
         public void InvalidDeleteQueueName()
         {
-            var api = new InternalApi(true);
-            Assert.Throws(Is.TypeOf<ArgumentException>(), delegate {
-                    api.CreateQueue("(Peanuckle)");
-                }
-            );
-            Assert.Throws(Is.TypeOf<ArgumentException>(), delegate {
-                    api.CreateQueue("");
-                }
-            );
+            using (var api = new InternalApi(true))
+            {
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.CreateQueue("(Peanuckle)"); }
+                );
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.CreateQueue(""); }
+                );
+            }
         }
 
         [Test]
@@ -81,13 +75,13 @@ namespace NWorkQueue.Tests
                 var trans = api.StartTransaction();
                 for (int i = 0; i < 10000; i++)
                 {
-                    queue.AddMessage(trans, new object(), 0);
+                    api.AddMessage(trans, queue, new object(), "");
                 }
 
-                trans.Commit();
+                api.CommitTransaction(trans);
             }
         }
-
+        /* Not sure this will be possible in updated api
         [Test]
         public void Add10000MessagesInTrans()
         {
@@ -105,6 +99,7 @@ namespace NWorkQueue.Tests
                 trans.Commit();
             }
         }
+        */
     }
 }
  

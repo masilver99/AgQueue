@@ -15,7 +15,7 @@ namespace NWorkQueue.Library
         void IStorage.InitializeStorage(bool deleteExistingData, string settings)
         {
             //_con = new SqliteConnection(@"Data Source=:memory:;"); //About 30% faster, and NO durability
-            _con = new SqliteConnection();
+            _con = new SqliteConnection(settings);
             _con.Open();
             if (deleteExistingData)
                 DeleteAllTables();
@@ -92,6 +92,7 @@ namespace NWorkQueue.Library
                 " ExpiryDate DateTime NOT NULL, " +
                 " CorrelationId INTEGER, " +
                 " GroupName TEXT, " +
+                " Metadata TEXT, " +
                 " Data BLOB," +
                 " FOREIGN KEY(QueueId) REFERENCES Queues(Id), " +
                 " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
@@ -163,17 +164,17 @@ namespace NWorkQueue.Library
             _con.Execute(sql, new { State = MessageState.Active, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as InternalTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.CommitAddedMessages(int transId, IStorageTransaction storageTrans)
+        void IStorage.CommitAddedMessages(long transId, IStorageTransaction storageTrans)
         {
             var sql =
-                "Update Messages SET STATE = @State AND TransactionId = NULL AND TransactionAction = NULL where TransactionId = @TranId  and TransactionAction = @TranAction;";
+                "Update Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL where TransactionId = @TranId  and TransactionAction = @TranAction;";
             _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { State = MessageState.Active.Value, TranId = transId, TranAction = TransactionAction.Add.Value });
         }
 
-        void IStorage.CommitPulledMessages(int transId, IStorageTransaction storageTrans, DateTime commitDateTime)
+        void IStorage.CommitPulledMessages(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
         {
             var sql =
-                "Update Messages SET STATE = @State AND TransactionId = NULL AND TransactionAction = NULL AND CloseDateTime = @CloseDateTime where TransactionId = @TranId  and TransactionAction = @TranAction;";
+                "Update Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime where TransactionId = @TranId  and TransactionAction = @TranAction;";
             _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction,
                 param: new
                 {
@@ -184,7 +185,7 @@ namespace NWorkQueue.Library
                 });
         }
 
-        void IStorage.CommitMessageTransaction(int transId, IStorageTransaction storageTrans, DateTime commitDateTime)
+        void IStorage.CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
         {
             var sql = "UPDATE Transactions SET Active = 0, EndDateTime = @EndDateTime WHERE Id = @TranId;";
             _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { TranId = transId, EndDateTime = commitDateTime });
@@ -207,7 +208,29 @@ namespace NWorkQueue.Library
         {
             var sql = "DELETE FROM Queues WHERE Id = @Id;";
             _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { Id = id });
+        }
 
+        void IStorage.AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "")
+        {
+            var sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data, CorrelationId, GroupName, Metadata) VALUES " +
+                      "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Data, @CorrelationId, @GroupName, @Metadata);";
+
+            _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new
+            {
+                Id = nextId,
+                QueueId = queueId,
+                TransactionId = transId,
+                TransactionAction = TransactionAction.Pull.Value,
+                State = MessageState.InTransaction.Value,
+                AddDateTime = addDateTime,
+                Priority = priority,
+                MaxRetries = maxRetries,
+                ExpiryDate = expiryDateTime ?? DateTime.MaxValue,
+                Data = compressedMessage,
+                CorrelationId = correlation,
+                GroupName = groupName,
+                Metadata = metaData
+            });
         }
     }
 

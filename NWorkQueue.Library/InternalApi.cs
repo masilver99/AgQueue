@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+[assembly: InternalsVisibleTo("NWorkQueue.Tests")]
 
 namespace NWorkQueue.Library
 {
@@ -32,9 +32,9 @@ namespace NWorkQueue.Library
         public InternalApi(bool deleteExistingData = false)
         {
             //Setup Storage
-            //We can set this by config at a later time.  Currently, only Sqlite is supported
+            //TODO: We can set this by config at a later time.  Currently, only Sqlite is supported
             _storage = new StorageSqlite();
-            _storage.InitializeStorage(false, @"Data Source=SqlLite.db;");
+            _storage.InitializeStorage(deleteExistingData, @"Data Source=SqlLite.db;");
 
             //Get starting Id's.  These are used to increment primary keys.
             _transId = _storage.GetMaxTransId();
@@ -71,13 +71,13 @@ namespace NWorkQueue.Library
                 RollbackTransaction(transId);
                 return TransactionResult.Expired;
             }
-            
+
             //Transaction is valid, so let's update it
             _storage.UpdateTransaction(transId, _expiryTimeInMinutes);
             return TransactionResult.Success;
         }
 
-        internal TransactionResult CommitTransaction(int transId)
+        internal TransactionResult CommitTransaction(long transId)
         {
             var storageTransaction = _storage.BeginStorageTransaction();
 
@@ -95,7 +95,7 @@ namespace NWorkQueue.Library
             }
 
             var commitDateTime = DateTime.Now;
-            
+
             //Updated newly added messages
             _storage.CommitAddedMessages(transId, storageTransaction);
 
@@ -116,7 +116,7 @@ namespace NWorkQueue.Library
 
             //Close the transaction
             _storage.CloseTransaction(transId, storageTrans, closeDateTime);
-            
+
             //Removed messages added during the transaction
             _storage.DeleteNewMessagesByTransId(transId, storageTrans);
 
@@ -148,7 +148,7 @@ namespace NWorkQueue.Library
                 throw new ArgumentException("Queue name cannot be empty", nameof(name));
             ValidateQueueName(in name);
             if (_queueList.ContainsKey(name))
-                    throw new Exception("Queue already exists");
+                throw new Exception("Queue already exists");
 
             //Add new queue
             var nextId = Interlocked.Increment(ref _queueId);
@@ -158,6 +158,7 @@ namespace NWorkQueue.Library
 
             return nextId;
         }
+
         /* Not sure this is needed
         public WorkQueue GetQueue(string queueName)
         {
@@ -197,68 +198,21 @@ namespace NWorkQueue.Library
         }
 
         internal WorkQueueModel QueueModel { get; set; }
-        private QueueQueries _queries;
 
-
-/*        private SqliteCommand cmd { get;set; }
-            _queries = new QueueQueries(internalApi._con);
-        }
-        */
-        public void AddMessage(Int64 transId, Int64 queueId, Object message, string metaData, int priority = 0, int maxRetries = 3, DateTime? rawExpiryDateTime = null)
+        public void AddMessage(Int64 transId, Int64 queueId, Object message, string metaData, int priority = 0,
+            int maxRetries = 3, DateTime? rawExpiryDateTime = null, int correlation = 0, string groupName = null)
         {
 
             var addDateTime = DateTime.Now;
             DateTime expiryDateTime = rawExpiryDateTime ?? DateTime.MaxValue;
             var nextId = Interlocked.Increment(ref _messageId);
             var compressedMessage = MessagePack.LZ4MessagePackSerializer.Serialize(message);
-            _storage.AddMessage(transId, queueId, compressedMessage, addDateTime, metaData)
-
-            _queries.AddMessage.Command.Parameters.Clear();
-            _queries.AddMessage.Command.Parameters.AddWithValue("@Id", nextId);
-            _queries.AddMessage.Command.Parameters.AddWithValue("@QueueId", QueueModel.Id);
-            _queries.AddMessage.Command.Parameters.AddWithValue("@TransactionId", trans.Id);
-            _queries.AddMessage.Command.Parameters.AddWithValue("@TransactionAction", TransactionAction.Add.Value);
-            _queries.AddMessage.Command.Parameters.AddWithValue("@State", MessageState.InTransaction.Value);
-            _queries.AddMessage.Command.Parameters.AddWithValue("@AddDateTime", DateTime.Now);
-            _queries.AddMessage.Command.Parameters.AddWithValue("@Priority", 0);
-            _queries.AddMessage.Command.Parameters.AddWithValue("@MaxRetries", 3);
-            _queries.AddMessage.Command.Parameters.AddWithValue("@ExpiryDate", DateTime.MaxValue);
-            _queries.AddMessage.Command.Parameters.AddWithValue("@Data", );
-            _queries.AddMessage.Command.ExecuteNonQuery();
+            _storage.AddMessage(transId, null, nextId, queueId, compressedMessage, addDateTime, metaData, priority,
+                maxRetries,
+                expiryDateTime, correlation, groupName);
         }
 
-        public void AddMessages(Transaction trans, Object[] messages, int priority)
-        {
-            InternalApi._storage.
-            //Validate Transaction here
-            var dbTrans = InternalApi._con.BeginTransaction();
-            cmd.Transaction = dbTrans;
-            foreach (var message in messages)
-            {
-                var nextId = Interlocked.Increment(ref InternalApi._messageId);
-                _queries.AddMessage.Command.Parameters.Clear();
-                _queries.AddMessage.Command.Parameters.AddWithValue("@Id", nextId);
-                _queries.AddMessage.Command.Parameters.AddWithValue("@QueueId", QueueModel.Id);
-                _queries.AddMessage.Command.Parameters.AddWithValue("@TransactionId", trans.Id);
-                _queries.AddMessage.Command.Parameters.AddWithValue("@TransactionAction", TransactionAction.Add.Value);
-                _queries.AddMessage.Command.Parameters.AddWithValue("@State", MessageState.InTransaction.Value);
-                _queries.AddMessage.Command.Parameters.AddWithValue("@AddDateTime",  DateTime.Now);
-                _queries.AddMessage.Command.Parameters.AddWithValue("@Priority",  0);
-                _queries.AddMessage.Command.Parameters.AddWithValue("@MaxRetries", 3);
-                _queries.AddMessage.Command.Parameters.AddWithValue("@ExpiryDate", DateTime.MaxValue);
-                _queries.AddMessage.Command.Parameters.AddWithValue("@Data", MessagePack.LZ4MessagePackSerializer.Serialize(message));
-                _queries.AddMessage.Command.ExecuteNonQuery();
-                _queries.AddMessage.Command.Transaction = null;
-            }
-
-            dbTrans.Commit();
-        }
     }
-
-    internal class MessageWrapper
-    {
-    }
-
 
     internal class TransactionModel
     {
@@ -348,30 +302,5 @@ namespace NWorkQueue.Library
         Expired = 1,
         Closed = 2,
         NotFound = 3
-    }
-
-    internal class QueueQueries
-    {
-        public CommandQuery AddMessage { get; set; }
-
-        public QueueQueries(SqliteConnection con)
-        {
-            var sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data) VALUES " +
-                      "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Data);";
-
-            AddMessage = new CommandQuery(con, sql);
-        }
-    }
-
-    internal class CommandQuery
-    {
-        public SqliteCommand Command { get; set; }
-        public CommandQuery(SqliteConnection con, string sql)
-        {
-            var cmd = con.CreateCommand();
-            cmd.CommandText = sql;
-            cmd.Prepare();
-            Command = cmd;
-        }
     }
 }

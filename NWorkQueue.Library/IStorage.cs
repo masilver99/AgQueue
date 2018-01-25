@@ -26,12 +26,13 @@ namespace NWorkQueue.Library
         void CloseRetriedMessages(long transId, IStorageTransaction storageTrans);
         void ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime);
         void UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans);
-        void CommitAddedMessages(int transId, IStorageTransaction storageTrans);
-        void CommitPulledMessages(int transId, IStorageTransaction storageTrans, DateTime commitDateTime);
-        void CommitMessageTransaction(int transId, IStorageTransaction storageTrans, DateTime commitDateTime);
+        void CommitAddedMessages(long transId, IStorageTransaction storageTrans);
+        void CommitPulledMessages(long transId, IStorageTransaction storageTrans, DateTime commitDateTime);
+        void CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime);
         SortedList<string, WorkQueueModel> GetFullQueueList();
         void AddQueue(long nextId, string name);
         void DeleteQueue(long id, IStorageTransaction storageTrans);
+        void AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "");
     }
 
     interface IStorageTransaction
