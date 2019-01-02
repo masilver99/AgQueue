@@ -27,7 +27,7 @@ namespace NWorkQueue.Library
 
         //Settings
         //How long until a transcation expires and is automatically rolled back
-        private int _expiryTimeInMinutes = 30;
+        private readonly int _expiryTimeInMinutes = 30;
 
         public InternalApi(bool deleteExistingData = false)
         {
