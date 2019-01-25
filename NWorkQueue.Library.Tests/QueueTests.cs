@@ -4,7 +4,7 @@ using NUnit;
 using NUnit.Framework;
 using NWorkQueue.Library;
 
-namespace NWorkQueue.Tests
+namespace NWorkQueue.Library.Tests
 {
     [TestFixture]
     public class QueueTests
@@ -52,7 +52,7 @@ namespace NWorkQueue.Tests
         }
 
         [Test]
-        public void DeleteQueue()
+        public void DeleteQueueByName()
         {
             using (var api = new InternalApi(true))
             {
@@ -66,40 +66,37 @@ namespace NWorkQueue.Tests
                 );
             }
         }
+
         [Test]
-        public void Add10000Messages()
+        public void DeleteQueueById()
+        {
+            using (var api = new InternalApi(true))
+            {
+                var queueId = api.CreateQueue("WiseMan");
+                Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
+                    delegate { api.DeleteQueue("WISEMEN"); }
+                );
+                api.DeleteQueue(queueId);
+                Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
+                    delegate { api.DeleteQueue(queueId); }
+                );
+            }
+        }
+
+        [Test]
+        public void CheckDeletedQueueForMessages()
         {
             using (var api = new InternalApi(true))
             {
                 var queue = api.CreateQueue("WiseMan");
                 var trans = api.StartTransaction();
-                for (int i = 0; i < 10000; i++)
-                {
-                    api.AddMessage(trans, queue, new object(), "");
-                }
-
+                api.AddMessage(trans, queue, new Object(), null);
                 api.CommitTransaction(trans);
+                Assert.AreEqual(1, api.GetMessageCount(queue));
+                api.DeleteQueue(queue);
+                Assert.AreEqual(0, api.GetMessageCount(queue));
             }
         }
-        /* Not sure this will be possible in updated api
-        [Test]
-        public void Add10000MessagesInTrans()
-        {
-            object[] array = new object[10000];
-            for (int i = 0; i < 10000; i++)
-            {
-                array[i] = new object();
-            }
-
-            using (var api = new InternalApi(true))
-            {
-                var queue = api.CreateQueue("WiseMan");
-                var trans = api.StartTransaction();
-                queue.AddMessage(trans, array, 0);
-                trans.Commit();
-            }
-        }
-        */
     }
 }
  

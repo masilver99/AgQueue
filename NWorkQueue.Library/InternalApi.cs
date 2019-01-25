@@ -77,6 +77,16 @@ namespace NWorkQueue.Library
             return TransactionResult.Success;
         }
 
+        /// <summary>
+        /// Returns the message count for available messages (messages in a transaction will not be included)
+        /// </summary>
+        /// <param name="queue"></param>
+        /// <returns></returns>
+        internal long GetMessageCount(long queue)
+        {
+            return _storage.GetMessageCount(queue);
+        }
+
         internal TransactionResult CommitTransaction(long transId)
         {
             var storageTransaction = _storage.BeginStorageTransaction();
@@ -135,7 +145,7 @@ namespace NWorkQueue.Library
 
         #region Queues
 
-        private void ValidateQueueName(in string queueName)
+        private void ValidateQueueName(string queueName)
         {
             if (!_queueNameRegex.IsMatch(queueName))
                 throw new ArgumentException("Queue name can only contain a-Z, 0-9, ., -, or _");
@@ -146,7 +156,7 @@ namespace NWorkQueue.Library
             //validation
             if (name.Length == 0)
                 throw new ArgumentException("Queue name cannot be empty", nameof(name));
-            ValidateQueueName(in name);
+            ValidateQueueName(name);
             if (_queueList.ContainsKey(name))
                 throw new Exception("Queue already exists");
 
@@ -177,6 +187,11 @@ namespace NWorkQueue.Library
                 throw new ArgumentException("Queue name cannot be empty", nameof(name));
             if (!_queueList.TryGetQueueId(fixedName, out var id))
                 throw new Exception("Queue not found");
+            DeleteQueue(id);
+        }
+
+        public void DeleteQueue(long queueId)
+        {
             var trans = _storage.BeginStorageTransaction();
 
             //TODO: Rollback queue transactions that were being used in message for this queue
@@ -185,10 +200,11 @@ namespace NWorkQueue.Library
             //TODO: Delete actual queue table
 
             //Delete From Queue Table
-            _storage.DeleteQueue(id, trans);
+            _storage.DeleteQueue(queueId, trans);
             trans.Commit();
-            _queueList.Delete(fixedName);
+            _queueList.Delete(queueId);
         }
+
 
         #endregion
 
@@ -279,10 +295,25 @@ namespace NWorkQueue.Library
 
     internal sealed class MessageState
     {
-        public static readonly MessageState Active = new MessageState("Active", 0);
+        /// <summary>
+        /// Active means the message is live and can be pulled from the queue
+        /// </summary>
+        public static readonly MessageState Active = new MessageState("Active", 0);  
+        /// <summary>
+        /// InTransaction means the message is currently tied to a transaction, either during insert of during processing.  IOW, this message is currently being inserted or pulled from the queue.
+        /// </summary>
         public static readonly MessageState InTransaction = new MessageState("InTransaction", 1);
+        /// <summary>
+        /// This message has been processed and will not be pulled
+        /// </summary>
         public static readonly MessageState Processed = new MessageState("Processed", 2);
+        /// <summary>
+        /// Message has expired and will not be pulled
+        /// </summary>
         public static readonly MessageState Expired = new MessageState("Expired", 3);
+        /// <summary>
+        /// Message retry limit has been reached and message will no longer be pulled
+        /// </summary>
         public static readonly MessageState RetryExceeded = new MessageState("RetryExceeded", 4);
 
         public readonly string Name;

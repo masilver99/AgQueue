@@ -33,6 +33,7 @@ namespace NWorkQueue.Library
         void AddQueue(long nextId, string name);
         void DeleteQueue(long id, IStorageTransaction storageTrans);
         void AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "");
+        long GetMessageCount(long queueId);
     }
 
     interface IStorageTransaction

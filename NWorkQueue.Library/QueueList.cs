@@ -5,6 +5,9 @@ using System.Text;
 
 namespace NWorkQueue.Library
 {
+    /// <summary>
+    /// Need to revisit if this cached list of queue names is necessary.  We should be able to use the DB to store these.
+    /// </summary>
     internal class QueueList
     {
         private SortedList<string, WorkQueueModel> _sortedList;
@@ -68,12 +71,25 @@ namespace NWorkQueue.Library
             }
         }
 
-
         public void Delete(string fixedName)
         {
             lock (SortLock)
             {
                 _sortedList.Remove(fixedName);
+            }
+        }
+        public void Delete(long queueId)
+        {
+            lock (SortLock)
+            {
+                foreach (var listItem in _sortedList)
+                {
+                    if (listItem.Value.Id == queueId)
+                    {
+                        _sortedList.Remove(listItem.Key);
+                        return;
+                    }
+                }
             }
         }
     }

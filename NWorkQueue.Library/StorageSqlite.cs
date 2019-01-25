@@ -220,7 +220,7 @@ namespace NWorkQueue.Library
                 Id = nextId,
                 QueueId = queueId,
                 TransactionId = transId,
-                TransactionAction = TransactionAction.Pull.Value,
+                TransactionAction = TransactionAction.Add.Value,
                 State = MessageState.InTransaction.Value,
                 AddDateTime = addDateTime,
                 Priority = priority,
@@ -231,6 +231,12 @@ namespace NWorkQueue.Library
                 GroupName = groupName,
                 Metadata = metaData
             });
+        }
+
+        public long GetMessageCount(long queueId)
+        {
+            var sql = "SELECT count(*) FROM Messages m WHERE m.QueueId = @QueueId AND m.State = @State;";
+            return _con.ExecuteScalar<long>(sql, new { QueueId = queueId, State = MessageState.Active.Value });
         }
     }
 
