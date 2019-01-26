@@ -34,6 +34,15 @@ namespace NWorkQueue.Library
         void DeleteQueue(long id, IStorageTransaction storageTrans);
         void AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "");
         long GetMessageCount(long queueId);
+        /// <summary>
+        /// Returns the id of the Queue.  If no queue is found, returns null
+        /// </summary>
+        /// <param name="name">Name of the queue to lookup</param>
+        /// <returns></returns>
+        long? GetQueueId(string name);
+
+        bool DoesQueueExist(long id);
+        void DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans);
     }
 
     interface IStorageTransaction

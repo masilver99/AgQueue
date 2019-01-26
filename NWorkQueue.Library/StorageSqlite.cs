@@ -22,6 +22,7 @@ namespace NWorkQueue.Library
             CreateTables(); //Non-destructive
         }
 
+        #region Transaction methods
         long IStorage.GetMaxTransId()
         {
             var sql = "SELECT Max(ID) FROM TRANSACTIONS;";
@@ -29,86 +30,6 @@ namespace NWorkQueue.Library
             if (id.HasValue)
                 return id.Value + 1;
             return 0;
-        }
-
-        long IStorage.GetMaxMessageId()
-        {
-            var sql = "SELECT Max(ID) FROM Messages;";
-            var id = _con.ExecuteScalar<int?>(sql);
-            if (id.HasValue)
-                return id.Value + 1;
-            return 0;
-        }
-
-        long IStorage.GetMaxQueueId()
-        {
-            var sql = "SELECT Max(ID) FROM Queues;";
-            var id = _con.ExecuteScalar<long?>(sql);
-            if (id.HasValue)
-                return id.Value;
-            return 0;
-        }
-
-
-        void IDisposable.Dispose()
-        {
-            _con.Dispose();
-        }
-
-        private void CreateTables()
-        {
-            var sql =
-                "PRAGMA foreign_keys = ON;" +
-                "PRAGMA TEMP_STORE = MEMORY;" +
-                //"PRAGMA JOURNAL_MODE = PERSIST;" + //Slower than WAL by about 20+x
-                //"PRAGMA SYNCHRONOUS = FULL;" +       //About 15x slower than NORMAL
-                "PRAGMA SYNCHRONOUS = NORMAL;" +   //
-                "PRAGMA LOCKING_MODE = EXCLUSIVE;" +
-                "PRAGMA journal_mode = WAL;" +
-                //"PRAGMA CACHE_SIZE = 500;" +
-
-                "Create table IF NOT EXISTS Transactions" +
-                "(Id INTEGER PRIMARY KEY," +
-                " Active INTEGER NOT NULL," +
-                " StartDateTime DATETIME NOT NULL," +
-                " ExpiryDateTime DATETIME NOT NULL, " +
-                " EndDateTime DATETIME);" +
-
-                "Create table IF NOT EXISTS Queues" +
-                "(Id INTEGER PRIMARY KEY," +
-                " Name TEXT NOT NULL);" +
-
-                "Create TABLE IF NOT EXISTS Messages " +
-                "(Id INTEGER PRIMARY KEY," +
-                " QueueId INTEGER NOT NULL, " +
-                " TransactionId INTEGER," +
-                " TransactionAction INTEGER," +
-                " State INTEGER NOT NULL, " +
-                " AddDateTime DATETIME NOT NULL," +
-                " CloseDateTime DATETIME, " +
-                " Priority INTEGER NOT NULL, " +
-                " MaxRetries INTEGER NOT NULL, " +
-                " Retries INTEGER NOT NULL, " +
-                " ExpiryDate DateTime NOT NULL, " +
-                " CorrelationId INTEGER, " +
-                " GroupName TEXT, " +
-                " Metadata TEXT, " +
-                " Data BLOB," +
-                " FOREIGN KEY(QueueId) REFERENCES Queues(Id), " +
-                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
-
-            _con.Execute(sql);
-        }
-
-        private void DeleteAllTables()
-        {
-            var sql =
-                "BEGIN;" +
-                "DROP TABLE IF EXISTS Messages; " +
-                "DROP TABLE IF EXISTS Queues;" +
-                "DROP table IF EXISTS Transactions;" +
-                "COMMIT;";
-            _con.Execute(sql);
         }
 
         void IStorage.StartTransaction(long newId, int expiryTimeInMinutes)
@@ -131,13 +52,76 @@ namespace NWorkQueue.Library
 
         IStorageTransaction IStorage.BeginStorageTransaction()
         {
-            return new InternalTransaction() {SqliteTransaction = _con.BeginTransaction()};
+            return new InternalTransaction() { SqliteTransaction = _con.BeginTransaction() };
         }
 
         void IStorage.CloseTransaction(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
         {
             var sql = "Update Transactions SET EndDateTime = @EndDateTime where Id = @tranId";
             _con.Execute(sql, new { transId, EndDateTime = closeDateTime }, (storageTrans as InternalTransaction)?.SqliteTransaction);
+        }
+
+        void IStorage.CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
+        {
+            var sql = "UPDATE Transactions SET Active = 0, EndDateTime = @EndDateTime WHERE Id = @TranId;";
+            _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { TranId = transId, EndDateTime = commitDateTime });
+        }
+
+        #endregion
+
+        #region Queue methods
+        long IStorage.GetMaxQueueId()
+        {
+            var sql = "SELECT Max(ID) FROM Queues;";
+            var id = _con.ExecuteScalar<long?>(sql);
+            if (id.HasValue)
+                return id.Value;
+            return 0;
+        }
+
+        SortedList<string, WorkQueueModel> IStorage.GetFullQueueList()
+        {
+            var sql = "SELECT Name, Id FROM Queues;";
+            return new SortedList<string, WorkQueueModel>(_con.Query(sql).ToDictionary(row => (string)row.Name,
+                row => new WorkQueueModel() { Id = row.Id, Name = row.Name }));
+        }
+
+        void IStorage.AddQueue(long nextId, string name)
+        {
+            var sql = "INSERT INTO Queues (Id, Name) VALUES (@Id, @Name);";
+            _con.Execute(sql, new { Id = nextId, Name = name });
+        }
+
+        void IStorage.DeleteQueue(long id, IStorageTransaction storageTrans)
+        {
+            var sql = "DELETE FROM Queues WHERE Id = @Id;";
+            _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { Id = id });
+        }
+
+        // This search should be case sensitive, only use LIKE with SQLite
+        long? IStorage.GetQueueId(string name)
+        {
+            var sql = "SELECT ID FROM Queues WHERE Name LIKE @Name;";
+            var id = _con.ExecuteScalar<long?>(sql, new {Name = name});
+            return id;
+        }
+
+        bool IStorage.DoesQueueExist(long id)
+        {
+            var sql = "SELECT ID FROM Queues WHERE ID = @id;";
+            var newId = _con.ExecuteScalar<long?>(sql, new {id});
+            return newId.HasValue;
+        }
+        #endregion
+
+        #region Message methods
+        long IStorage.GetMaxMessageId()
+        {
+            var sql = "SELECT Max(ID) FROM Messages;";
+            var id = _con.ExecuteScalar<int?>(sql);
+            if (id.HasValue)
+                return id.Value + 1;
+            return 0;
         }
 
         void IStorage.DeleteNewMessagesByTransId(long transId, IStorageTransaction storageTrans)
@@ -184,30 +168,10 @@ namespace NWorkQueue.Library
                     CloseDateTime = commitDateTime
                 });
         }
-
-        void IStorage.CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
+        public long GetMessageCount(long queueId)
         {
-            var sql = "UPDATE Transactions SET Active = 0, EndDateTime = @EndDateTime WHERE Id = @TranId;";
-            _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { TranId = transId, EndDateTime = commitDateTime });
-        }
-
-        SortedList<string, WorkQueueModel> IStorage.GetFullQueueList()
-        {
-            var sql = "SELECT Name, Id FROM Queues;";
-            return new SortedList<string, WorkQueueModel>(_con.Query(sql).ToDictionary(row => (string) row.Name,
-                row => new WorkQueueModel() {Id = row.Id, Name = row.Name}));
-        }
-
-        void IStorage.AddQueue(long nextId, string name)
-        {
-            var sql = "INSERT INTO Queues (Id, Name) VALUES (@Id, @Name);";
-            _con.Execute(sql, new { Id = nextId, Name = name });
-        }
-
-        void IStorage.DeleteQueue(long id, IStorageTransaction storageTrans)
-        {
-            var sql = "DELETE FROM Queues WHERE Id = @Id;";
-            _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { Id = id });
+            var sql = "SELECT count(*) FROM Messages m WHERE m.QueueId = @QueueId AND m.State = @State;";
+            return _con.ExecuteScalar<long>(sql, new { QueueId = queueId, State = MessageState.Active.Value });
         }
 
         void IStorage.AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "")
@@ -233,10 +197,73 @@ namespace NWorkQueue.Library
             });
         }
 
-        public long GetMessageCount(long queueId)
+        void IStorage.DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans)
         {
-            var sql = "SELECT count(*) FROM Messages m WHERE m.QueueId = @QueueId AND m.State = @State;";
-            return _con.ExecuteScalar<long>(sql, new { QueueId = queueId, State = MessageState.Active.Value });
+            var sql = "Delete FROM Messages WHERE QueueId = @queueId;";
+            _con.Execute(sql, new { queueId }, (storageTrans as InternalTransaction)?.SqliteTransaction);
+        }
+
+        #endregion
+
+        void IDisposable.Dispose()
+        {
+            _con.Dispose();
+        }
+
+        private void CreateTables()
+        {
+            var sql =
+                "PRAGMA foreign_keys = ON;" +
+                "PRAGMA TEMP_STORE = MEMORY;" +
+                //"PRAGMA JOURNAL_MODE = PERSIST;" + //Slower than WAL by about 20+x
+                //"PRAGMA SYNCHRONOUS = FULL;" +       //About 15x slower than NORMAL
+                "PRAGMA SYNCHRONOUS = NORMAL;" +   //
+                "PRAGMA LOCKING_MODE = EXCLUSIVE;" +
+                "PRAGMA journal_mode = WAL;" +
+                //"PRAGMA CACHE_SIZE = 500;" +
+
+                "Create table IF NOT EXISTS Transactions" +
+                "(Id INTEGER PRIMARY KEY," +
+                " Active INTEGER NOT NULL," +
+                " StartDateTime DATETIME NOT NULL," +
+                " ExpiryDateTime DATETIME NOT NULL, " +
+                " EndDateTime DATETIME);" +
+
+                "Create table IF NOT EXISTS Queues" +
+                "(Id INTEGER PRIMARY KEY," +
+                " Name TEXT UNIQUE NOT NULL);" +
+
+                "Create TABLE IF NOT EXISTS Messages " +
+                "(Id INTEGER PRIMARY KEY," +
+                " QueueId INTEGER NOT NULL, " +
+                " TransactionId INTEGER," +
+                " TransactionAction INTEGER," +
+                " State INTEGER NOT NULL, " +
+                " AddDateTime DATETIME NOT NULL," +
+                " CloseDateTime DATETIME, " +
+                " Priority INTEGER NOT NULL, " +
+                " MaxRetries INTEGER NOT NULL, " +
+                " Retries INTEGER NOT NULL, " +
+                " ExpiryDate DateTime NOT NULL, " +
+                " CorrelationId INTEGER, " +
+                " GroupName TEXT, " +
+                " Metadata TEXT, " +
+                " Data BLOB," +
+                " FOREIGN KEY(QueueId) REFERENCES Queues(Id), " +
+                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
+
+            _con.Execute(sql);
+        }
+
+        private void DeleteAllTables()
+        {
+            var sql =
+                "BEGIN;" +
+                "DROP TABLE IF EXISTS Messages; " +
+                "DROP TABLE IF EXISTS Queues;" +
+                "DROP table IF EXISTS Transactions;" +
+                "COMMIT;";
+            _con.Execute(sql);
         }
     }
 

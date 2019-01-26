@@ -19,7 +19,8 @@ namespace NWorkQueue.Library
 
         private IStorage _storage;
 
-        private QueueList _queueList = new QueueList();
+        //TODO: Remove queuelist and just use datebase.  Not worth having to sync with DB
+        //private QueueList _queueList = new QueueList();
 
         private static readonly DateTime MaxDateTime = DateTime.MaxValue;
 
@@ -40,9 +41,6 @@ namespace NWorkQueue.Library
             _transId = _storage.GetMaxTransId();
             _messageId = _storage.GetMaxMessageId();
             _queueId = _storage.GetMaxQueueId();
-
-            //Cache queue names/ids
-            _queueList.Reload(_storage.GetFullQueueList());
         }
 
         internal long StartTransaction()
@@ -151,20 +149,25 @@ namespace NWorkQueue.Library
                 throw new ArgumentException("Queue name can only contain a-Z, 0-9, ., -, or _");
         }
 
+        /// <summary>
+        /// Creates a new queue. Queue cannot already exist
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>The queue Id</returns>
         public long CreateQueue(String name)
         {
             //validation
             if (name.Length == 0)
                 throw new ArgumentException("Queue name cannot be empty", nameof(name));
             ValidateQueueName(name);
-            if (_queueList.ContainsKey(name))
+
+            //Check if queue already exists
+            if (_storage.GetQueueId(name).HasValue)
                 throw new Exception("Queue already exists");
 
             //Add new queue
             var nextId = Interlocked.Increment(ref _queueId);
             _storage.AddQueue(nextId, name);
-            var queueModel = new WorkQueueModel() {Id = nextId, Name = name};
-            _queueList.Add(queueModel);
 
             return nextId;
         }
@@ -185,24 +188,43 @@ namespace NWorkQueue.Library
             var fixedName = name.Trim();
             if (fixedName.Length == 0)
                 throw new ArgumentException("Queue name cannot be empty", nameof(name));
-            if (!_queueList.TryGetQueueId(fixedName, out var id))
+            var id = _storage.GetQueueId(fixedName);
+
+            if (!id.HasValue)
                 throw new Exception("Queue not found");
-            DeleteQueue(id);
+            DeleteQueue(id.Value);
         }
 
+        /// <summary>
+        /// Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
+        /// </summary>
+        /// <param name="queueId"></param>
         public void DeleteQueue(long queueId)
         {
+            // Throw exception if queue does not exist
+            if (!_storage.DoesQueueExist(queueId))
+                throw new Exception("Queue not found");
+
             var trans = _storage.BeginStorageTransaction();
+            try
+            {
+                //TODO: Rollback queue transactions that were being used in message for this queue
+                //UpdateTransaction Set Active = false
 
-            //TODO: Rollback queue transactions that were being used in message for this queue
-            //TODO: Delete Messages
 
-            //TODO: Delete actual queue table
+                //TODO: Delete Messages
+                _storage.DeleteMessagesByQueueId(queueId, trans);
 
-            //Delete From Queue Table
-            _storage.DeleteQueue(queueId, trans);
-            trans.Commit();
-            _queueList.Delete(queueId);
+                //Delete From Queue Table
+                _storage.DeleteQueue(queueId, trans);
+                trans.Commit();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                trans.Rollback();
+            }
+
         }
 
 
