@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Dapper;
-using Microsoft.Data.Sqlite;
-using SQLitePCL;
-using NWorkQueue.Common;
-using NWorkQueue.Common.Models;
-
-namespace NWorkQueue.Sqlite
+﻿namespace NWorkQueue.Sqlite
 {
+    using System;
+    using Dapper;
+    using Microsoft.Data.Sqlite;
+    using NWorkQueue.Common;
 
     public class StorageSqlite : IStorage
     {
@@ -52,7 +46,7 @@ namespace NWorkQueue.Sqlite
         public TransactionModel GetTransactionById(long transId, IStorageTransaction storageTrans)
         {
             const string sql = "SELECT * FROM Transactions WHERE Id = @Id";
-            return this._con.QueryFirstOrDefault<TransactionModel>(sql, new { Id = transId }, (storageTrans as InternalTransaction)?.SqliteTransaction);
+            return this._con.QueryFirstOrDefault<TransactionModel>(sql, new { Id = transId }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
         public TransactionModel GetTransactionById(long transId)
@@ -68,19 +62,19 @@ namespace NWorkQueue.Sqlite
 
         IStorageTransaction IStorage.BeginStorageTransaction()
         {
-            return new InternalTransaction() { SqliteTransaction = _con.BeginTransaction() };
+            return new DbTransaction() { SqliteTransaction = _con.BeginTransaction() };
         }
 
         void IStorage.CloseTransaction(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
         {
             const string sql = "Update Transactions SET EndDateTime = @EndDateTime where Id = @tranId";
-            this._con.Execute(sql, new { transId, EndDateTime = closeDateTime }, (storageTrans as InternalTransaction)?.SqliteTransaction);
+            this._con.Execute(sql, new { transId, EndDateTime = closeDateTime }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
         void IStorage.CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
         {
             const string sql = "UPDATE Transactions SET Active = 0, EndDateTime = @EndDateTime WHERE Id = @TranId;";
-            this._con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { TranId = transId, EndDateTime = commitDateTime });
+            this._con.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: new { TranId = transId, EndDateTime = commitDateTime });
         }
 
         #endregion
@@ -107,7 +101,7 @@ namespace NWorkQueue.Sqlite
         void IStorage.DeleteQueue(long id, IStorageTransaction storageTrans)
         {
             const string sql = "DELETE FROM Queues WHERE Id = @Id;";
-            this._con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { Id = id });
+            this._con.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: new { Id = id });
         }
 
         // This search should be case sensitive, only use LIKE with SQLite
@@ -142,39 +136,41 @@ namespace NWorkQueue.Sqlite
         void IStorage.DeleteNewMessagesByTransId(long transId, IStorageTransaction storageTrans)
         {
             const string sql = "Delete FROM Messages WHERE TransactionId = @tranId and TransactionAction = @TranAction";
-            this._con.Execute(sql, new { transId, TranAction = TransactionAction.Add.Value }, (storageTrans as InternalTransaction)?.SqliteTransaction);
+            this._con.Execute(sql, new { transId, TranAction = TransactionAction.Add.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
         void IStorage.CloseRetriedMessages(long transId, IStorageTransaction storageTrans)
         {
             const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and Retries >= MaxRetries";
-            this._con.Execute(sql, new { State = MessageState.RetryExceeded, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as InternalTransaction)?.SqliteTransaction);
+            this._con.Execute(sql, new { State = MessageState.RetryExceeded, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
         void IStorage.ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
         {
             const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and ExpiryDate <= @ExpiryDate";
-            this._con.Execute(sql, new { State = MessageState.Expired, transId, TranAction = TransactionAction.Pull.Value, ExpiryDate = closeDateTime }, (storageTrans as InternalTransaction)?.SqliteTransaction);
+            this._con.Execute(sql, new { State = MessageState.Expired, transId, TranAction = TransactionAction.Pull.Value, ExpiryDate = closeDateTime }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
         void IStorage.UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans)
         {
             const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, Retries = Retries + 1 WHERE TransactionId = @tranId and TransactionAction = @TranAction;";
-            this._con.Execute(sql, new { State = MessageState.Active, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as InternalTransaction)?.SqliteTransaction);
+            this._con.Execute(sql, new { State = MessageState.Active, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
         void IStorage.CommitAddedMessages(long transId, IStorageTransaction storageTrans)
         {
             const string sql =
                 "Update Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL where TransactionId = @TranId  and TransactionAction = @TranAction;";
-            this._con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { State = MessageState.Active.Value, TranId = transId, TranAction = TransactionAction.Add.Value });
+            this._con.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: new { State = MessageState.Active.Value, TranId = transId, TranAction = TransactionAction.Add.Value });
         }
 
         void IStorage.CommitPulledMessages(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
         {
             const string sql =
                 "Update Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime where TransactionId = @TranId  and TransactionAction = @TranAction;";
-            this._con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction,
+            this._con.Execute(
+                sql, 
+                transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
                 param: new
                 {
                     State = MessageState.Processed.Value,
@@ -195,7 +191,7 @@ namespace NWorkQueue.Sqlite
             const string sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data, CorrelationId, GroupName, Metadata) VALUES " +
                       "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Data, @CorrelationId, @GroupName, @Metadata);";
 
-            this._con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction,
+            this._con.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
                 param: new
                 {
                     Id = nextId,
@@ -217,7 +213,7 @@ namespace NWorkQueue.Sqlite
         void IStorage.DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans)
         {
             const string sql = "Delete FROM Messages WHERE QueueId = @queueId;";
-            this._con.Execute(sql, new { queueId }, (storageTrans as InternalTransaction)?.SqliteTransaction);
+            this._con.Execute(sql, new { queueId }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
         #endregion
@@ -287,21 +283,6 @@ namespace NWorkQueue.Sqlite
                 "DROP table IF EXISTS Transactions;" +
                 "COMMIT;";
             this._con.Execute(sql);
-        }
-    }
-
-    internal class InternalTransaction : IStorageTransaction
-    {
-        internal SqliteTransaction SqliteTransaction { get; set; }
-
-        void IStorageTransaction.Commit()
-        {
-            SqliteTransaction.Commit();
-        }
-
-        void IStorageTransaction.Rollback()
-        {
-            SqliteTransaction.Rollback();
         }
     }
 }

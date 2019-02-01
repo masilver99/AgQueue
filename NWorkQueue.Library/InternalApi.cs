@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -170,7 +166,7 @@ namespace NWorkQueue.Library
         /// </summary>
         /// <param name="name"></param>
         /// <returns>The queue Id</returns>
-        public long CreateQueue(String name)
+        public long CreateQueue(string name)
         {
             // validation
             if (name.Length == 0)
@@ -268,9 +264,7 @@ namespace NWorkQueue.Library
             DateTime expiryDateTime = rawExpiryDateTime ?? DateTime.MaxValue;
             var nextId = Interlocked.Increment(ref this._messageId);
             var compressedMessage = MessagePack.LZ4MessagePackSerializer.Serialize(message);
-            this.storage.AddMessage(transId, null, nextId, queueId, compressedMessage, addDateTime, metaData, priority,
-                maxRetries,
-                expiryDateTime, correlation, groupName);
+            this.storage.AddMessage(transId, null, nextId, queueId, compressedMessage, addDateTime, metaData, priority, maxRetries, expiryDateTime, correlation, groupName);
         }
     }
 }

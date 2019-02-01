@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NWorkQueue.Common
+﻿namespace NWorkQueue.Common
 {
     // This may need to be in the public API
     public enum TransactionResult

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NWorkQueue.Common
+﻿namespace NWorkQueue.Common
 {
     public sealed class TransactionAction
     {

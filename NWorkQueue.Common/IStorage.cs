@@ -1,6 +1,4 @@
-﻿using NWorkQueue.Common.Models;
-
-namespace NWorkQueue.Common
+﻿namespace NWorkQueue.Common
 {
     using System;
     using System.Collections.Generic;
