@@ -12,7 +12,7 @@ namespace NWorkQueue.Library
     {
         private SqliteConnection _con;
 
-        void IStorage.InitializeStorage(bool deleteExistingData, string settings)
+        public void InitializeStorage(bool deleteExistingData, string settings)
         {
             //_con = new SqliteConnection(@"Data Source=:memory:;"); //About 30% faster, and NO durability
             _con = new SqliteConnection(settings);
@@ -23,7 +23,7 @@ namespace NWorkQueue.Library
         }
 
         #region Transaction methods
-        long IStorage.GetMaxTransId()
+        public long GetMaxTransId()
         {
             var sql = "SELECT Max(ID) FROM TRANSACTIONS;";
             var id = _con.ExecuteScalar<int?>(sql);
@@ -32,36 +32,36 @@ namespace NWorkQueue.Library
             return 0;
         }
 
-        void IStorage.StartTransaction(long newId, int expiryTimeInMinutes)
+        public void StartTransaction(long newId, int expiryTimeInMinutes)
         {
             var sql = "INSERT INTO Transactions (Id, Active, StartDateTime, ExpiryDateTime) VALUES (@Id, 1, @StartDateTime, @ExpiryDateTime)";
             _con.Execute(sql, new { StartDateTime = DateTime.Now, ExpiryDateTime = DateTime.Now.AddMinutes(expiryTimeInMinutes), Id = newId });
         }
 
-        TransactionModel IStorage.GetTransactionById(long transId, IStorageTransaction storageTrans = null)
+        public TransactionModel GetTransactionById(long transId, IStorageTransaction storageTrans = null)
         {
             var sql = "SELECT * FROM Transactions WHERE Id = @Id";
             return _con.QueryFirstOrDefault<TransactionModel>(sql, new { Id = transId }, (storageTrans as InternalTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.UpdateTransaction(long transId, int expiryTimeInMinutes)
+        public void UpdateTransaction(long transId, int expiryTimeInMinutes)
         {
             var sql = "UPDATE Transaction SET ExpiryDateTime = @DateTime WHERE Id = @Id";
             _con.Execute(sql, new { DateTime = DateTime.Now.AddMinutes(expiryTimeInMinutes), Id = transId });
         }
 
-        IStorageTransaction IStorage.BeginStorageTransaction()
+        public IStorageTransaction BeginStorageTransaction()
         {
             return new InternalTransaction() { SqliteTransaction = _con.BeginTransaction() };
         }
 
-        void IStorage.CloseTransaction(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
+        public void CloseTransaction(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
         {
             var sql = "Update Transactions SET EndDateTime = @EndDateTime where Id = @tranId";
             _con.Execute(sql, new { transId, EndDateTime = closeDateTime }, (storageTrans as InternalTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
+        public void CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
         {
             var sql = "UPDATE Transactions SET Active = 0, EndDateTime = @EndDateTime WHERE Id = @TranId;";
             _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { TranId = transId, EndDateTime = commitDateTime });
@@ -70,7 +70,7 @@ namespace NWorkQueue.Library
         #endregion
 
         #region Queue methods
-        long IStorage.GetMaxQueueId()
+        public long GetMaxQueueId()
         {
             var sql = "SELECT Max(ID) FROM Queues;";
             var id = _con.ExecuteScalar<long?>(sql);
@@ -79,34 +79,34 @@ namespace NWorkQueue.Library
             return 0;
         }
 
-        SortedList<string, WorkQueueModel> IStorage.GetFullQueueList()
+        public SortedList<string, WorkQueueModel> GetFullQueueList()
         {
             var sql = "SELECT Name, Id FROM Queues;";
             return new SortedList<string, WorkQueueModel>(_con.Query(sql).ToDictionary(row => (string)row.Name,
                 row => new WorkQueueModel() { Id = row.Id, Name = row.Name }));
         }
 
-        void IStorage.AddQueue(long nextId, string name)
+        public void AddQueue(long nextId, string name)
         {
             var sql = "INSERT INTO Queues (Id, Name) VALUES (@Id, @Name);";
             _con.Execute(sql, new { Id = nextId, Name = name });
         }
 
-        void IStorage.DeleteQueue(long id, IStorageTransaction storageTrans)
+        public void DeleteQueue(long id, IStorageTransaction storageTrans)
         {
             var sql = "DELETE FROM Queues WHERE Id = @Id;";
             _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { Id = id });
         }
 
         // This search should be case sensitive, only use LIKE with SQLite
-        long? IStorage.GetQueueId(string name)
+        public long? GetQueueId(string name)
         {
             var sql = "SELECT ID FROM Queues WHERE Name LIKE @Name;";
             var id = _con.ExecuteScalar<long?>(sql, new {Name = name});
             return id;
         }
 
-        bool IStorage.DoesQueueExist(long id)
+        public bool DoesQueueExist(long id)
         {
             var sql = "SELECT ID FROM Queues WHERE ID = @id;";
             var newId = _con.ExecuteScalar<long?>(sql, new {id});
@@ -115,7 +115,7 @@ namespace NWorkQueue.Library
         #endregion
 
         #region Message methods
-        long IStorage.GetMaxMessageId()
+        public long GetMaxMessageId()
         {
             var sql = "SELECT Max(ID) FROM Messages;";
             var id = _con.ExecuteScalar<int?>(sql);
@@ -124,38 +124,38 @@ namespace NWorkQueue.Library
             return 0;
         }
 
-        void IStorage.DeleteNewMessagesByTransId(long transId, IStorageTransaction storageTrans)
+        public void DeleteNewMessagesByTransId(long transId, IStorageTransaction storageTrans)
         {
             var sql = "Delete FROM Messages WHERE TransactionId = @tranId and TransactionAction = @TranAction";
             _con.Execute(sql, new { transId, TranAction = TransactionAction.Add.Value }, (storageTrans as InternalTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.CloseRetriedMessages(long transId, IStorageTransaction storageTrans)
+        public void CloseRetriedMessages(long transId, IStorageTransaction storageTrans)
         {
             var sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and Retries >= MaxRetries";
             _con.Execute(sql, new { State = MessageState.RetryExceeded, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as InternalTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
+        public void ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
         {
             var sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and ExpiryDate <= @ExpiryDate";
             _con.Execute(sql, new { State = MessageState.Expired, transId, TranAction = TransactionAction.Pull.Value, ExpiryDate = closeDateTime }, (storageTrans as InternalTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans)
+        public void UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans)
         {
             var sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, Retries = Retries + 1 WHERE TransactionId = @tranId and TransactionAction = @TranAction;";
             _con.Execute(sql, new { State = MessageState.Active, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as InternalTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.CommitAddedMessages(long transId, IStorageTransaction storageTrans)
+        public void CommitAddedMessages(long transId, IStorageTransaction storageTrans)
         {
             var sql =
                 "Update Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL where TransactionId = @TranId  and TransactionAction = @TranAction;";
             _con.Execute(sql, transaction: (storageTrans as InternalTransaction)?.SqliteTransaction, param: new { State = MessageState.Active.Value, TranId = transId, TranAction = TransactionAction.Add.Value });
         }
 
-        void IStorage.CommitPulledMessages(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
+        public void CommitPulledMessages(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
         {
             var sql =
                 "Update Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime where TransactionId = @TranId  and TransactionAction = @TranAction;";
@@ -174,7 +174,7 @@ namespace NWorkQueue.Library
             return _con.ExecuteScalar<long>(sql, new { QueueId = queueId, State = MessageState.Active.Value });
         }
 
-        void IStorage.AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "")
+        public void AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "")
         {
             var sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data, CorrelationId, GroupName, Metadata) VALUES " +
                       "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Data, @CorrelationId, @GroupName, @Metadata);";
@@ -197,7 +197,7 @@ namespace NWorkQueue.Library
             });
         }
 
-        void IStorage.DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans)
+        public void DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans)
         {
             var sql = "Delete FROM Messages WHERE QueueId = @queueId;";
             _con.Execute(sql, new { queueId }, (storageTrans as InternalTransaction)?.SqliteTransaction);
@@ -205,7 +205,7 @@ namespace NWorkQueue.Library
 
         #endregion
 
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             _con.Dispose();
         }
