@@ -4,7 +4,9 @@ using System.Text;
 
 namespace NWorkQueue.Library
 {
-    class Queue
+    public class Queue
     {
+        internal Queue()
+        { }
     }
 }

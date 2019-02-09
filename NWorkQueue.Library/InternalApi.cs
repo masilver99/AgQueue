@@ -12,7 +12,10 @@ namespace NWorkQueue.Library
 {
     public class InternalApi : IDisposable
     {
-
+        public Queue Queue { get; set; }
+        public Transaction Transaction { get; set; }
+        public Message Message { get; set; }
+    
         private long _transId = 0;
         internal long _messageId = 0;
         private long _queueId = 0;
@@ -37,7 +40,9 @@ namespace NWorkQueue.Library
             _storage = new StorageSqlite();
             _storage.InitializeStorage(deleteExistingData, @"Data Source=SqlLite.db;");
 
-            //Get starting Id's.  These are used to increment primary keys.
+            // 
+            // Get starting Id's.  These are used to increment primary keys.
+
             _transId = _storage.GetMaxTransId();
             _messageId = _storage.GetMaxMessageId();
             _queueId = _storage.GetMaxQueueId();
