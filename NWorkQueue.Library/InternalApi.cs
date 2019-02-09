@@ -1,4 +1,8 @@
-﻿using System;
+﻿// <copyright file="InternalApi.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
+using System;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -28,6 +32,8 @@ namespace NWorkQueue.Library
         // How long until a transcation expires and is automatically rolled back
         private readonly int _expiryTimeInMinutes = 30;
 
+        internal WorkQueueModel QueueModel { get; set; }
+
         public InternalApi(bool deleteExistingData = false)
         {
             // Setup Storage
@@ -51,7 +57,7 @@ namespace NWorkQueue.Library
         /// <summary>
         /// Updates the specified transaction, reseting it's timeout
         /// </summary>
-        /// <param name="transId"></param>
+        /// <param name="transId">Returns the Queue Transaction ID</param>
         internal TransactionResult UpdateTransaction(long transId)
         {
             var transModel = this.storage.GetTransactionById(transId);
@@ -82,11 +88,11 @@ namespace NWorkQueue.Library
         /// <summary>
         /// Returns the message count for available messages (messages in a transaction will not be included)
         /// </summary>
-        /// <param name="queue"></param>
-        /// <returns></returns>
-        internal long GetMessageCount(long queue)
+        /// <param name="queueId">The Queue ID to get the message count for</param>
+        /// <returns>Returns message count in specified queue</returns>
+        internal long GetMessageCount(long queueId)
         {
-            return this.storage.GetMessageCount(queue);
+            return this.storage.GetMessageCount(queueId);
         }
 
         internal TransactionResult CommitTransaction(long transId)
@@ -152,19 +158,10 @@ namespace NWorkQueue.Library
 
 
         #region Queues
-
-        private void ValidateQueueName(string queueName)
-        {
-            if (!_queueNameRegex.IsMatch(queueName))
-            {
-                throw new ArgumentException("Queue name can only contain a-Z, 0-9, ., -, or _");
-            }
-        }
-
         /// <summary>
         /// Creates a new queue. Queue cannot already exist
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name of the queue being created.  Case doesn't matter</param>
         /// <returns>The queue Id</returns>
         public long CreateQueue(string name)
         {
@@ -221,7 +218,7 @@ namespace NWorkQueue.Library
         /// <summary>
         /// Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
         /// </summary>
-        /// <param name="queueId"></param>
+        /// <param name="queueId">The Queue ID of the Queue to delete</param>
         public void DeleteQueue(long queueId)
         {
             // Throw exception if queue does not exist
@@ -249,14 +246,20 @@ namespace NWorkQueue.Library
                 trans.Rollback();
             }
         }
+
+        private static void ValidateQueueName(string queueName)
+        {
+            if (!_queueNameRegex.IsMatch(queueName))
+            {
+                throw new ArgumentException("Queue name can only contain a-Z, 0-9, ., -, or _");
+            }
+        }
         #endregion
 
         public void Dispose()
         {
             this.storage.Dispose();
         }
-
-        internal WorkQueueModel QueueModel { get; set; }
 
         public void AddMessage(long transId, long queueId, object message, string metaData, int priority = 0, int maxRetries = 3, DateTime? rawExpiryDateTime = null, int correlation = 0, string groupName = null)
         {
