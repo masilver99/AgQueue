@@ -95,8 +95,11 @@ namespace NWorkQueue.Common
         /// <summary>
         /// Returns the id of the Queue.  If no queue is found, returns null
         /// </summary>
+        /// <remarks>
+        /// This search should be case sensitive, only use LIKE with SQLite
+        /// </remarks>
         /// <param name="name">Name of the queue to lookup</param>
-        /// <returns></returns>
+        /// <returns>Queue ID or null if queue not found</returns>
         long? GetQueueId(string name);
 
         bool DoesQueueExist(long id);

@@ -15,7 +15,9 @@ namespace NWorkQueue.Sqlite
         private SqliteConnection connection;
 
         // IStorage methods below
-        void IStorage.InitializeStorage(bool deleteExistingData, string settings)
+
+        /// <inheritdoc/>
+        public void InitializeStorage(bool deleteExistingData, string settings)
         {
             // connection = new SqliteConnection(@"Data Source=:memory:;"); //About 30% faster, and NO durability
             this.connection = new SqliteConnection(settings);
@@ -29,6 +31,8 @@ namespace NWorkQueue.Sqlite
         }
 
         #region Transaction methods
+
+        /// <inheritdoc/>
         public long GetMaxTransactionId()
         {
             const string sql = "SELECT Max(ID) FROM TRANSACTIONS;";
@@ -41,36 +45,42 @@ namespace NWorkQueue.Sqlite
             return 0;
         }
 
-        void IStorage.StartTransaction(long newId, int expiryTimeInMinutes)
+        /// <inheritdoc/>
+        public void StartTransaction(long newId, int expiryTimeInMinutes)
         {
             const string sql = "INSERT INTO Transactions (Id, Active, StartDateTime, ExpiryDateTime) VALUES (@Id, 1, @StartDateTime, @ExpiryDateTime)";
             this.connection.Execute(sql, new { StartDateTime = DateTime.Now, ExpiryDateTime = DateTime.Now.AddMinutes(expiryTimeInMinutes), Id = newId });
         }
 
+        /// <inheritdoc/>
         public TransactionModel GetTransactionById(long transId, IStorageTransaction storageTrans = null)
         {
             const string sql = "SELECT * FROM Transactions WHERE Id = @Id";
             return this.connection.QueryFirstOrDefault<TransactionModel>(sql, new { Id = transId }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.ExtendTransaction(long transId, int expiryTimeInMinutes)
+        /// <inheritdoc/>
+        public void ExtendTransaction(long transId, int expiryTimeInMinutes)
         {
             const string sql = "UPDATE Transaction SET ExpiryDateTime = @DateTime WHERE Id = @Id";
             this.connection.Execute(sql, new { DateTime = DateTime.Now.AddMinutes(expiryTimeInMinutes), Id = transId });
         }
 
-        IStorageTransaction IStorage.BeginStorageTransaction()
+        /// <inheritdoc/>
+        public IStorageTransaction BeginStorageTransaction()
         {
             return new DbTransaction() { SqliteTransaction = this.connection.BeginTransaction() };
         }
 
-        void IStorage.CloseTransaction(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
+        /// <inheritdoc/>
+        public void CloseTransaction(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
         {
             const string sql = "Update Transactions SET EndDateTime = @EndDateTime where Id = @tranId";
             this.connection.Execute(sql, new { transId, EndDateTime = closeDateTime }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
+        /// <inheritdoc/>
+        public void CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
         {
             const string sql = "UPDATE Transactions SET Active = 0, EndDateTime = @EndDateTime WHERE Id = @TranId;";
             this.connection.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: new { TranId = transId, EndDateTime = commitDateTime });
@@ -79,7 +89,9 @@ namespace NWorkQueue.Sqlite
         #endregion
 
         #region Queue methods
-        long IStorage.GetMaxQueueId()
+
+        /// <inheritdoc/>
+        public long GetMaxQueueId()
         {
             const string sql = "SELECT Max(ID) FROM Queues;";
             var id = this.connection.ExecuteScalar<long?>(sql);
@@ -91,27 +103,30 @@ namespace NWorkQueue.Sqlite
             return 0;
         }
 
-        void IStorage.AddQueue(long nextId, string name)
+        /// <inheritdoc/>
+        public void AddQueue(long nextId, string name)
         {
             const string sql = "INSERT INTO Queues (Id, Name) VALUES (@Id, @Name);";
             this.connection.Execute(sql, new { Id = nextId, Name = name });
         }
 
-        void IStorage.DeleteQueue(long id, IStorageTransaction storageTrans)
+        /// <inheritdoc/>
+        public void DeleteQueue(long id, IStorageTransaction storageTrans)
         {
             const string sql = "DELETE FROM Queues WHERE Id = @Id;";
             this.connection.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: new { Id = id });
         }
 
-        // This search should be case sensitive, only use LIKE with SQLite
-        long? IStorage.GetQueueId(string name)
+        /// <inheritdoc/>
+        public long? GetQueueId(string name)
         {
             const string sql = "SELECT ID FROM Queues WHERE Name LIKE @Name;";
             var id = this.connection.ExecuteScalar<long?>(sql, new { Name = name });
             return id;
         }
 
-        bool IStorage.DoesQueueExist(long id)
+        /// <inheritdoc/>
+        public bool DoesQueueExist(long id)
         {
             const string sql = "SELECT ID FROM Queues WHERE ID = @id;";
             var newId = this.connection.ExecuteScalar<long?>(sql, new { id });
@@ -120,7 +135,9 @@ namespace NWorkQueue.Sqlite
         #endregion
 
         #region Message methods
-        long IStorage.GetMaxMessageId()
+
+        /// <inheritdoc/>
+        public long GetMaxMessageId()
         {
             const string sql = "SELECT Max(ID) FROM Messages;";
             var id = this.connection.ExecuteScalar<int?>(sql);
@@ -132,38 +149,44 @@ namespace NWorkQueue.Sqlite
             return 0;
         }
 
-        void IStorage.DeleteNewMessagesByTransId(long transId, IStorageTransaction storageTrans)
+        /// <inheritdoc/>
+        public void DeleteNewMessagesByTransId(long transId, IStorageTransaction storageTrans)
         {
             const string sql = "Delete FROM Messages WHERE TransactionId = @tranId and TransactionAction = @TranAction";
             this.connection.Execute(sql, new { transId, TranAction = TransactionAction.Add.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.CloseRetriedMessages(long transId, IStorageTransaction storageTrans)
+        /// <inheritdoc/>
+        public void CloseRetriedMessages(long transId, IStorageTransaction storageTrans)
         {
             const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and Retries >= MaxRetries";
             this.connection.Execute(sql, new { State = MessageState.RetryExceeded, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
+        /// <inheritdoc/>
+        public void ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
         {
             const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and ExpiryDate <= @ExpiryDate";
             this.connection.Execute(sql, new { State = MessageState.Expired, transId, TranAction = TransactionAction.Pull.Value, ExpiryDate = closeDateTime }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans)
+        /// <inheritdoc/>
+        public void UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans)
         {
             const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, Retries = Retries + 1 WHERE TransactionId = @tranId and TransactionAction = @TranAction;";
             this.connection.Execute(sql, new { State = MessageState.Active, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
-        void IStorage.CommitAddedMessages(long transId, IStorageTransaction storageTrans)
+        /// <inheritdoc/>
+        public void CommitAddedMessages(long transId, IStorageTransaction storageTrans)
         {
             const string sql =
                 "Update Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL where TransactionId = @TranId  and TransactionAction = @TranAction;";
             this.connection.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: new { State = MessageState.Active.Value, TranId = transId, TranAction = TransactionAction.Add.Value });
         }
 
-        void IStorage.CommitPulledMessages(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
+        /// <inheritdoc/>
+        public void CommitPulledMessages(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
         {
             const string sql =
                 "Update Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime where TransactionId = @TranId  and TransactionAction = @TranAction;";
@@ -182,12 +205,14 @@ namespace NWorkQueue.Sqlite
                 param: param);
         }
 
+        /// <inheritdoc/>
         public long GetMessageCount(long queueId)
         {
             const string sql = "SELECT count(*) FROM Messages m WHERE m.QueueId = @QueueId AND m.State = @State;";
             return this.connection.ExecuteScalar<long>(sql, new { QueueId = queueId, State = MessageState.Active.Value });
         }
 
+        /// <inheritdoc/>
         public void AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "")
         {
             const string sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data, CorrelationId, GroupName, Metadata) VALUES " +
@@ -212,6 +237,7 @@ namespace NWorkQueue.Sqlite
             this.connection.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: param);
         }
 
+        /// <inheritdoc/>
         void IStorage.DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans)
         {
             const string sql = "Delete FROM Messages WHERE QueueId = @queueId;";
@@ -220,6 +246,7 @@ namespace NWorkQueue.Sqlite
 
         #endregion
 
+        /// <inheritdoc/>
         void IDisposable.Dispose()
         {
             this.connection.Dispose();
