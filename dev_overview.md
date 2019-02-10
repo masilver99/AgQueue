@@ -5,9 +5,13 @@ This document serves as a collection of development notes and will grow substant
 ## Project Descriptions: ##
 
 NWorkQueue.Library - The API library performing queue and message functions.  This is the core of the project.  This library will be exposed via REST or a TCP server.  It can use any storage library, although, currently only SQLite is supported.
+
 NWorkQueue.Library.Tests - unit and integration tests for the Library project
+
 NWorkQueue.TcpClient - A TCP client to communicate with NWorkQueue.  This will be used to 
+
 NWorkQueue - Project for Server process hosting the NWorkQueue.Library.  This will eventually be a TCP and REST server, configurable by a config file.
+
 NWorkQueue.Common - Will eventually contain interfaces for the client libraries
 
 ## Expected Development Timeline: ##
@@ -27,6 +31,14 @@ Complete NWorkQueue.Library project.  This should allow for the following functi
 11) GetMessageCount - Get the number of message queued
 
 As each function is completed, unit tests should be created to comfirm functionality
+
+## Developer Expectations ##
+
+Code should follow style cop recommendations.  The style cop analyzer is checked in with each project.  
+
+There should be no warnings in a Pull Requests.
+
+All public methods and properties should be well documented using the documentaion comment: ///
 
 ## Notes ##
 
