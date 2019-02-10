@@ -40,6 +40,18 @@ There should be no warnings in a Pull Requests.
 
 All public methods and properties should be well documented using the documentaion comment: ///
 
+## Design Decisions ##
+
+### Primary Keys ###
+
+Primary keys are int64s. They are created by the application, instead of the database or storage mechanism.  This allows for handling of storage that doesn't provide a way to increment the primary key.    
+
+While using something like a GUID would come with certain advantages, I've seen problems with using them.  Many databases don't index them effeciently when they aren't sequential. Performance could be impacted with a great deal of lookups by the primary key.  I've seen SQLServer suffer when using GUIDs as the primary key.
+
+Not using GUID has some serious tradeoffs.  Only one process can use the storage, since multiple processes would cause primary key conflicts.
+
+I'm not opposed to revisiting the use of GUID primary keys, but for the time being Int64's should be adequate.
+
 ## Notes ##
 
 Queue names are case sensitive
