@@ -1,4 +1,8 @@
-﻿namespace NWorkQueue.Library
+﻿// <copyright file="Queue.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
+namespace NWorkQueue.Library
 {
     using System;
     using System.Text.RegularExpressions;
@@ -7,26 +11,18 @@
 
     public class Queue
     {
-        private long queueId = 0;
+        private static readonly Regex QueueNameRegex = new Regex(@"^[A-Za-z0-9\.\-_]+$", RegexOptions.Compiled);
 
-        private IStorage storage;
+        private readonly IStorage storage;
 
-        static readonly Regex QueueNameRegex = new Regex(@"^[A-Za-z0-9\.\-_]+$", RegexOptions.Compiled);
+        private long currQueueId = 0;
 
         internal Queue(IStorage storage)
         {
             this.storage = storage;
 
             // Get starting Id. These are used to increment primary keys.
-            this.queueId = this.storage.GetMaxQueueId();
-        }
-
-        private void ValidateQueueName(string queueName)
-        {
-            if (!QueueNameRegex.IsMatch(queueName))
-            {
-                throw new ArgumentException("Queue name can only contain a-Z, 0-9, ., -, or _");
-            }
+            this.currQueueId = this.storage.GetMaxQueueId();
         }
 
         /// <summary>
@@ -51,7 +47,7 @@
             }
 
             // Add new queue
-            var nextId = Interlocked.Increment(ref this.queueId);
+            var nextId = Interlocked.Increment(ref this.currQueueId);
             this.storage.AddQueue(nextId, name);
 
             return nextId;
@@ -68,16 +64,22 @@
             return new WorkQueue(this, workQueueModel);
         }
         */
-        public void DeleteQueue(String name)
+        public void DeleteQueue(string name)
         {
             var fixedName = name.Trim();
             if (fixedName.Length == 0)
+            {
                 throw new ArgumentException("Queue name cannot be empty", nameof(name));
+            }
+
             var id = this.storage.GetQueueId(fixedName);
 
             if (!id.HasValue)
+            {
                 throw new Exception("Queue not found");
-            DeleteQueue(id.Value);
+            }
+
+            this.DeleteQueue(id.Value);
         }
 
         /// <summary>
@@ -88,16 +90,17 @@
         {
             // Throw exception if queue does not exist
             if (!this.storage.DoesQueueExist(queueId))
+            {
                 throw new Exception("Queue not found");
+            }
 
             var trans = this.storage.BeginStorageTransaction();
             try
             {
-                //TODO: Rollback queue transactions that were being used in message for this queue
-                //UpdateTransaction Set Active = false
+                // TODO: Rollback queue transactions that were being used in message for this queue
+                // ExtendTransaction Set Active = false
 
-
-                //TODO: Delete Messages
+                // TODO: Delete Messages
                 this.storage.DeleteMessagesByQueueId(queueId, trans);
 
                 // Delete From Queue Table
@@ -109,7 +112,14 @@
                 Console.WriteLine(e);
                 trans.Rollback();
             }
+        }
 
+        private void ValidateQueueName(string queueName)
+        {
+            if (!QueueNameRegex.IsMatch(queueName))
+            {
+                throw new ArgumentException("Queue name can only contain a-Z, 0-9, ., -, or _");
+            }
         }
     }
 }

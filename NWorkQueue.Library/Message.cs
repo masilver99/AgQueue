@@ -1,4 +1,8 @@
-﻿namespace NWorkQueue.Library
+﻿// <copyright file="Message.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
+namespace NWorkQueue.Library
 {
     using System;
     using System.Threading;
@@ -6,9 +10,9 @@
 
     public class Message
     {
-        private long currMessageId = 0;
+        private readonly IStorage storage;
 
-        private IStorage storage;
+        private long currMessageId = 0;
 
         internal Message(IStorage storage)
         {

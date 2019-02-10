@@ -1,7 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\dev\NWorkQueue\NWorkQueue.Sqlite\NWorkQueue.Sqlite.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +19,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NWorkQueue.Common\NWorkQueue.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
 
 </Project>

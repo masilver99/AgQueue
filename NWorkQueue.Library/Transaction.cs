@@ -1,4 +1,8 @@
-﻿namespace NWorkQueue.Library
+﻿// <copyright file="Transaction.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
+namespace NWorkQueue.Library
 {
     using System;
     using System.Threading;
@@ -10,9 +14,9 @@
         // How long until a transcation expires and is automatically rolled back
         private readonly int expiryTimeInMinutes = 30;
 
-        private long transId = 0;
+        private readonly IStorage storage;
 
-        private IStorage storage;
+        private long currTransId = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Transaction"/> class.
@@ -23,13 +27,13 @@
             this.storage = storage;
 
             // Get starting Id.  used to increment primary keys.
-            this.transId = this.storage.GetMaxTransId();
+            this.currTransId = this.storage.GetMaxTransactionId();
         }
 
         internal long StartTransaction()
         {
-            var newId = Interlocked.Increment(ref this.transId);
-            this.storage.StartTransaction(newId, _expiryTimeInMinutes);
+            var newId = Interlocked.Increment(ref this.currTransId);
+            this.storage.StartTransaction(newId, this.expiryTimeInMinutes);
             return newId;
         }
 
@@ -60,7 +64,7 @@
             }
 
             // Transaction is valid, so let's update it
-            this.storage.UpdateTransaction(transId, _expiryTimeInMinutes);
+            this.storage.ExtendTransaction(transId, this.expiryTimeInMinutes);
             return TransactionResult.Success;
         }
 
@@ -134,6 +138,5 @@
 
             storageTrans.Commit();
         }
-
     }
 }

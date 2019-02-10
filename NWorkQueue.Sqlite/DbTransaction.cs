@@ -1,4 +1,8 @@
-﻿namespace NWorkQueue.Sqlite
+﻿// <copyright file="DbTransaction.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace NWorkQueue.Sqlite
 {
     using Microsoft.Data.Sqlite;
     using NWorkQueue.Common;

@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NWorkQueue.Library</name>
+    </assembly>
+    <members>
+        <member name="T:NWorkQueue.Library.InternalApi">
+            <summary>
+            Starting point for accessing all queue related APIS
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Library.InternalApi.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NWorkQueue.Library.InternalApi"/> class.
+            </summary>
+            <param name="deleteExistingData">Deletes all Queues, Messages and Transactions</param>
+        </member>
+        <member name="P:NWorkQueue.Library.InternalApi.Queue">
+            <summary>
+            Gets Queue related APIs
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Library.InternalApi.Transaction">
+            <summary>
+            Gets Transaction related APIs
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Library.InternalApi.Message">
+            <summary>
+            Gets Message related APIs
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Library.InternalApi.Dispose">
+            <summary>
+            Disposes of storage resources
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Library.Queue.CreateQueue(System.String)">
+            <summary>
+            Creates a new queue. Queue cannot already exist
+            </summary>
+            <param name="name"></param>
+            <returns>The queue Id</returns>
+        </member>
+        <member name="M:NWorkQueue.Library.Queue.DeleteQueue(System.Int64)">
+            <summary>
+            Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
+            </summary>
+            <param name="queueId"></param>
+        </member>
+        <member name="M:NWorkQueue.Library.Transaction.#ctor(NWorkQueue.Common.IStorage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NWorkQueue.Library.Transaction"/> class.
+            </summary>
+            <param name="storage">An IStorage interface</param>
+        </member>
+        <member name="M:NWorkQueue.Library.Transaction.ExtendTransaction(System.Int64)">
+            <summary>
+            Updates the specified transaction, reseting it's timeout
+            </summary>
+            <param name="transId"></param>
+        </member>
+        <member name="M:NWorkQueue.Library.Transaction.GetMessageCount(System.Int64)">
+            <summary>
+            Returns the message count for available messages (messages in a transaction will not be included)
+            </summary>
+            <param name="queue"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

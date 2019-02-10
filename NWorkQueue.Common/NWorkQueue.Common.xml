@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NWorkQueue.Common</name>
+    </assembly>
+    <members>
+        <member name="M:NWorkQueue.Common.IStorage.InitializeStorage(System.Boolean,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="deleteExistingData"></param>
+            <param name="settings">Could be connection string, could be empty, could be json settings.  Depends on the underlying storage class</param>
+        </member>
+        <member name="M:NWorkQueue.Common.IStorage.GetQueueId(System.String)">
+            <summary>
+            Returns the id of the Queue.  If no queue is found, returns null
+            </summary>
+            <param name="name">Name of the queue to lookup</param>
+            <returns></returns>
+        </member>
+        <member name="P:NWorkQueue.Common.MessageState.Active">
+            <summary>
+            Active means the message is live and can be pulled from the queue
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.MessageState.InTransaction">
+            <summary>
+            InTransaction means the message is currently tied to a transaction, either during insert of during processing.  IOW, this message is currently being inserted or pulled from the queue.
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.MessageState.Processed">
+            <summary>
+            This message has been processed and will not be pulled
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.MessageState.Expired">
+            <summary>
+            Message has expired and will not be pulled
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.MessageState.RetryExceeded">
+            <summary>
+            Message retry limit has been reached and message will no longer be pulled
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.Id">
+            <summary>
+            Generated unique message id
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.MaxRetries">
+            <summary>
+            Numerber of attempts to have message processed, i.e. commited
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.Retries">
+            <summary>
+            Number of Rollbacks or timeouts before the message expires
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.ExpiryDate">
+            <summary>
+            DateTime the message will expire
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.Data">
+            <summary>
+            Actual message data 
+            </summary>
+        </member>
+        <member name="T:NWorkQueue.Common.Models.QueueModel">
+            <summary>
+            Represents a Queue
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Common.Models.QueueModel.#ctor(System.Int64,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NWorkQueue.Common.Models.QueueModel"/> class.
+            </summary>
+            <param name="id">queue Id</param>
+            <param name="name">queue name</param>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.QueueModel.Id">
+            <summary>
+            Gets the unique queue id
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.QueueModel.Name">
+            <summary>
+            Gets the name of the queue
+            </summary>
+        </member>
+        <member name="T:NWorkQueue.Common.Models.TransactionModel">
+            <summary>
+            Represents a Queue Transaction
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Common.Models.TransactionModel.#ctor(System.Int32,System.Boolean,System.DateTime,System.DateTime)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NWorkQueue.Common.Models.TransactionModel"/> class.
+            </summary>
+            <param name="id">primary key</param>
+            <param name="active">Is transaction active</param>
+            <param name="createDateTime">Datetime transaction was created</param>
+            <param name="expiryDateTime">Datetime transaction will expire</param>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.TransactionModel.Id">
+            <summary>
+            Gets the unique ID for a transaction
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.TransactionModel.Active">
+            <summary>
+            Gets a value indicating whether gets the transaction's active state
+            Is the transaction active?  e.g. has it been committed or rolled back
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.TransactionModel.CreateDateTime">
+            <summary>
+            Gets the date and time the transaction was creted
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.TransactionModel.ExpiryDateTime">
+            <summary>
+            Gets the date and time the transaction will expire. e.g. after this datetime, the transaction will automatically rollback
+            </summary>
+        </member>
+    </members>
+</doc>
