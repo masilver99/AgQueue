@@ -21,7 +21,7 @@ namespace NWorkQueue.Common
         Expired = 1,
 
         /// <summary>
-        /// The transaction was already closed 
+        /// The transaction was already closed
         /// </summary>
         Closed = 2,
 

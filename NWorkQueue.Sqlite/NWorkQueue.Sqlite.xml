@@ -4,6 +4,22 @@
         <name>NWorkQueue.Sqlite</name>
     </assembly>
     <members>
+        <member name="T:NWorkQueue.Sqlite.DbTransaction">
+            <summary>
+            Wrapper around SQLite transaction.  Used by storage classes
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.DbTransaction.#ctor(Microsoft.Data.Sqlite.SqliteConnection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NWorkQueue.Sqlite.DbTransaction"/> class.
+            </summary>
+            <param name="connection">SQLite connection</param>
+        </member>
+        <member name="P:NWorkQueue.Sqlite.DbTransaction.SqliteTransaction">
+            <summary>
+            Gets the internal SQLite transaction
+            </summary>
+        </member>
         <member name="M:NWorkQueue.Sqlite.DbTransaction.Commit">
             <inheritdoc/>
         </member>
@@ -60,10 +76,10 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.DeleteMessagesByTransId(System.Int64,NWorkQueue.Common.IStorageTransaction)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CloseRetriedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CloseRetriedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.ExpireOlderMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.ExpireOlderMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime,System.DateTime)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateRetriesOnRollbackedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">

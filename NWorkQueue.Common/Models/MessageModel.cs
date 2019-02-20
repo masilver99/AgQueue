@@ -8,47 +8,74 @@ namespace NWorkQueue.Common.Models
     using System.Collections.Generic;
     using System.Text;
 
+    /// <summary>
+    /// Represents a Queue Message
+    /// </summary>
     internal class MessageModel
     {
         /// <summary>
-        /// Generated unique message id
+        /// Gets generated unique message id
         /// </summary>
-        public int Id { get; set; }
-
-        public int QueueId { get; set; }
-
-        public int TransactionId { get; set; }
-
-        public int TransactionAction { get; set; }
-
-        public DateTime AddDateTime { get; set; }
-
-        public DateTime CloseDateTime { get; set; }
-
-        public int Priority { get; set; }
+        public int Id { get; }
 
         /// <summary>
-        /// Numerber of attempts to have message processed, i.e. commited
+        /// Gets the id of the queue
         /// </summary>
-        public int MaxRetries { get; set; }
+        public int QueueId { get; }
 
         /// <summary>
-        /// Number of Rollbacks or timeouts before the message expires
+        /// Gets the id of the queue transaction
         /// </summary>
-        public int Retries { get; set; } = 0;
+        public int TransactionId { get; }
 
         /// <summary>
-        /// DateTime the message will expire
+        /// Gets the transaction action. i.e. was this message added or pulled in the transaction
         /// </summary>
-        public DateTime ExpiryDate { get; set; }
-
-        public int CorrelationId { get; set; }
-
-        public string Group { get; set; }
+        public int TransactionAction { get; }
 
         /// <summary>
-        /// Actual message data 
+        /// Gets the datetime the message was added
         /// </summary>
-        public byte[] Data { get; set; }
+        public DateTime AddDateTime { get; }
+
+        /// <summary>
+        /// Gets the datetime the message was closed, i.e. processed or cancelled or expired
+        /// </summary>
+        public DateTime CloseDateTime { get; }
+
+        /// <summary>
+        /// Gets the priority of the message.  Lower is higher priority
+        /// </summary>
+        public int Priority { get; }
+
+        /// <summary>
+        /// Gets number of attempts to have message processed, i.e. commited
+        /// </summary>
+        public int MaxRetries { get; }
+
+        /// <summary>
+        /// Gets the number of rollbacks or timeouts before the message expires
+        /// </summary>
+        public int Retries { get; } = 0;
+
+        /// <summary>
+        /// Gets DateTime the message will expire
+        /// </summary>
+        public DateTime ExpiryDate { get; }
+
+        /// <summary>
+        /// Gets the interger correlation id, used by calling application
+        /// </summary>
+        public int CorrelationId { get; }
+
+        /// <summary>
+        /// Gets string group name.  Used by external application for grouping purposes
+        /// </summary>
+        public string Group { get; }
+
+        /// <summary>
+        /// Gets actual message data
+        /// </summary>
+        public byte[] Data { get; }
     }
 }

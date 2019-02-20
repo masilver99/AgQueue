@@ -85,20 +85,90 @@
             <param name="transId">Id of the queue transaction</param>
             <param name="storageTrans">Storage Transaction</param>
         </member>
-        <member name="M:NWorkQueue.Common.IStorage.CloseRetriedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+        <member name="M:NWorkQueue.Common.IStorage.CloseRetriedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
             <summary>
             Close messages that have too many retries
             </summary>
             <param name="transId">Queue transaction id</param>
             <param name="storageTrans">Storage Transaction</param>
+            <param name="closeDateTime">Datetime the message should be marked as closed</param>
         </member>
-        <member name="M:NWorkQueue.Common.IStorage.ExpireOlderMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
+        <member name="M:NWorkQueue.Common.IStorage.ExpireOlderMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime,System.DateTime)">
             <summary>
             Expire messages past their expiration date/time
             </summary>
             <param name="transId">Queue transaction id</param>
-            <param name="storageTrans"></param>
-            <param name="closeDateTime"></param>
+            <param name="storageTrans">Storage Transaction</param>
+            <param name="closeDateTime">Datetime the message should be marked as closed</param>
+            <param name="expiryDateTime">Messages with expiry times before this will be marked closed</param>
+        </member>
+        <member name="M:NWorkQueue.Common.IStorage.UpdateRetriesOnRollbackedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <summary>
+            Update retry counts on rolledback transaction
+            </summary>
+            <param name="transId">Queue transaction id</param>
+            <param name="storageTrans">Storage Transaction</param>
+        </member>
+        <member name="M:NWorkQueue.Common.IStorage.CommitAddedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <summary>
+            Commit added messages marking them as queued
+            </summary>
+            <param name="transId">Queue transaction id</param>
+            <param name="storageTrans">Storage Transaction</param>
+        </member>
+        <member name="M:NWorkQueue.Common.IStorage.CommitPulledMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
+            <summary>
+            Commit pulled messages marking them as complete
+            </summary>
+            <param name="transId">Queue transaction id</param>
+            <param name="storageTrans">Storage Transaction</param>
+            <param name="commitDateTime">Datetime of the commit</param>
+        </member>
+        <member name="M:NWorkQueue.Common.IStorage.CommitMessageTransaction(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
+            <summary>
+            Commit a queue transaction
+            </summary>
+            <param name="transId">Queue transaction id</param>
+            <param name="storageTrans">Storage Transaction</param>
+            <param name="commitDateTime">Datetime of the commit</param>
+        </member>
+        <member name="M:NWorkQueue.Common.IStorage.AddQueue(System.Int64,System.String)">
+            <summary>
+            Create a new Queue in storage
+            </summary>
+            <param name="nextId">ID to use as the queue id</param>
+            <param name="name">Queue name</param>
+        </member>
+        <member name="M:NWorkQueue.Common.IStorage.DeleteQueue(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <summary>
+            Delete a Queue and ALL messages in the Queue
+            </summary>
+            <param name="id">Queue Id of the queue to delete</param>
+            <param name="storageTrans">The storage transaction to perform the operation under</param>
+        </member>
+        <member name="M:NWorkQueue.Common.IStorage.AddMessage(System.Int64,NWorkQueue.Common.IStorageTransaction,System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String)">
+            <summary>
+            Add a message to the storage
+            </summary>
+            <param name="transId">Queue Transaction ID</param>
+            <param name="storageTrans">Storage transaction</param>
+            <param name="nextId">The ID to be used at the primary id, i.e. the message id</param>
+            <param name="queueId">ID of the storage queue</param>
+            <param name="compressedMessage">Message data, compressed</param>
+            <param name="addDateTime">Datetime the message was added</param>
+            <param name="metaData">String metadata on message data</param>
+            <param name="priority">Message priority</param>
+            <param name="maxRetries">How many retries before expires</param>
+            <param name="expiryDateTime">Datetime the message will expire</param>
+            <param name="correlation">Correlation ID</param>
+            <param name="groupName">Group name</param>
+        </member>
+        <member name="M:NWorkQueue.Common.IStorage.GetMessageCount(System.Int64)">
+            <summary>
+            Returns message total message count for a queue
+            </summary>
+            <param name="queueId">ID of the message queue</param>
+            <returns>Returns the count</returns>
         </member>
         <member name="M:NWorkQueue.Common.IStorage.GetQueueId(System.String)">
             <summary>
@@ -112,10 +182,17 @@
         </member>
         <member name="M:NWorkQueue.Common.IStorage.DoesQueueExist(System.Int64)">
             <summary>
-            Does the 
+            Does a Quque exist for the specified id
             </summary>
-            <param name="id"></param>
-            <returns></returns>
+            <param name="id">Quque ID</param>
+            <returns>true if quque exists</returns>
+        </member>
+        <member name="M:NWorkQueue.Common.IStorage.DeleteMessagesByQueueId(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <summary>
+            Delete all messages in a specified queue
+            </summary>
+            <param name="queueId">Queue id</param>
+            <param name="storageTrans">Storage transaction</param>
         </member>
         <member name="T:NWorkQueue.Common.IStorageTransaction">
             <summary>
@@ -132,54 +209,114 @@
             Rollsback the transaction, usually this reprents a database transaction
             </summary>
         </member>
+        <member name="T:NWorkQueue.Common.MessageState">
+            <summary>
+            Current state of a message
+            </summary>
+        </member>
         <member name="P:NWorkQueue.Common.MessageState.Active">
             <summary>
-            Active means the message is live and can be pulled from the queue
+            Gets active value.  Is the message is live and can be pulled from the queue
             </summary>
         </member>
         <member name="P:NWorkQueue.Common.MessageState.InTransaction">
             <summary>
-            InTransaction means the message is currently tied to a transaction, either during insert of during processing.  IOW, this message is currently being inserted or pulled from the queue.
+            Gets InTransaction.  Means the message is currently tied to a transaction, either during insert of during processing.  IOW, this message is currently being inserted or pulled from the queue.
             </summary>
         </member>
         <member name="P:NWorkQueue.Common.MessageState.Processed">
             <summary>
-            This message has been processed and will not be pulled
+            Gets processed state. i.e. This message has been processed and will not be pulled
             </summary>
         </member>
         <member name="P:NWorkQueue.Common.MessageState.Expired">
             <summary>
-            Message has expired and will not be pulled
+            Gets if Message has expired and will not be pulled
             </summary>
         </member>
         <member name="P:NWorkQueue.Common.MessageState.RetryExceeded">
             <summary>
-            Message retry limit has been reached and message will no longer be pulled
+            Gets boolean representing if RetryExceeded. Message retry limit has been reached and message will no longer be pulled
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.MessageState.Name">
+            <summary>
+            Gets the message state string
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.MessageState.Value">
+            <summary>
+            Gets the message state ID
+            </summary>
+        </member>
+        <member name="T:NWorkQueue.Common.Models.MessageModel">
+            <summary>
+            Represents a Queue Message
             </summary>
         </member>
         <member name="P:NWorkQueue.Common.Models.MessageModel.Id">
             <summary>
-            Generated unique message id
+            Gets generated unique message id
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.QueueId">
+            <summary>
+            Gets the id of the queue
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.TransactionId">
+            <summary>
+            Gets the id of the queue transaction
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.TransactionAction">
+            <summary>
+            Gets the transaction action. i.e. was this message added or pulled in the transaction
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.AddDateTime">
+            <summary>
+            Gets the datetime the message was added
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.CloseDateTime">
+            <summary>
+            Gets the datetime the message was closed, i.e. processed or cancelled or expired
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.Priority">
+            <summary>
+            Gets the priority of the message.  Lower is higher priority
             </summary>
         </member>
         <member name="P:NWorkQueue.Common.Models.MessageModel.MaxRetries">
             <summary>
-            Numerber of attempts to have message processed, i.e. commited
+            Gets number of attempts to have message processed, i.e. commited
             </summary>
         </member>
         <member name="P:NWorkQueue.Common.Models.MessageModel.Retries">
             <summary>
-            Number of Rollbacks or timeouts before the message expires
+            Gets the number of rollbacks or timeouts before the message expires
             </summary>
         </member>
         <member name="P:NWorkQueue.Common.Models.MessageModel.ExpiryDate">
             <summary>
-            DateTime the message will expire
+            Gets DateTime the message will expire
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.CorrelationId">
+            <summary>
+            Gets the interger correlation id, used by calling application
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.MessageModel.Group">
+            <summary>
+            Gets string group name.  Used by external application for grouping purposes
             </summary>
         </member>
         <member name="P:NWorkQueue.Common.Models.MessageModel.Data">
             <summary>
-            Actual message data 
+            Gets actual message data
             </summary>
         </member>
         <member name="T:NWorkQueue.Common.Models.QueueModel">
@@ -237,6 +374,57 @@
         <member name="P:NWorkQueue.Common.Models.TransactionModel.ExpiryDateTime">
             <summary>
             Gets the date and time the transaction will expire. e.g. after this datetime, the transaction will automatically rollback
+            </summary>
+        </member>
+        <member name="T:NWorkQueue.Common.TransactionAction">
+            <summary>
+            Represents the action performed within a transaction
+            </summary>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionAction.Add">
+            <summary>
+            Item was added within a transaction (if rolledback, delete)
+            </summary>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionAction.Pull">
+            <summary>
+            Item was pulled within transaction, increment retry count if rolledback
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.TransactionAction.Name">
+            <summary>
+            Gets transaction action name
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.TransactionAction.Value">
+            <summary>
+            Gets transaction Action value / id
+            </summary>
+        </member>
+        <member name="T:NWorkQueue.Common.TransactionResult">
+            <summary>
+            Result of transaction commital
+            </summary>
+            <remarks>Only commits use the results since commits may have valid responses.  If a rollback fails, an exception should be thrown, at least for now</remarks>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionResult.Success">
+            <summary>
+            Transaction was successfully committed
+            </summary>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionResult.Expired">
+            <summary>
+            Transaction expired before the commit could be completed
+            </summary>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionResult.Closed">
+            <summary>
+            The transaction was already closed
+            </summary>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionResult.NotFound">
+            <summary>
+            Transaction could not be found. Perhaps this should be an exception
             </summary>
         </member>
     </members>

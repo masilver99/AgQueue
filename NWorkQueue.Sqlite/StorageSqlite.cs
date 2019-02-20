@@ -72,7 +72,7 @@ namespace NWorkQueue.Sqlite
         /// <inheritdoc/>
         public IStorageTransaction BeginStorageTransaction()
         {
-            return new DbTransaction() { SqliteTransaction = this.connection.BeginTransaction() };
+            return new DbTransaction(this.connection);
         }
 
         /// <inheritdoc/>

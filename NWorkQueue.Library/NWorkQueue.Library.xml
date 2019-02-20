@@ -35,18 +35,65 @@
             Disposes of storage resources
             </summary>
         </member>
+        <member name="T:NWorkQueue.Library.Message">
+            <summary>
+            APIS's for accessing and manging queue messages
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Library.Message.#ctor(NWorkQueue.Common.IStorage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NWorkQueue.Library.Message"/> class.
+            </summary>
+            <param name="storage">Storage library</param>
+        </member>
+        <member name="M:NWorkQueue.Library.Message.AddMessage(System.Int64,System.Int64,System.Object,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String)">
+            <summary>
+            Adds a message to a queue
+            </summary>
+            <param name="transId">Queue Transaction id.  All messages must be added in a transaction</param>
+            <param name="queueId">The queue id to add the message to</param>
+            <param name="message">Message object to be serialized</param>
+            <param name="metaData">String of optional data describing the message</param>
+            <param name="priority">Message priority.  Lower the number, the higher the priority</param>
+            <param name="maxRetries">How many failures before the message will be expired</param>
+            <param name="rawExpiryDateTime">Datetime that the message will expire if it's not already been processed</param>
+            <param name="correlation">Optional correlation id.  ID's are defined by the calling application</param>
+            <param name="groupName" >Optional group string.  Defined by calling application</param>
+        </member>
+        <member name="T:NWorkQueue.Library.Queue">
+            <summary>
+            Queue API from which to manage queue
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Library.Queue.#ctor(NWorkQueue.Common.IStorage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NWorkQueue.Library.Queue"/> class.
+            </summary>
+            <param name="storage">storage engine</param>
+        </member>
         <member name="M:NWorkQueue.Library.Queue.CreateQueue(System.String)">
             <summary>
             Creates a new queue. Queue cannot already exist
             </summary>
-            <param name="name"></param>
+            <param name="name">Name of queue to create</param>
             <returns>The queue Id</returns>
+        </member>
+        <member name="M:NWorkQueue.Library.Queue.DeleteQueue(System.String)">
+            <summary>
+            Delete a queue and all messages in the queue
+            </summary>
+            <param name="name">Name of the queue to delete</param>
         </member>
         <member name="M:NWorkQueue.Library.Queue.DeleteQueue(System.Int64)">
             <summary>
             Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
             </summary>
-            <param name="queueId"></param>
+            <param name="queueId">Queue id</param>
+        </member>
+        <member name="T:NWorkQueue.Library.Transaction">
+            <summary>
+            Represents a Queue Transaction.  Most message functions require a transaction
+            </summary>
         </member>
         <member name="M:NWorkQueue.Library.Transaction.#ctor(NWorkQueue.Common.IStorage)">
             <summary>
@@ -54,18 +101,38 @@
             </summary>
             <param name="storage">An IStorage interface</param>
         </member>
+        <member name="M:NWorkQueue.Library.Transaction.StartTransaction">
+            <summary>
+            Start Queue Transaction
+            </summary>
+            <returns>Queue Transaction id of the new transaction</returns>
+        </member>
         <member name="M:NWorkQueue.Library.Transaction.UpdateTransaction(System.Int64)">
             <summary>
             Updates the specified transaction, reseting it's timeout
             </summary>
-            <param name="transId"></param>
+            <param name="transId">Queue Transaction id</param>
+            <returns>Enum detailing if update was successul</returns>
         </member>
         <member name="M:NWorkQueue.Library.Transaction.GetMessageCount(System.Int64)">
             <summary>
             Returns the message count for available messages (messages in a transaction will not be included)
             </summary>
-            <param name="queue"></param>
-            <returns></returns>
+            <param name="queueId">Queue id</param>
+            <returns>Message count</returns>
+        </member>
+        <member name="M:NWorkQueue.Library.Transaction.CommitTransaction(System.Int64)">
+            <summary>
+            Commits the Queue Transaction
+            </summary>
+            <param name="transId">Queue transaction id</param>
+            <returns>Was the commit successful</returns>
+        </member>
+        <member name="M:NWorkQueue.Library.Transaction.RollbackTransaction(System.Int64)">
+            <summary>
+            Rollsback the Queue transaction and resets the messages states or doesn't add messages
+            </summary>
+            <param name="transId">Queue transaction id</param>
         </member>
     </members>
 </doc>

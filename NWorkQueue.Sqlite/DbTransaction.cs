@@ -7,9 +7,24 @@ namespace NWorkQueue.Sqlite
     using Microsoft.Data.Sqlite;
     using NWorkQueue.Common;
 
+    /// <summary>
+    /// Wrapper around SQLite transaction.  Used by storage classes
+    /// </summary>
     internal class DbTransaction : IStorageTransaction
     {
-        internal SqliteTransaction SqliteTransaction { get; set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbTransaction"/> class.
+        /// </summary>
+        /// <param name="connection">SQLite connection</param>
+        public DbTransaction(SqliteConnection connection)
+        {
+            this.SqliteTransaction = connection.BeginTransaction();
+        }
+
+        /// <summary>
+        /// Gets the internal SQLite transaction
+        /// </summary>
+        internal SqliteTransaction SqliteTransaction { get; }
 
         /// <inheritdoc/>
         public void Commit()

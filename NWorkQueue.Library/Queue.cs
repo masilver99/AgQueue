@@ -9,6 +9,9 @@ namespace NWorkQueue.Library
     using System.Threading;
     using NWorkQueue.Common;
 
+    /// <summary>
+    /// Queue API from which to manage queue
+    /// </summary>
     public class Queue
     {
         private static readonly Regex QueueNameRegex = new Regex(@"^[A-Za-z0-9\.\-_]+$", RegexOptions.Compiled);
@@ -17,6 +20,10 @@ namespace NWorkQueue.Library
 
         private long currQueueId = 0;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Queue"/> class.
+        /// </summary>
+        /// <param name="storage">storage engine</param>
         internal Queue(IStorage storage)
         {
             this.storage = storage;
@@ -28,7 +35,7 @@ namespace NWorkQueue.Library
         /// <summary>
         /// Creates a new queue. Queue cannot already exist
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">Name of queue to create</param>
         /// <returns>The queue Id</returns>
         public long CreateQueue(string name)
         {

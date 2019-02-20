@@ -100,20 +100,72 @@ namespace NWorkQueue.Common
         /// <param name="expiryDateTime">Messages with expiry times before this will be marked closed</param>
         void ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime, DateTime expiryDateTime);
 
+        /// <summary>
+        /// Update retry counts on rolledback transaction
+        /// </summary>
+        /// <param name="transId">Queue transaction id</param>
+        /// <param name="storageTrans">Storage Transaction</param>
         void UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans);
 
+        /// <summary>
+        /// Commit added messages marking them as queued
+        /// </summary>
+        /// <param name="transId">Queue transaction id</param>
+        /// <param name="storageTrans">Storage Transaction</param>
         void CommitAddedMessages(long transId, IStorageTransaction storageTrans);
 
+        /// <summary>
+        /// Commit pulled messages marking them as complete
+        /// </summary>
+        /// <param name="transId">Queue transaction id</param>
+        /// <param name="storageTrans">Storage Transaction</param>
+        /// <param name="commitDateTime">Datetime of the commit</param>
         void CommitPulledMessages(long transId, IStorageTransaction storageTrans, DateTime commitDateTime);
 
+        /// <summary>
+        /// Commit a queue transaction
+        /// </summary>
+        /// <param name="transId">Queue transaction id</param>
+        /// <param name="storageTrans">Storage Transaction</param>
+        /// <param name="commitDateTime">Datetime of the commit</param>
         void CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime);
 
+        /// <summary>
+        /// Create a new Queue in storage
+        /// </summary>
+        /// <param name="nextId">ID to use as the queue id</param>
+        /// <param name="name">Queue name</param>
         void AddQueue(long nextId, string name);
 
+        /// <summary>
+        /// Delete a Queue and ALL messages in the Queue
+        /// </summary>
+        /// <param name="id">Queue Id of the queue to delete</param>
+        /// <param name="storageTrans">The storage transaction to perform the operation under</param>
         void DeleteQueue(long id, IStorageTransaction storageTrans);
 
+        /// <summary>
+        /// Add a message to the storage
+        /// </summary>
+        /// <param name="transId">Queue Transaction ID</param>
+        /// <param name="storageTrans">Storage transaction</param>
+        /// <param name="nextId">The ID to be used at the primary id, i.e. the message id</param>
+        /// <param name="queueId">ID of the storage queue</param>
+        /// <param name="compressedMessage">Message data, compressed</param>
+        /// <param name="addDateTime">Datetime the message was added</param>
+        /// <param name="metaData">String metadata on message data</param>
+        /// <param name="priority">Message priority</param>
+        /// <param name="maxRetries">How many retries before expires</param>
+        /// <param name="expiryDateTime">Datetime the message will expire</param>
+        /// <param name="correlation">Correlation ID</param>
+        /// <param name="groupName">Group name</param>
         void AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "");
 
+        /// <summary>
+        /// Returns message total message count for a queue
+        /// </summary>
+        /// <param name="queueId">ID of the message queue</param>
+        /// <returns>Returns the count</returns>
         long GetMessageCount(long queueId);
 
         /// <summary>
