@@ -10,6 +10,9 @@ namespace NWorkQueue.Sqlite
     using NWorkQueue.Common;
     using NWorkQueue.Common.Models;
 
+    /// <summary>
+    /// Implements the IStorage interface for storing and retriving queue date to SQLite
+    /// </summary>
     public class StorageSqlite : IStorage
     {
         private SqliteConnection connection;
@@ -150,24 +153,24 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public void DeleteNewMessagesByTransId(long transId, IStorageTransaction storageTrans)
+        public void DeleteMessagesByTransId(long transId, IStorageTransaction storageTrans)
         {
             const string sql = "Delete FROM Messages WHERE TransactionId = @tranId and TransactionAction = @TranAction";
             this.connection.Execute(sql, new { transId, TranAction = TransactionAction.Add.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
         /// <inheritdoc/>
-        public void CloseRetriedMessages(long transId, IStorageTransaction storageTrans)
+        public void CloseRetriedMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
         {
-            const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and Retries >= MaxRetries";
-            this.connection.Execute(sql, new { State = MessageState.RetryExceeded, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
+            const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @closeDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and Retries >= MaxRetries";
+            this.connection.Execute(sql, new { State = MessageState.RetryExceeded, transId, TranAction = TransactionAction.Pull.Value, closeDateTime }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
         /// <inheritdoc/>
-        public void ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
+        public void ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime, DateTime expiryDateTime)
         {
-            const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and ExpiryDate <= @ExpiryDate";
-            this.connection.Execute(sql, new { State = MessageState.Expired, transId, TranAction = TransactionAction.Pull.Value, ExpiryDate = closeDateTime }, (storageTrans as DbTransaction)?.SqliteTransaction);
+            const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @closeDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and ExpiryDateTime <= @expiryDateTime";
+            this.connection.Execute(sql, new { State = MessageState.Expired, transId, TranAction = TransactionAction.Pull.Value, expiryDateTime, closeDateTime }, (storageTrans as DbTransaction)?.SqliteTransaction);
         }
 
         /// <inheritdoc/>
@@ -268,7 +271,6 @@ namespace NWorkQueue.Sqlite
                 "PRAGMA LOCKING_MODE = EXCLUSIVE;" +
                 "PRAGMA journal_mode = WAL;" +
                 // "PRAGMA CACHE_SIZE = 500;" +
-
                 "Create table IF NOT EXISTS Transactions" +
                 "(Id INTEGER PRIMARY KEY," +
                 " Active INTEGER NOT NULL," +
@@ -291,7 +293,7 @@ namespace NWorkQueue.Sqlite
                 " Priority INTEGER NOT NULL, " +
                 " MaxRetries INTEGER NOT NULL, " +
                 " Retries INTEGER NOT NULL, " +
-                " ExpiryDate DateTime NOT NULL, " +
+                " ExpiryDateTime DateTime NOT NULL, " +
                 " CorrelationId INTEGER, " +
                 " GroupName TEXT, " +
                 " Metadata TEXT, " +

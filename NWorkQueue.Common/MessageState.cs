@@ -1,4 +1,8 @@
-﻿namespace NWorkQueue.Common
+﻿// <copyright file="MessageState.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
+namespace NWorkQueue.Common
 {
     public sealed class MessageState
     {

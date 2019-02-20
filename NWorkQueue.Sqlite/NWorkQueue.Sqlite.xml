@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NWorkQueue.Sqlite</name>
+    </assembly>
+    <members>
+        <member name="M:NWorkQueue.Sqlite.DbTransaction.Commit">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.DbTransaction.Rollback">
+            <inheritdoc/>
+        </member>
+        <member name="T:NWorkQueue.Sqlite.StorageSqlite">
+            <summary>
+            Implements the IStorage interface for storing and retriving queue date to SQLite
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.InitializeStorage(System.Boolean,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetMaxTransactionId">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.StartTransaction(System.Int64,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetTransactionById(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.ExtendTransaction(System.Int64,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.BeginStorageTransaction">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CloseTransaction(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CommitMessageTransaction(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetMaxQueueId">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.AddQueue(System.Int64,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.DeleteQueue(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetQueueId(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.DoesQueueExist(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetMaxMessageId">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.DeleteMessagesByTransId(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CloseRetriedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.ExpireOlderMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateRetriesOnRollbackedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CommitAddedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CommitPulledMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetMessageCount(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.AddMessage(System.Int64,NWorkQueue.Common.IStorageTransaction,System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.NWorkQueue#Common#IStorage#DeleteMessagesByQueueId(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.System#IDisposable#Dispose">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

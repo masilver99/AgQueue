@@ -1,5 +1,5 @@
-﻿// <copyright file="DbTransaction.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="DbTransaction.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
 namespace NWorkQueue.Sqlite
@@ -11,12 +11,14 @@ namespace NWorkQueue.Sqlite
     {
         internal SqliteTransaction SqliteTransaction { get; set; }
 
-        void IStorageTransaction.Commit()
+        /// <inheritdoc/>
+        public void Commit()
         {
             this.SqliteTransaction.Commit();
         }
 
-        void IStorageTransaction.Rollback()
+        /// <inheritdoc/>
+        public void Rollback()
         {
             this.SqliteTransaction.Rollback();
         }

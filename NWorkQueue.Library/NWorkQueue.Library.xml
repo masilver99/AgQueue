@@ -54,7 +54,7 @@
             </summary>
             <param name="storage">An IStorage interface</param>
         </member>
-        <member name="M:NWorkQueue.Library.Transaction.ExtendTransaction(System.Int64)">
+        <member name="M:NWorkQueue.Library.Transaction.UpdateTransaction(System.Int64)">
             <summary>
             Updates the specified transaction, reseting it's timeout
             </summary>

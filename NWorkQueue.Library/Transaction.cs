@@ -8,6 +8,9 @@ namespace NWorkQueue.Library
     using System.Threading;
     using NWorkQueue.Common;
 
+    /// <summary>
+    /// Represents a Queue Transaction.  Most message functions require a transaction
+    /// </summary>
     public class Transaction
     {
         // Settings
@@ -30,6 +33,10 @@ namespace NWorkQueue.Library
             this.currTransId = this.storage.GetMaxTransactionId();
         }
 
+        /// <summary>
+        /// Start Queue Transaction
+        /// </summary>
+        /// <returns>Queue Transaction id of the new transaction</returns>
         internal long StartTransaction()
         {
             var newId = Interlocked.Increment(ref this.currTransId);
@@ -40,7 +47,8 @@ namespace NWorkQueue.Library
         /// <summary>
         /// Updates the specified transaction, reseting it's timeout
         /// </summary>
-        /// <param name="transId"></param>
+        /// <param name="transId">Queue Transaction id</param>
+        /// <returns>Enum detailing if update was successul</returns>
         internal TransactionResult UpdateTransaction(long transId)
         {
             var transModel = this.storage.GetTransactionById(transId);
@@ -71,13 +79,18 @@ namespace NWorkQueue.Library
         /// <summary>
         /// Returns the message count for available messages (messages in a transaction will not be included)
         /// </summary>
-        /// <param name="queue"></param>
-        /// <returns></returns>
-        internal long GetMessageCount(long queue)
+        /// <param name="queueId">Queue id</param>
+        /// <returns>Message count</returns>
+        internal long GetMessageCount(long queueId)
         {
-            return this.storage.GetMessageCount(queue);
+            return this.storage.GetMessageCount(queueId);
         }
 
+        /// <summary>
+        /// Commits the Queue Transaction
+        /// </summary>
+        /// <param name="transId">Queue transaction id</param>
+        /// <returns>Was the commit successful</returns>
         internal TransactionResult CommitTransaction(long transId)
         {
             var storageTransaction = this.storage.BeginStorageTransaction();
@@ -116,6 +129,10 @@ namespace NWorkQueue.Library
             return TransactionResult.Success;
         }
 
+        /// <summary>
+        /// Rollsback the Queue transaction and resets the messages states or doesn't add messages
+        /// </summary>
+        /// <param name="transId">Queue transaction id</param>
         internal void RollbackTransaction(long transId)
         {
             var storageTrans = this.storage.BeginStorageTransaction();
@@ -125,13 +142,13 @@ namespace NWorkQueue.Library
             this.storage.CloseTransaction(transId, storageTrans, closeDateTime);
 
             // Removed messages added during the transaction
-            this.storage.DeleteNewMessagesByTransId(transId, storageTrans);
+            this.storage.DeleteMessagesByTransId(transId, storageTrans);
 
             // Check if open messages are at the retry threshold, if so , mark as closed
-            this.storage.CloseRetriedMessages(transId, storageTrans);
+            this.storage.CloseRetriedMessages(transId, storageTrans, closeDateTime);
 
             // Check if open messages are past the expiry date, if so mark as such
-            this.storage.ExpireOlderMessages(transId, storageTrans, closeDateTime);
+            this.storage.ExpireOlderMessages(transId, storageTrans, closeDateTime, closeDateTime);
 
             // All other records, increment retry count, mark record as active and ready to be pulled again
             this.storage.UpdateRetriesOnRollbackedMessages(transId, storageTrans);

@@ -64,6 +64,11 @@ namespace NWorkQueue.Library
             return new WorkQueue(this, workQueueModel);
         }
         */
+
+        /// <summary>
+        /// Delete a queue and all messages in the queue
+        /// </summary>
+        /// <param name="name">Name of the queue to delete</param>
         public void DeleteQueue(string name)
         {
             var fixedName = name.Trim();
@@ -85,7 +90,7 @@ namespace NWorkQueue.Library
         /// <summary>
         /// Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
         /// </summary>
-        /// <param name="queueId"></param>
+        /// <param name="queueId">Queue id</param>
         public void DeleteQueue(long queueId)
         {
             // Throw exception if queue does not exist

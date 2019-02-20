@@ -1,4 +1,8 @@
-﻿namespace NWorkQueue.Common.Models
+﻿// <copyright file="MessageModel.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
+namespace NWorkQueue.Common.Models
 {
     using System;
     using System.Collections.Generic;

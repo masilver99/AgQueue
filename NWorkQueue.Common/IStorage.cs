@@ -68,13 +68,37 @@ namespace NWorkQueue.Common
         /// <returns>Transaction Model</returns>
         TransactionModel GetTransactionById(long transId, IStorageTransaction storageTrans = null);
 
+        /// <summary>
+        /// Mark the Queue Transaction as closed
+        /// </summary>
+        /// <param name="transId">Queue Transaction to mark as closed</param>
+        /// <param name="storageTrans">The db transaction to assodicate with this update</param>
+        /// <param name="closeDateTime">Datetime transaction was closed</param>
         void CloseTransaction(long transId, IStorageTransaction storageTrans, DateTime closeDateTime);
 
-        void DeleteNewMessagesByTransId(long transId, IStorageTransaction storageTrans);
+        /// <summary>
+        /// Delete all messages by their queue transaction id
+        /// </summary>
+        /// <param name="transId">Id of the queue transaction</param>
+        /// <param name="storageTrans">Storage Transaction</param>
+        void DeleteMessagesByTransId(long transId, IStorageTransaction storageTrans);
 
-        void CloseRetriedMessages(long transId, IStorageTransaction storageTrans);
+        /// <summary>
+        /// Close messages that have too many retries
+        /// </summary>
+        /// <param name="transId">Queue transaction id</param>
+        /// <param name="storageTrans">Storage Transaction</param>
+        /// <param name="closeDateTime">Datetime the message should be marked as closed</param>
+        void CloseRetriedMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime);
 
-        void ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime);
+        /// <summary>
+        /// Expire messages past their expiration date/time
+        /// </summary>
+        /// <param name="transId">Queue transaction id</param>
+        /// <param name="storageTrans">Storage Transaction</param>
+        /// <param name="closeDateTime">Datetime the message should be marked as closed</param>
+        /// <param name="expiryDateTime">Messages with expiry times before this will be marked closed</param>
+        void ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime, DateTime expiryDateTime);
 
         void UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans);
 
@@ -102,8 +126,18 @@ namespace NWorkQueue.Common
         /// <returns>Queue ID or null if queue not found</returns>
         long? GetQueueId(string name);
 
+        /// <summary>
+        /// Does a Quque exist for the specified id
+        /// </summary>
+        /// <param name="id">Quque ID</param>
+        /// <returns>true if quque exists</returns>
         bool DoesQueueExist(long id);
 
+        /// <summary>
+        /// Delete all messages in a specified queue
+        /// </summary>
+        /// <param name="queueId">Queue id</param>
+        /// <param name="storageTrans">Storage transaction</param>
         void DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans);
     }
 }
