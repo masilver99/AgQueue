@@ -37,7 +37,7 @@ namespace NWorkQueue.Library
         /// Start Queue Transaction
         /// </summary>
         /// <returns>Queue Transaction id of the new transaction</returns>
-        internal long StartTransaction()
+        internal long Start()
         {
             var newId = Interlocked.Increment(ref this.currTransId);
             this.storage.StartTransaction(newId, this.expiryTimeInMinutes);
@@ -77,11 +77,11 @@ namespace NWorkQueue.Library
         }
 
         /// <summary>
-        /// Returns the message count for available messages (messages in a transaction will not be included)
+        /// Returns the message count of messages in a specific transaction. Results are unknown for closed committed or rolledback transactions.
         /// </summary>
-        /// <param name="queueId">Queue id</param>
+        /// <param name="transId">Transaction id</param>
         /// <returns>Message count</returns>
-        internal long GetMessageCount(long queueId)
+        public long GetMessageCount(long transId)
         {
             return this.storage.GetMessageCount(queueId);
         }
@@ -91,7 +91,7 @@ namespace NWorkQueue.Library
         /// </summary>
         /// <param name="transId">Queue transaction id</param>
         /// <returns>Was the commit successful</returns>
-        internal TransactionResult CommitTransaction(long transId)
+        public TransactionResult Commit(long transId)
         {
             var storageTransaction = this.storage.BeginStorageTransaction();
 
@@ -133,7 +133,7 @@ namespace NWorkQueue.Library
         /// Rollsback the Queue transaction and resets the messages states or doesn't add messages
         /// </summary>
         /// <param name="transId">Queue transaction id</param>
-        internal void RollbackTransaction(long transId)
+        public void RollbackTransaction(long transId)
         {
             var storageTrans = this.storage.BeginStorageTransaction();
             var closeDateTime = DateTime.Now;

@@ -14,9 +14,9 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.CreateQueue("(Peanuckle)"); }
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.Create("(Peanuckle)"); }
                 );
-                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.CreateQueue(""); }
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.Create(""); }
                 );
             }
         }
@@ -26,15 +26,15 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                api.Queue.CreateQueue("WiseMan");
+                api.Queue.Create("WiseMan");
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"),
-                    delegate { api.Queue.CreateQueue("WiseMan"); }
+                    delegate { api.Queue.Create("WiseMan"); }
                 );
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"),
-                    delegate { api.Queue.CreateQueue("wiseman"); }
+                    delegate { api.Queue.Create("wiseman"); }
                 );
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"),
-                    delegate { api.Queue.CreateQueue("WISEMAN"); }
+                    delegate { api.Queue.Create("WISEMAN"); }
                 );
             }
         }
@@ -44,9 +44,9 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.CreateQueue("(Peanuckle)"); }
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.Create("(Peanuckle)"); }
                 );
-                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.CreateQueue(""); }
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.Create(""); }
                 );
             }
         }
@@ -56,7 +56,7 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                api.Queue.CreateQueue("WiseMan");
+                api.Queue.Create("WiseMan");
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
                     delegate { api.Queue.DeleteQueue("WISEMEN"); }
                 );
@@ -72,7 +72,7 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                var queueId = api.Queue.CreateQueue("WiseMan");
+                var queueId = api.Queue.Create("WiseMan");
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
                     delegate { api.Queue.DeleteQueue("WISEMEN"); }
                 );
@@ -88,13 +88,13 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                var queue = api.Queue.CreateQueue("WiseMan");
-                var trans = api.Transaction.StartTransaction();
-                api.Message.AddMessage(trans, queue, new Object(), null);
-                api.Transaction.CommitTransaction(trans);
-                Assert.AreEqual(1, api.Transaction.GetMessageCount(queue));
+                var queue = api.Queue.Create("WiseMan");
+                var trans = api.Transaction.Start();
+                api.Message.Add(trans, queue, new Object(), null);
+                api.Transaction.Commit(trans);
+                Assert.AreEqual(1, api.Queue.GetMessageCount(queue));
                 api.Queue.DeleteQueue(queue);
-                Assert.AreEqual(0, api.Transaction.GetMessageCount(queue));
+                Assert.AreEqual(0, api.Queue.GetMessageCount(queue));
             }
         }
     }

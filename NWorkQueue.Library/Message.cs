@@ -39,13 +39,15 @@ namespace NWorkQueue.Library
         /// <param name="rawExpiryDateTime">Datetime that the message will expire if it's not already been processed</param>
         /// <param name="correlation">Optional correlation id.  ID's are defined by the calling application</param>
         /// <param name="groupName" >Optional group string.  Defined by calling application</param>
-        public void AddMessage(long transId, long queueId, object message, string metaData, int priority = 0, int maxRetries = 3, DateTime? rawExpiryDateTime = null, int correlation = 0, string groupName = null)
+        /// <returns>Message ID</returns>
+        public long Add(long transId, long queueId, object message, string metaData, int priority = 0, int maxRetries = 3, DateTime? rawExpiryDateTime = null, int correlation = 0, string groupName = null)
         {
             var addDateTime = DateTime.Now;
             DateTime expiryDateTime = rawExpiryDateTime ?? DateTime.MaxValue;
             var nextId = Interlocked.Increment(ref this.currMessageId);
             var compressedMessage = MessagePack.LZ4MessagePackSerializer.Serialize(message);
             this.storage.AddMessage(transId, null, nextId, queueId, compressedMessage, addDateTime, metaData, priority, maxRetries, expiryDateTime, correlation, groupName);
+            return nextId;
         }
     }
 }

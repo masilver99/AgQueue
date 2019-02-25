@@ -37,7 +37,7 @@ namespace NWorkQueue.Library
         /// </summary>
         /// <param name="name">Name of queue to create</param>
         /// <returns>The queue Id</returns>
-        public long CreateQueue(string name)
+        public long Create(string name)
         {
             // validation
             if (name.Length == 0)
@@ -58,6 +58,16 @@ namespace NWorkQueue.Library
             this.storage.AddQueue(nextId, name);
 
             return nextId;
+        }
+
+        /// <summary>
+        /// Returns the message count for available messages (messages in a transaction will not be included)
+        /// </summary>
+        /// <param name="queueId">Queue id</param>
+        /// <returns>Message count</returns>
+        public long GetMessageCount(long queueId)
+        {
+            return this.storage.GetMessageCount(queueId);
         }
 
         /* Not sure this is needed

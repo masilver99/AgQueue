@@ -14,16 +14,16 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                var queue = api.Queue.CreateQueue("WiseMan");
-                var trans = api.Transaction.StartTransaction();
+                var queue = api.Queue.Create("WiseMan");
+                var trans = api.Transaction.Start();
                 for (int i = 0; i < 10000; i++)
                 {
-                    api.Message.AddMessage(trans, queue, new object(), "");
+                    api.Message.Add(trans, queue, new object(), "");
                 }
-                var messageCount = api.Transaction.GetMessageCount(queue);
+                var messageCount = api.Queue.GetMessageCount(queue);
                 Assert.AreEqual(0, messageCount);
-                api.Transaction.CommitTransaction(trans);
-                messageCount = api.Transaction.GetMessageCount(queue);
+                api.Transaction.Commit(trans);
+                messageCount = api.Queue.GetMessageCount(queue);
                 Assert.AreEqual(10000, messageCount);
             }
         }
