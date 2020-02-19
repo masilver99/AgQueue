@@ -83,7 +83,9 @@ namespace NWorkQueue.Library
         /// <returns>Message count</returns>
         public long GetMessageCount(long transId)
         {
-            return this.storage.GetMessageCount(queueId);
+            throw new NotImplementedException();
+
+            //return this.storage.GetMessageCount(queueId);
         }
 
         /// <summary>

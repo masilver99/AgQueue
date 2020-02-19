@@ -21,6 +21,7 @@ namespace NWorkQueue
 
 
             log.Trace("Starting communication threads...");
+             
 
             log.Trace("Starting internal loop...");
             //Loop here until Ctrl-C or shutdown is requested
