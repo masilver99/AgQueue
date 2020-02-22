@@ -7,10 +7,11 @@ namespace NWorkQueue.Library
     using System;
     using System.Text.RegularExpressions;
     using System.Threading;
+    using MessagePack;
     using NWorkQueue.Common;
 
     /// <summary>
-    /// Queue API from which to manage queue
+    /// Queue API from which to manage queue.
     /// </summary>
     public class Queue
     {
@@ -19,6 +20,8 @@ namespace NWorkQueue.Library
         private readonly IStorage storage;
 
         private long currQueueId = 0;
+
+        public long Id => this.currQueueId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Queue"/> class.
@@ -65,9 +68,9 @@ namespace NWorkQueue.Library
         /// </summary>
         /// <param name="queueId">Queue id</param>
         /// <returns>Message count</returns>
-        public long GetMessageCount(long queueId)
+        public long GetMessageCount()
         {
-            return this.storage.GetMessageCount(queueId);
+            return this.storage.GetMessageCount(this.currQueueId);
         }
 
         /* Not sure this is needed
@@ -83,57 +86,26 @@ namespace NWorkQueue.Library
         */
 
         /// <summary>
-        /// Delete a queue and all messages in the queue
+        /// Adds a message to a queue.
         /// </summary>
-        /// <param name="name">Name of the queue to delete</param>
-        public void DeleteQueue(string name)
+        /// <param name="transId">Queue Transaction id.  All messages must be added in a transaction.</param>
+        /// <param name="queueId">The queue id to add the message to.</param>
+        /// <param name="message">Message object to be serialized.</param>
+        /// <param name="metaData">String of optional data describing the message.</param>
+        /// <param name="priority">Message priority.  Lower the number, the higher the priority.</param>
+        /// <param name="maxRetries">How many failures before the message will be expired.</param>
+        /// <param name="rawExpiryDateTime">Datetime that the message will expire if it's not already been processed.</param>
+        /// <param name="correlation">Optional correlation id.  ID's are defined by the calling application.</param>
+        /// <param name="groupName" >Optional group string.  Defined by calling application.</param>
+        /// <returns>Message ID.</returns>
+        public long AddMessage(Transaction trans, object message, string metaData, int priority = 0, int maxRetries = 3, DateTime? rawExpiryDateTime = null, int correlation = 0, string groupName = null)
         {
-            var fixedName = name.Trim();
-            if (fixedName.Length == 0)
-            {
-                throw new ArgumentException("Queue name cannot be empty", nameof(name));
-            }
-
-            var id = this.storage.GetQueueId(fixedName);
-
-            if (!id.HasValue)
-            {
-                throw new Exception("Queue not found");
-            }
-
-            this.DeleteQueue(id.Value);
-        }
-
-        /// <summary>
-        /// Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
-        /// </summary>
-        /// <param name="queueId">Queue id</param>
-        public void DeleteQueue(long queueId)
-        {
-            // Throw exception if queue does not exist
-            if (!this.storage.DoesQueueExist(queueId))
-            {
-                throw new Exception("Queue not found");
-            }
-
-            var trans = this.storage.BeginStorageTransaction();
-            try
-            {
-                // TODO: Rollback queue transactions that were being used in message for this queue
-                // ExtendTransaction Set Active = false
-
-                // TODO: Delete Messages
-                this.storage.DeleteMessagesByQueueId(queueId, trans);
-
-                // Delete From Queue Table
-                this.storage.DeleteQueue(queueId, trans);
-                trans.Commit();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                trans.Rollback();
-            }
+            var addDateTime = DateTime.Now;
+            DateTime expiryDateTime = rawExpiryDateTime ?? DateTime.MaxValue;
+            var nextId = this.storage.GetMaxMessageId();
+            var compressedMessage = MessagePackSerializer.Serialize(message);
+            this.storage.AddMessage(trans.Id, null, nextId, this.currQueueId, compressedMessage, addDateTime, metaData, priority, maxRetries, expiryDateTime, correlation, groupName);
+            return nextId;
         }
 
         private void ValidateQueueName(string queueName)
@@ -143,5 +115,7 @@ namespace NWorkQueue.Library
                 throw new ArgumentException("Queue name can only contain a-Z, 0-9, ., -, or _");
             }
         }
+
+
     }
 }

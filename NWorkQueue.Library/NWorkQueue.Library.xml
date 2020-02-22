@@ -7,6 +7,7 @@
         <member name="T:NWorkQueue.Library.InternalApi">
             <summary>
             Starting point for accessing all queue related APIS
+            This is mostly a factory for creating Queues and Transactions
             </summary>
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.#ctor(System.Boolean)">
@@ -15,20 +16,39 @@
             </summary>
             <param name="deleteExistingData">Deletes all Queues, Messages and Transactions</param>
         </member>
-        <member name="P:NWorkQueue.Library.InternalApi.Queue">
+        <member name="M:NWorkQueue.Library.InternalApi.CreateQueue(System.String)">
             <summary>
-            Gets Queue related APIs
+            Creates a new queue. An exception is thrown is queue already exists.
             </summary>
+            <param name="queueName">The name of the queue</param>
+            <returns>A Queue object</returns>
         </member>
-        <member name="P:NWorkQueue.Library.InternalApi.Transaction">
+        <member name="M:NWorkQueue.Library.InternalApi.DeleteQueue(System.String)">
             <summary>
-            Gets Transaction related APIs
+            Delete a queue and all messages in the queue.
             </summary>
+            <param name="name">Name of the queue to delete.</param>
         </member>
-        <member name="P:NWorkQueue.Library.InternalApi.Message">
+        <member name="M:NWorkQueue.Library.InternalApi.DeleteQueue(System.Int64)">
             <summary>
-            Gets Message related APIs
+            Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
             </summary>
+            <param name="queueId">Queue id</param>
+        </member>
+        <member name="M:NWorkQueue.Library.InternalApi.GetQueueByName(System.String,System.Boolean)">
+            <summary>
+            Returns a Queue object by name
+            </summary>
+            <param name="queueName">The name of the queue to return</param>
+            <param name="autoCreate">If the name doesn't exist, create it otherwise throw an exception</param>
+            <returns>A Queue object</returns>
+        </member>
+        <member name="M:NWorkQueue.Library.InternalApi.GetQueueById(System.Int64)">
+            <summary>
+            Returns a Queue object based on a queue ID
+            </summary>
+            <param name="queueId">The Queue ID to lookup</param>
+            <returns>A Queue object</returns>
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.Dispose">
             <summary>
@@ -37,32 +57,18 @@
         </member>
         <member name="T:NWorkQueue.Library.Message">
             <summary>
-            APIS's for accessing and manging queue messages
+            APIS's for accessing and manging queue messages.
             </summary>
         </member>
         <member name="M:NWorkQueue.Library.Message.#ctor(NWorkQueue.Common.IStorage)">
             <summary>
             Initializes a new instance of the <see cref="T:NWorkQueue.Library.Message"/> class.
             </summary>
-            <param name="storage">Storage library</param>
-        </member>
-        <member name="M:NWorkQueue.Library.Message.AddMessage(System.Int64,System.Int64,System.Object,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String)">
-            <summary>
-            Adds a message to a queue
-            </summary>
-            <param name="transId">Queue Transaction id.  All messages must be added in a transaction</param>
-            <param name="queueId">The queue id to add the message to</param>
-            <param name="message">Message object to be serialized</param>
-            <param name="metaData">String of optional data describing the message</param>
-            <param name="priority">Message priority.  Lower the number, the higher the priority</param>
-            <param name="maxRetries">How many failures before the message will be expired</param>
-            <param name="rawExpiryDateTime">Datetime that the message will expire if it's not already been processed</param>
-            <param name="correlation">Optional correlation id.  ID's are defined by the calling application</param>
-            <param name="groupName" >Optional group string.  Defined by calling application</param>
+            <param name="storage">Storage library.</param>
         </member>
         <member name="T:NWorkQueue.Library.Queue">
             <summary>
-            Queue API from which to manage queue
+            Queue API from which to manage queue.
             </summary>
         </member>
         <member name="M:NWorkQueue.Library.Queue.#ctor(NWorkQueue.Common.IStorage)">
@@ -71,24 +77,34 @@
             </summary>
             <param name="storage">storage engine</param>
         </member>
-        <member name="M:NWorkQueue.Library.Queue.CreateQueue(System.String)">
+        <member name="M:NWorkQueue.Library.Queue.Create(System.String)">
             <summary>
             Creates a new queue. Queue cannot already exist
             </summary>
             <param name="name">Name of queue to create</param>
             <returns>The queue Id</returns>
         </member>
-        <member name="M:NWorkQueue.Library.Queue.DeleteQueue(System.String)">
+        <member name="M:NWorkQueue.Library.Queue.GetMessageCount">
             <summary>
-            Delete a queue and all messages in the queue
-            </summary>
-            <param name="name">Name of the queue to delete</param>
-        </member>
-        <member name="M:NWorkQueue.Library.Queue.DeleteQueue(System.Int64)">
-            <summary>
-            Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
+            Returns the message count for available messages (messages in a transaction will not be included)
             </summary>
             <param name="queueId">Queue id</param>
+            <returns>Message count</returns>
+        </member>
+        <member name="M:NWorkQueue.Library.Queue.AddMessage(NWorkQueue.Library.Transaction,System.Object,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String)">
+            <summary>
+            Adds a message to a queue.
+            </summary>
+            <param name="transId">Queue Transaction id.  All messages must be added in a transaction.</param>
+            <param name="queueId">The queue id to add the message to.</param>
+            <param name="message">Message object to be serialized.</param>
+            <param name="metaData">String of optional data describing the message.</param>
+            <param name="priority">Message priority.  Lower the number, the higher the priority.</param>
+            <param name="maxRetries">How many failures before the message will be expired.</param>
+            <param name="rawExpiryDateTime">Datetime that the message will expire if it's not already been processed.</param>
+            <param name="correlation">Optional correlation id.  ID's are defined by the calling application.</param>
+            <param name="groupName" >Optional group string.  Defined by calling application.</param>
+            <returns>Message ID.</returns>
         </member>
         <member name="T:NWorkQueue.Library.Transaction">
             <summary>
@@ -101,9 +117,9 @@
             </summary>
             <param name="storage">An IStorage interface</param>
         </member>
-        <member name="M:NWorkQueue.Library.Transaction.StartTransaction">
+        <member name="M:NWorkQueue.Library.Transaction.Start">
             <summary>
-            Start Queue Transaction
+            Start Queue Transaction.
             </summary>
             <returns>Queue Transaction id of the new transaction</returns>
         </member>
@@ -116,12 +132,12 @@
         </member>
         <member name="M:NWorkQueue.Library.Transaction.GetMessageCount(System.Int64)">
             <summary>
-            Returns the message count for available messages (messages in a transaction will not be included)
+            Returns the message count of messages in a specific transaction. Results are unknown for closed committed or rolledback transactions.
             </summary>
-            <param name="queueId">Queue id</param>
+            <param name="transId">Transaction id</param>
             <returns>Message count</returns>
         </member>
-        <member name="M:NWorkQueue.Library.Transaction.CommitTransaction(System.Int64)">
+        <member name="M:NWorkQueue.Library.Transaction.Commit">
             <summary>
             Commits the Queue Transaction
             </summary>

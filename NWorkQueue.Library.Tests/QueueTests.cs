@@ -14,9 +14,9 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.Create("(Peanuckle)"); }
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.CreateQueue("(Peanuckle)"); }
                 );
-                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.Create(""); }
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.CreateQueue(""); }
                 );
             }
         }
@@ -26,15 +26,15 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                api.Queue.Create("WiseMan");
+                api.CreateQueue("WiseMan");
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"),
-                    delegate { api.Queue.Create("WiseMan"); }
+                    delegate { api.CreateQueue("WiseMan"); }
                 );
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"),
-                    delegate { api.Queue.Create("wiseman"); }
+                    delegate { api.CreateQueue("wiseman"); }
                 );
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue already exists"),
-                    delegate { api.Queue.Create("WISEMAN"); }
+                    delegate { api.CreateQueue("WISEMAN"); }
                 );
             }
         }
@@ -44,9 +44,9 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.Create("(Peanuckle)"); }
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.CreateQueue("(Peanuckle)"); }
                 );
-                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.Queue.Create(""); }
+                Assert.Throws(Is.TypeOf<ArgumentException>(), delegate { api.CreateQueue(""); }
                 );
             }
         }
@@ -56,13 +56,13 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                api.Queue.Create("WiseMan");
+                api.CreateQueue("WiseMan");
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
-                    delegate { api.Queue.DeleteQueue("WISEMEN"); }
+                    delegate { api.DeleteQueue("WISEMEN"); }
                 );
-                api.Queue.DeleteQueue("WiseMan");
+                api.DeleteQueue("WiseMan");
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
-                    delegate { api.Queue.DeleteQueue("WiseMan"); }
+                    delegate { api.DeleteQueue("WiseMan"); }
                 );
             }
         }
@@ -72,13 +72,13 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                var queueId = api.Queue.Create("WiseMan");
+                var queue = api.CreateQueue("WiseMan");
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
-                    delegate { api.Queue.DeleteQueue("WISEMEN"); }
+                    delegate { api.DeleteQueue("WISEMEN"); }
                 );
-                api.Queue.DeleteQueue(queueId);
+                api.DeleteQueue(queue.Id);
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo("Queue not found"),
-                    delegate { api.Queue.DeleteQueue(queueId); }
+                    delegate { api.DeleteQueue(queue.Id); }
                 );
             }
         }
@@ -88,13 +88,13 @@ namespace NWorkQueue.Library.Tests
         {
             using (var api = new InternalApi(true))
             {
-                var queue = api.Queue.Create("WiseMan");
-                var trans = api.Transaction.Start();
-                api.Message.Add(trans, queue, new Object(), null);
-                api.Transaction.Commit(trans);
-                Assert.AreEqual(1, api.Queue.GetMessageCount(queue));
-                api.Queue.DeleteQueue(queue);
-                Assert.AreEqual(0, api.Queue.GetMessageCount(queue));
+                var queue = api.CreateQueue("WiseMan");
+                var trans = api.CreateTransaction();
+                queue.AddMessage(trans, new Object(), null);
+                trans.Commit();
+                Assert.AreEqual(1, queue.GetMessageCount());
+                api.DeleteQueue(queue.Id);
+                Assert.AreEqual(0, queue.GetMessageCount());
             }
         }
     }

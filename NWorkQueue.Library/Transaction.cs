@@ -21,6 +21,8 @@ namespace NWorkQueue.Library
 
         private long currTransId = 0;
 
+        public long Id => this.currTransId; 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Transaction"/> class.
         /// </summary>
@@ -34,7 +36,7 @@ namespace NWorkQueue.Library
         }
 
         /// <summary>
-        /// Start Queue Transaction
+        /// Start Queue Transaction.
         /// </summary>
         /// <returns>Queue Transaction id of the new transaction</returns>
         internal long Start()
@@ -93,12 +95,12 @@ namespace NWorkQueue.Library
         /// </summary>
         /// <param name="transId">Queue transaction id</param>
         /// <returns>Was the commit successful</returns>
-        public TransactionResult Commit(long transId)
+        public TransactionResult Commit()
         {
             var storageTransaction = this.storage.BeginStorageTransaction();
 
             // Check if transaction has expired
-            var transModel = this.storage.GetTransactionById(transId, storageTransaction);
+            var transModel = this.storage.GetTransactionById(this.Id, storageTransaction);
             if (transModel == null)
             {
                 return TransactionResult.NotFound;
@@ -112,20 +114,20 @@ namespace NWorkQueue.Library
             if (transModel.ExpiryDateTime <= DateTime.Now)
             {
                 // Took too long to run transaction, so now we have to rollback :-(
-                this.RollbackTransaction(transId);
+                this.RollbackTransaction(this.Id);
                 return TransactionResult.Expired;
             }
 
             var commitDateTime = DateTime.Now;
 
             // Updated newly added messages
-            this.storage.CommitAddedMessages(transId, storageTransaction);
+            this.storage.CommitAddedMessages(this.Id, storageTransaction);
 
             // Update newly completed messages
-            this.storage.CommitPulledMessages(transId, storageTransaction, commitDateTime);
+            this.storage.CommitPulledMessages(this.Id, storageTransaction, commitDateTime);
 
             // Update Transaction record
-            this.storage.CommitMessageTransaction(transId, storageTransaction, commitDateTime);
+            this.storage.CommitMessageTransaction(this.Id, storageTransaction, commitDateTime);
 
             storageTransaction.Commit();
             return TransactionResult.Success;

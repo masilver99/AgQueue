@@ -60,13 +60,13 @@ namespace NWorkQueue.Library.Tests.Scenarios
         {
             using (var api = new InternalApi(true))
             {
-                var queue = api.Queue.Create("Scenario1");
-                var trans = api.Transaction.Start();
-                var messageId = api.Message.Add(trans, queue, "blah", "");
-                var messageCount = api.Queue.GetMessageCount(queue);
+                var queue = api.CreateQueue("Scenario1");
+                var trans = api.CreateTransaction();
+                var messageId = queue.AddMessage(trans, "blah", "");
+                var messageCount = queue.GetMessageCount();
                 Assert.AreEqual(0, messageCount);
-                api.Transaction.Commit(trans);
-                messageCount = api.Queue.GetMessageCount(queue);
+                trans.Commit();
+                messageCount = queue.GetMessageCount();
                 Assert.AreEqual(1, messageCount);
             }
         }
@@ -84,13 +84,12 @@ namespace NWorkQueue.Library.Tests.Scenarios
         {
             using (var api = new InternalApi(true))
             {
-                var queueId = api.Queue.Create("Scenario1");
-                var transId = api.Transaction.Start();
-                var messageId = api.Message.Add(transId, queueId, "blah", "");
-                api.Transaction.Commit(transId);
-                transId = api.Transaction.Start();
-                api.Message.PullMessage(queueId, transId);
-                var messageCount = api.Queue.GetMessageCount(queueId);
+                var queue = api.CreateQueue("Scenario1");
+                var trans = api.CreateTransaction();
+                var messageId = queue.AddMessage(trans, "blah", "");
+                trans.Commit();
+                //queue.PullMessage(queueId, transId);
+                var messageCount = queue.GetMessageCount();
                 Assert.AreEqual(1, messageCount);
             }
         }

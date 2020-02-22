@@ -29,10 +29,10 @@ namespace Benchmarks
             var sw = Stopwatch.StartNew();
             var memStream3 = new MemoryStream();
             //MessagePack.MessagePackSerializer.SetDefaultResolver(MessagePack.Resolvers.ContractlessStandardResolver.Instance);
-            MessagePack.LZ4MessagePackSerializer.Serialize(memStream3, message);
+            MessagePack.MessagePackSerializer.Serialize(memStream3, message);
             Console.WriteLine("Message Size: " + memStream3.Length);
             memStream3.Position = 0;
-            var obj1 = MessagePack.LZ4MessagePackSerializer.Deserialize<Message>(memStream3);
+            var obj1 = MessagePack.MessagePackSerializer.Deserialize<Message>(memStream3);
             //Console.WriteLine(obj1.Title);
             Console.WriteLine("Elapsed: " + sw.ElapsedTicks);
         }

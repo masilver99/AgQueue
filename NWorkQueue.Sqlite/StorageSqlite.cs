@@ -38,6 +38,8 @@ namespace NWorkQueue.Sqlite
         /// <inheritdoc/>
         public long GetMaxTransactionId()
         {
+            // This is bad code.  Two transactions at the same time will cause a conflict.
+            // Need to go ahead and create a record in the DB
             const string sql = "SELECT Max(ID) FROM TRANSACTIONS;";
             var id = this.connection.ExecuteScalar<int?>(sql);
             if (id.HasValue)

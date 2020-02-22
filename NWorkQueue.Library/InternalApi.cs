@@ -56,6 +56,61 @@ namespace NWorkQueue.Library
         }
 
         /// <summary>
+        /// Delete a queue and all messages in the queue.
+        /// </summary>
+        /// <param name="name">Name of the queue to delete.</param>
+        public void DeleteQueue(string name)
+        {
+            var fixedName = name.Trim();
+            if (fixedName.Length == 0)
+            {
+                throw new ArgumentException("Queue name cannot be empty", nameof(name));
+            }
+
+            var id = this.storage.GetQueueId(fixedName);
+
+            if (!id.HasValue)
+            {
+                throw new Exception("Queue not found");
+            }
+
+            this.DeleteQueue(id.Value);
+        }
+
+        /// <summary>
+        /// Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
+        /// </summary>
+        /// <param name="queueId">Queue id</param>
+        public void DeleteQueue(long queueId)
+        {
+            // Throw exception if queue does not exist
+            if (!this.storage.DoesQueueExist(queueId))
+            {
+                throw new Exception("Queue not found");
+            }
+
+            var trans = this.storage.BeginStorageTransaction();
+            try
+            {
+                // TODO: Rollback queue transactions that were being used in message for this queue
+                // ExtendTransaction Set Active = false
+
+                // TODO: Delete Messages
+                this.storage.DeleteMessagesByQueueId(queueId, trans);
+
+                // Delete From Queue Table
+                this.storage.DeleteQueue(queueId, trans);
+                trans.Commit();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                trans.Rollback();
+            }
+        }
+
+
+        /// <summary>
         /// Returns a Queue object by name
         /// </summary>
         /// <param name="queueName">The name of the queue to return</param>
@@ -97,6 +152,11 @@ namespace NWorkQueue.Library
         public void Dispose()
         {
             this.storage.Dispose();
+        }
+
+        internal Transaction CreateTransaction()
+        {
+            throw new NotImplementedException();
         }
     }
 }
