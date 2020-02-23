@@ -29,10 +29,10 @@ A classic example of when to use a work queue is sending email from a website.  
 
 ## Additional Details
 
-NWorkQueue consists of a server process that contains communication threads.  Currently, two communication threads/libraries are planned.  A TCP socket and REST library.  The socket library will have a client library to wrap the socket calls.
+NWorkQueue consists of a server process that contains a gRPC communication server and a gRPC client for communicating with the queue.  
 
 NWorkQueue uses SQLite for storage.  While not as fast as using in-memory containers, it's HIGHLY resilient to machine failures, i.e. a spurious reboot won't cause your queue to disappear.  At a future date, we may offer different storage options, including memory-only, for those that don't want durable storage.
 
-NWorkQueue is built with C# in .NET Core, i.e. standard 2.0.  This means it should run on Windows, Linux and Mac.  
+NWorkQueue is built with C# in .NET Core 3.1.  This means it should run on Windows, Linux and Mac.  
 
-We'll try to post benchmarks once the project is complete, but the goal is more durability and resilency focused than raw speed, however constant speed optimaizations are being made.
+We'll post benchmarks once the project is complete, but the goal is more durability and resilency than raw speed.
