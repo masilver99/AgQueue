@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// <copyright file="IQueueApi.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
 using System.ServiceModel;
 using System.Threading.Tasks;
+using NWorkQueue.Common.Models;
 
 namespace NWorkQueue.Common
 {
     [ServiceContract(Name = "")]
-    interface IQueueApi
+    public interface IQueueApi
     {
-        ValueTask<>
+        ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request);
     }
 }

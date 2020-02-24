@@ -1,16 +1,18 @@
-﻿using Grpc.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// <copyright file="QueueApi.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
 using System.Threading.Tasks;
+using NWorkQueue.Common;
+using NWorkQueue.Common.Models;
 
 namespace NWorkQueue.Server
 {
     public class QueueApi : IQueueApi
     {
-        ValueTask Test()
+        public ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request)
         {
-            throw new RpcException
+            return new ValueTask<CreateQueueResponse>(new CreateQueueResponse());
         }
         //CreateQueue
         //DeleteQueue
