@@ -19,7 +19,7 @@ namespace NWorkQueue.Library
 {
     /// <summary>
     /// Starting point for accessing all queue related APIS
-    /// This is mostly a factory for creating Queues and Transactions
+    /// This is mostly a factory for creating Queues and Transactions.
     /// </summary>
     public class InternalApi : IDisposable
     {
@@ -30,7 +30,7 @@ namespace NWorkQueue.Library
         /// <summary>
         /// Initializes a new instance of the <see cref="InternalApi"/> class.
         /// </summary>
-        /// <param name="deleteExistingData">Deletes all Queues, Messages and Transactions</param>
+        /// <param name="deleteExistingData">Deletes all Queues, Messages and Transactions.</param>
         public InternalApi(bool deleteExistingData = false)
         {
             // Setup Storage
@@ -48,8 +48,8 @@ namespace NWorkQueue.Library
         /// <summary>
         /// Creates a new queue. An exception is thrown is queue already exists.
         /// </summary>
-        /// <param name="queueName">The name of the queue</param>
-        /// <returns>A Queue object</returns>
+        /// <param name="queueName">The name of the queue.</param>
+        /// <returns>A Queue object.</returns>
         public Queue CreateQueue(string queueName)
         {
             throw new NotImplementedException();
@@ -78,9 +78,9 @@ namespace NWorkQueue.Library
         }
 
         /// <summary>
-        /// Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
+        /// Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue.
         /// </summary>
-        /// <param name="queueId">Queue id</param>
+        /// <param name="queueId">Queue id.</param>
         public void DeleteQueue(long queueId)
         {
             // Throw exception if queue does not exist
@@ -109,30 +109,29 @@ namespace NWorkQueue.Library
             }
         }
 
-
         /// <summary>
-        /// Returns a Queue object by name
+        /// Returns a Queue object by name.
         /// </summary>
-        /// <param name="queueName">The name of the queue to return</param>
-        /// <param name="autoCreate">If the name doesn't exist, create it otherwise throw an exception</param>
-        /// <returns>A Queue object</returns>
+        /// <param name="queueName">The name of the queue to return.</param>
+        /// <param name="autoCreate">If the name doesn't exist, create it otherwise throw an exception.</param>
+        /// <returns>A Queue object.</returns>
         public Queue GetQueueByName(string queueName, bool autoCreate)
         {
             throw new NotImplementedException();
-
         }
 
         /// <summary>
-        /// Returns a Queue object based on a queue ID
+        /// Returns a Queue object based on a queue ID.
         /// </summary>
-        /// <param name="queueId">The Queue ID to lookup</param>
-        /// <returns>A Queue object</returns>
+        /// <param name="queueId">The Queue ID to lookup.</param>
+        /// <returns>A Queue object.</returns>
         public Queue GetQueueById(long queueId)
         {
             throw new NotImplementedException();
         }
+
         /// <summary>
-        /// Gets Queue related APIs
+        /// Gets Queue related APIs.
         /// </summary>
         // public Queue Queue { get; }
 

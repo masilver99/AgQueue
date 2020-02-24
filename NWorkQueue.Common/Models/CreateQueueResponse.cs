@@ -10,12 +10,12 @@ namespace NWorkQueue.Common.Models
     public class CreateQueueResponse
     {
         [DataMember(Order = 1)]
-        public CreateQueueStatus Status;
+        public CreateQueueStatus Status { get; set; }
 
         [DataMember(Order = 2)]
-        public long QueueId;
+        public long QueueId { get; set; }
 
         [DataMember(Order = 3)]
-        public string Message;
+        public string Message { get; set; }
     }
 }
