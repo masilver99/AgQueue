@@ -10,6 +10,11 @@ namespace NWorkQueue.Server
 {
     public class QueueApi : IQueueApi
     {
+        public QueueApi()
+        {
+
+        }
+
         public ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request)
         {
             return new ValueTask<CreateQueueResponse>(new CreateQueueResponse());

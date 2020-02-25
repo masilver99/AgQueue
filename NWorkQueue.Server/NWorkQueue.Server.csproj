@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NWorkQueue.Common\NWorkQueue.Common.csproj" />
+    <ProjectReference Include="..\NWorkQueue.Sqlite\NWorkQueue.Sqlite.csproj" />
   </ItemGroup>
 
 </Project>

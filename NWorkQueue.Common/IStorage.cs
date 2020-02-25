@@ -16,8 +16,7 @@ namespace NWorkQueue.Common
         /// Called when Queue process starts.  Connections to the storage should be made here, etc.
         /// </summary>
         /// <param name="deleteExistingData">Should all existing queues and messages be deleted.</param>
-        /// <param name="settings">Could be connection string, could be empty, could be json settings.  Depends on the underlying storage class.</param>
-        void InitializeStorage(bool deleteExistingData, string settings);
+        void InitializeStorage(bool deleteExistingData);
 
         /// <summary>
         /// Get the id of the last transaction created, assuming the last ID is the largest.

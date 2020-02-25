@@ -31,12 +31,11 @@ namespace NWorkQueue.Library
         /// Initializes a new instance of the <see cref="InternalApi"/> class.
         /// </summary>
         /// <param name="deleteExistingData">Deletes all Queues, Messages and Transactions.</param>
-        public InternalApi(bool deleteExistingData = false)
+        public InternalApi(IStorage storage, bool deleteExistingData = false)
         {
             // Setup Storage
             // TODO: We can set this by config at a later time.  Currently, only Sqlite is supported
-            this.storage = new StorageSqlite();
-            this.storage.InitializeStorage(deleteExistingData, @"Data Source=SqlLite.db;");
+            this.storage = storage;
 
             // this.Message = new Message(this.storage);
             // this.Transaction = new Transaction(this.storage);

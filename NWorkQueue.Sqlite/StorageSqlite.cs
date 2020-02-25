@@ -13,18 +13,21 @@ namespace NWorkQueue.Sqlite
     /// <summary>
     /// Implements the IStorage interface for storing and retriving queue date to SQLite
     /// </summary>
-    public class StorageSqlite : IStorage
+    public class StorageSqlLite : IStorage
     {
         private SqliteConnection connection;
 
         // IStorage methods below
+        public StorageSqlLite(string connectionString)
+        {
+            this.connection = new SqliteConnection(connectionString);
+            this.connection.Open();
+        }
 
         /// <inheritdoc/>
-        public void InitializeStorage(bool deleteExistingData, string settings)
+        public void InitializeStorage(bool deleteExistingData)
         {
             // connection = new SqliteConnection(@"Data Source=:memory:;"); //About 30% faster, and NO durability
-            this.connection = new SqliteConnection(settings);
-            this.connection.Open();
             if (deleteExistingData)
             {
                 this.DeleteAllTables();

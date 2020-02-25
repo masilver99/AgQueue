@@ -5,6 +5,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using NWorkQueue.Common;
+using NWorkQueue.Sqlite;
 using ProtoBuf.Grpc.Server;
 
 namespace NWorkQueue.Server
@@ -22,6 +24,8 @@ namespace NWorkQueue.Server
             {
                 config.ResponseCompressionLevel = System.IO.Compression.CompressionLevel.Optimal;
             });
+
+            services.AddSingleton<IStorage>(new StorageSqlLite(@"Data Source=SqlLite.db;"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
