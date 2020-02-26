@@ -8,7 +8,7 @@ using NWorkQueue.Common.Models;
 
 namespace NWorkQueue.Common
 {
-    [ServiceContract(Name = "")]
+    [ServiceContract(Name = "Queue.Api")]
     public interface IQueueApi
     {
         ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request);

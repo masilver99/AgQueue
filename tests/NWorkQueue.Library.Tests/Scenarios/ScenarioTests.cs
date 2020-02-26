@@ -55,7 +55,7 @@ namespace NWorkQueue.Library.Tests.Scenarios
         /// Expectations: 
         ///   A) Message is in Queue
         ///   B) Transaction is closed
-        [Test]
+        /*[Test]
         public void AddMessage()
         {
             using (var api = new InternalApi(true))
@@ -79,6 +79,7 @@ namespace NWorkQueue.Library.Tests.Scenarios
            Expectations:
              A) No Message in queue
         */
+        /*
         [Test]
         public void AddMessagePullMessage()
         {
@@ -92,6 +93,6 @@ namespace NWorkQueue.Library.Tests.Scenarios
                 var messageCount = queue.GetMessageCount();
                 Assert.AreEqual(1, messageCount);
             }
-        }
+        }*/
     }
 }

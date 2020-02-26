@@ -9,6 +9,7 @@ namespace NWorkQueue.Library.Tests
     [TestFixture]
     public class QueueTests
     {
+        /*
         [Test]
         public void InvalidCreateQueueName()
         {
@@ -96,7 +97,7 @@ namespace NWorkQueue.Library.Tests
                 api.DeleteQueue(queue.Id);
                 Assert.AreEqual(0, queue.GetMessageCount());
             }
-        }
+        }*/
     }
 }
  

@@ -9,11 +9,13 @@ namespace NWorkQueue.Library.Tests
     [TestFixture]
     public class MessageTests
     {
+        /*
         [Test]
         public void Add10000Messages()
         {
-            using (var api = new InternalApi(true))
-            {
+
+            using (var api = new InternalApi(new )) ;
+            
                 var queue = api.CreateQueue("WiseMan");
                 var trans = api.CreateTransaction();
                 for (int i = 0; i < 10000; i++)
@@ -25,7 +27,6 @@ namespace NWorkQueue.Library.Tests
                 trans.Commit();
                 messageCount = queue.GetMessageCount();
                 Assert.AreEqual(10000, messageCount);
-            }
         }
 
         /* Not sure this will be possible in updated api

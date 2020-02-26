@@ -7,21 +7,21 @@
         <member name="T:NWorkQueue.Library.InternalApi">
             <summary>
             Starting point for accessing all queue related APIS
-            This is mostly a factory for creating Queues and Transactions
+            This is mostly a factory for creating Queues and Transactions.
             </summary>
         </member>
-        <member name="M:NWorkQueue.Library.InternalApi.#ctor(System.Boolean)">
+        <member name="M:NWorkQueue.Library.InternalApi.#ctor(NWorkQueue.Common.IStorage,System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:NWorkQueue.Library.InternalApi"/> class.
             </summary>
-            <param name="deleteExistingData">Deletes all Queues, Messages and Transactions</param>
+            <param name="deleteExistingData">Deletes all Queues, Messages and Transactions.</param>
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.CreateQueue(System.String)">
             <summary>
             Creates a new queue. An exception is thrown is queue already exists.
             </summary>
-            <param name="queueName">The name of the queue</param>
-            <returns>A Queue object</returns>
+            <param name="queueName">The name of the queue.</param>
+            <returns>A Queue object.</returns>
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.DeleteQueue(System.String)">
             <summary>
@@ -31,24 +31,24 @@
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.DeleteQueue(System.Int64)">
             <summary>
-            Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue
+            Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue.
             </summary>
-            <param name="queueId">Queue id</param>
+            <param name="queueId">Queue id.</param>
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.GetQueueByName(System.String,System.Boolean)">
             <summary>
-            Returns a Queue object by name
+            Returns a Queue object by name.
             </summary>
-            <param name="queueName">The name of the queue to return</param>
-            <param name="autoCreate">If the name doesn't exist, create it otherwise throw an exception</param>
-            <returns>A Queue object</returns>
+            <param name="queueName">The name of the queue to return.</param>
+            <param name="autoCreate">If the name doesn't exist, create it otherwise throw an exception.</param>
+            <returns>A Queue object.</returns>
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.GetQueueById(System.Int64)">
             <summary>
-            Returns a Queue object based on a queue ID
+            Returns a Queue object based on a queue ID.
             </summary>
-            <param name="queueId">The Queue ID to lookup</param>
-            <returns>A Queue object</returns>
+            <param name="queueId">The Queue ID to lookup.</param>
+            <returns>A Queue object.</returns>
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.Dispose">
             <summary>

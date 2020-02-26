@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NWorkQueue.Library\NWorkQueue.Library.csproj" />
+    <ProjectReference Include="..\..\NWorkQueue.Library\NWorkQueue.Library.csproj" />
   </ItemGroup>
 
 </Project>
