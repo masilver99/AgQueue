@@ -58,7 +58,7 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetMaxQueueId">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.AddQueue(System.Int64,System.String)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.AddQueue(System.String)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.DeleteQueue(System.Int64,NWorkQueue.Common.IStorageTransaction)">

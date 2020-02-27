@@ -131,11 +131,10 @@
             <param name="storageTrans">Storage Transaction.</param>
             <param name="commitDateTime">Datetime of the commit.</param>
         </member>
-        <member name="M:NWorkQueue.Common.IStorage.AddQueue(System.Int64,System.String)">
+        <member name="M:NWorkQueue.Common.IStorage.AddQueue(System.String)">
             <summary>
             Create a new Queue in storage.
             </summary>
-            <param name="nextId">ID to use as the queue id.</param>
             <param name="name">Queue name.</param>
         </member>
         <member name="M:NWorkQueue.Common.IStorage.DeleteQueue(System.Int64,NWorkQueue.Common.IStorageTransaction)">

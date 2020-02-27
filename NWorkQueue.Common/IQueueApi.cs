@@ -5,6 +5,7 @@
 using System.ServiceModel;
 using System.Threading.Tasks;
 using NWorkQueue.Common.Models;
+using NWorkQueue.Server;
 
 namespace NWorkQueue.Common
 {
@@ -12,5 +13,6 @@ namespace NWorkQueue.Common
     public interface IQueueApi
     {
         ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request);
+        ValueTask<ActionResponse> InitializeStorage(InitializeStorageRequest request);
     }
 }

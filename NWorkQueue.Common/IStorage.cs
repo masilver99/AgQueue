@@ -132,9 +132,8 @@ namespace NWorkQueue.Common
         /// <summary>
         /// Create a new Queue in storage.
         /// </summary>
-        /// <param name="nextId">ID to use as the queue id.</param>
         /// <param name="name">Queue name.</param>
-        void AddQueue(long nextId, string name);
+        long AddQueue(string name);
 
         /// <summary>
         /// Delete a Queue and ALL messages in the Queue.

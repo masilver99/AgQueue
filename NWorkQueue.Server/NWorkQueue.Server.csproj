@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
-
+  
+  
   <ItemGroup>
     <Content Remove="stylecop.json" />
   </ItemGroup>
@@ -22,7 +24,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NWorkQueue.Common\NWorkQueue.Common.csproj" />
+    <ProjectReference Include="..\NWorkQueue.Library\NWorkQueue.Library.csproj" />
     <ProjectReference Include="..\NWorkQueue.Sqlite\NWorkQueue.Sqlite.csproj" />
   </ItemGroup>
-
+  
 </Project>

@@ -112,10 +112,10 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public void AddQueue(long nextId, string name)
+        public long AddQueue(string name)
         {
-            const string sql = "INSERT INTO Queues (Id, Name) VALUES (@Id, @Name);";
-            this.connection.Execute(sql, new { Id = nextId, Name = name });
+            const string sql = "INSERT INTO Queues (Name) VALUES (@Name);SELECT last_insert_rowid();";
+            return this.connection.ExecuteScalar<long>(sql, new { Name = name });
         }
 
         /// <inheritdoc/>

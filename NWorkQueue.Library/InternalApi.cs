@@ -30,16 +30,10 @@ namespace NWorkQueue.Library
         /// <summary>
         /// Initializes a new instance of the <see cref="InternalApi"/> class.
         /// </summary>
-        /// <param name="deleteExistingData">Deletes all Queues, Messages and Transactions.</param>
-        public InternalApi(IStorage storage, bool deleteExistingData = false)
+        public InternalApi(IStorage storage)
         {
             // Setup Storage
-            // TODO: We can set this by config at a later time.  Currently, only Sqlite is supported
             this.storage = storage;
-
-            // this.Message = new Message(this.storage);
-            // this.Transaction = new Transaction(this.storage);
-            // this.Queue = new Queue(this.storage);
         }
 
         // Below is a set of factories.  All of these methods return a Queue, Transaction or Message
@@ -49,21 +43,35 @@ namespace NWorkQueue.Library
         /// </summary>
         /// <param name="queueName">The name of the queue.</param>
         /// <returns>A Queue object.</returns>
-        public Queue CreateQueue(string queueName)
+        public long CreateQueue(string queueName)
         {
-            throw new NotImplementedException();
+            var fixedName = this.StandardizeQueueName(queueName);
+
+            // Check if Queue already exists
+            if (this.storage.GetQueueId(fixedName).HasValue)
+            {
+                throw new ArgumentException("Queue already exists");
+            }
+
+            return this.storage.AddQueue(queueName);
+        }
+
+        // 
+        private string StandardizeQueueName(string rawQueueName)
+        {
+            return rawQueueName.Replace(" ", string.Empty);
         }
 
         /// <summary>
         /// Delete a queue and all messages in the queue.
         /// </summary>
-        /// <param name="name">Name of the queue to delete.</param>
-        public void DeleteQueue(string name)
+        /// <param name="queueName">Name of the queue to delete.</param>
+        public void DeleteQueue(string queueName)
         {
-            var fixedName = name.Trim();
+            var fixedName = this.StandardizeQueueName(queueName);
             if (fixedName.Length == 0)
             {
-                throw new ArgumentException("Queue name cannot be empty", nameof(name));
+                throw new ArgumentException("Queue name cannot be empty", nameof(queueName));
             }
 
             var id = this.storage.GetQueueId(fixedName);
@@ -150,6 +158,11 @@ namespace NWorkQueue.Library
         public void Dispose()
         {
             this.storage.Dispose();
+        }
+
+        public void InitializeStorage(bool deleteExistingData)
+        {
+            this.storage.InitializeStorage(deleteExistingData);
         }
 
         internal Transaction CreateTransaction()

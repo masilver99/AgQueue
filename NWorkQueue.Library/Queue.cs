@@ -58,7 +58,7 @@ namespace NWorkQueue.Library
 
             // Add new queue
             var nextId = Interlocked.Increment(ref this.currQueueId);
-            this.storage.AddQueue(nextId, name);
+            //this.storage.AddQueue(nextId, name);
 
             return nextId;
         }

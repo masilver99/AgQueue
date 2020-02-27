@@ -5,21 +5,30 @@
 using System.Threading.Tasks;
 using NWorkQueue.Common;
 using NWorkQueue.Common.Models;
+using NWorkQueue.Library;
 
 namespace NWorkQueue.Server
 {
     public class QueueApi : IQueueApi
     {
-        public QueueApi()
-        {
+        private InternalApi internalApi;
 
+        public QueueApi(InternalApi internalApi)
+        {
+            this.internalApi = internalApi;
         }
 
         public ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request)
         {
             return new ValueTask<CreateQueueResponse>(new CreateQueueResponse());
         }
-        //CreateQueue
+
+        public ValueTask<ActionResponse> InitializeStorage(InitializeStorageRequest request)
+        {
+            this.internalApi.InitializeStorage(request.DeleteExistingData);
+            return new ValueTask<ActionResponse>(new ActionResponse { Success = true });
+        }
+
         //DeleteQueue
         //AddMessage
         //PeekMessage

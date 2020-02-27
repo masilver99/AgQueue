@@ -10,11 +10,10 @@
             This is mostly a factory for creating Queues and Transactions.
             </summary>
         </member>
-        <member name="M:NWorkQueue.Library.InternalApi.#ctor(NWorkQueue.Common.IStorage,System.Boolean)">
+        <member name="M:NWorkQueue.Library.InternalApi.#ctor(NWorkQueue.Common.IStorage)">
             <summary>
             Initializes a new instance of the <see cref="T:NWorkQueue.Library.InternalApi"/> class.
             </summary>
-            <param name="deleteExistingData">Deletes all Queues, Messages and Transactions.</param>
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.CreateQueue(System.String)">
             <summary>
@@ -27,7 +26,7 @@
             <summary>
             Delete a queue and all messages in the queue.
             </summary>
-            <param name="name">Name of the queue to delete.</param>
+            <param name="queueName">Name of the queue to delete.</param>
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.DeleteQueue(System.Int64)">
             <summary>
