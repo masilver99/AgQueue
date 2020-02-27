@@ -11,6 +11,8 @@ Besides, for simple work queues, MSMQ may be overkill.  Same with RabbitMQ and o
 
 [Development Overview](dev_overview.md)
 
+[Development Status](dev_status.md)
+
 ### Example
 
 A classic example of when to use a work queue is sending email from a website.  When your users request a password change or any other activity that will send an email, you don't want their browsing experience to slow down while the email is sent, so you place a message into a queue, which is near instant.  In the background or on another machine, the message is picked up and and email is sent out.
