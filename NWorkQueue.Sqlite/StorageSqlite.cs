@@ -61,7 +61,7 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public TransactionModel GetTransactionById(long transId, IStorageTransaction storageTrans = null)
+        public TransactionModel GetTransactionById(long transId, IStorageTransaction? storageTrans = null)
         {
             const string sql = "SELECT * FROM Transactions WHERE Id = @Id";
             return this.connection.QueryFirstOrDefault<TransactionModel>(sql, new { Id = transId }, (storageTrans as DbTransaction)?.SqliteTransaction);
@@ -221,7 +221,7 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public void AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "")
+        public void AddMessage(long transId, IStorageTransaction? storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "")
         {
             const string sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data, CorrelationId, GroupName, Metadata) VALUES " +
                       "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Data, @CorrelationId, @GroupName, @Metadata);";

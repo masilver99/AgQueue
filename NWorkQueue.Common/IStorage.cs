@@ -65,7 +65,7 @@ namespace NWorkQueue.Common
         /// <param name="transId">Id of the tranaction to lookup.</param>
         /// <param name="storageTrans">Optional Storage transaction to perform this within.</param>
         /// <returns>Transaction Model.</returns>
-        TransactionModel GetTransactionById(long transId, IStorageTransaction storageTrans = null);
+        TransactionModel GetTransactionById(long transId, IStorageTransaction? storageTrans = null);
 
         /// <summary>
         /// Mark the Queue Transaction as closed.
@@ -157,7 +157,7 @@ namespace NWorkQueue.Common
         /// <param name="expiryDateTime">Datetime the message will expire.</param>
         /// <param name="correlation">Correlation ID.</param>
         /// <param name="groupName">Group name.</param>
-        void AddMessage(long transId, IStorageTransaction storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "");
+        void AddMessage(long transId, IStorageTransaction? storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "");
 
         /// <summary>
         /// Returns message total message count for a queue.
