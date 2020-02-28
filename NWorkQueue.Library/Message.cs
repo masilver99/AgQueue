@@ -27,6 +27,5 @@ namespace NWorkQueue.Library
             this.storage = storage;
             this.currMessageId = this.storage.GetMaxMessageId();
         }
-
     }
 }

@@ -21,6 +21,10 @@ namespace NWorkQueue.Library
     /// Starting point for accessing all queue related APIS
     /// This is mostly a factory for creating Queues and Transactions.
     /// </summary>
+    /// <remarks>
+    /// Exceptions are not used unless there is an exceptional condition.  For example, if an items doesn't exist or a param is invalid, 
+    /// this is handled without an exception.  This is mostly for speed and simplicity with the gRPC interface.
+    /// </remarks>
     public class InternalApi : IDisposable
     {
         private static readonly DateTime MaxDateTime = DateTime.MaxValue;
@@ -36,27 +40,24 @@ namespace NWorkQueue.Library
             this.storage = storage;
         }
 
-        // Below is a set of factories.  All of these methods return a Queue, Transaction or Message
-
         /// <summary>
-        /// Creates a new queue. An exception is thrown is queue already exists.
+        /// Creates a new queue. 
         /// </summary>
         /// <param name="queueName">The name of the queue.</param>
         /// <returns>A Queue object.</returns>
-        public long CreateQueue(string queueName)
+        public (long QueueId, ApiResult ApiResult) CreateQueue(string queueName)
         {
             var fixedName = this.StandardizeQueueName(queueName);
 
             // Check if Queue already exists
             if (this.storage.GetQueueId(fixedName).HasValue)
             {
-                throw new ArgumentException("Queue already exists");
+                return (0, new ApiResult { ResultCode = ResultCode.AlreadyExists, Message = $"Queue name {fixedName} already exists" });
             }
 
-            return this.storage.AddQueue(queueName);
+            return (this.storage.AddQueue(queueName), new ApiResult { ResultCode = ResultCode.Ok });
         }
 
-        // 
         private string StandardizeQueueName(string rawQueueName)
         {
             return rawQueueName.Replace(" ", string.Empty);

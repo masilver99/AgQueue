@@ -5,7 +5,7 @@
 namespace NWorkQueue.Common
 {
     /// <summary>
-    /// Interface for Client to implement
+    /// Interface for Client to implement.
     /// </summary>
     public interface INWorkQueueClient
     {
