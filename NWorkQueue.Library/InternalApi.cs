@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using NWorkQueue.Common;
 using NWorkQueue.Sqlite;
 
@@ -45,12 +46,12 @@ namespace NWorkQueue.Library
         /// </summary>
         /// <param name="queueName">The name of the queue.</param>
         /// <returns>A Queue object.</returns>
-        public (long QueueId, ApiResult ApiResult) CreateQueue(string queueName)
+        public async ValueTask<(long QueueId, ApiResult ApiResult)> CreateQueue(string queueName)
         {
             var fixedName = this.StandardizeQueueName(queueName);
 
             // Check if Queue already exists
-            if (this.storage.GetQueueId(fixedName).HasValue)
+            if ((await this.storage.GetQueueId(fixedName)).HasValue)
             {
                 return (0, new ApiResult { ResultCode = ResultCode.AlreadyExists, Message = $"Queue name {fixedName} already exists" });
             }
@@ -67,7 +68,7 @@ namespace NWorkQueue.Library
         /// Delete a queue and all messages in the queue.
         /// </summary>
         /// <param name="queueName">Name of the queue to delete.</param>
-        public void DeleteQueue(string queueName)
+        public async ValueTask DeleteQueue(string queueName)
         {
             var fixedName = this.StandardizeQueueName(queueName);
             if (fixedName.Length == 0)
@@ -75,7 +76,7 @@ namespace NWorkQueue.Library
                 throw new ArgumentException("Queue name cannot be empty", nameof(queueName));
             }
 
-            var id = this.storage.GetQueueId(fixedName);
+            var id = await this.storage.GetQueueId(fixedName);
 
             if (!id.HasValue)
             {

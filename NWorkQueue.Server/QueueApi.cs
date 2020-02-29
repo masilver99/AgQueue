@@ -13,23 +13,23 @@ namespace NWorkQueue.Server
 {
     public class QueueApi : IQueueApi
     {
-        private InternalApi internalApi;
+        private readonly InternalApi internalApi;
 
         public QueueApi(InternalApi internalApi)
         {
             this.internalApi = internalApi;
         }
 
-        public ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request)
+        public async ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request)
         {
-            CreateQueueResponse createQueueResponse;
             try
             {
-                var result = this.internalApi.CreateQueue(request.QueueName);
+                var result = await this.internalApi.CreateQueue(request.QueueName);
                 if (result.ApiResult.IsSuccess)
                 {
-                    return new ValueTask<CreateQueueResponse>(new CreateQueueResponse { QueueId = result.QueueId, Success = true });
+                    return new CreateQueueResponse(result.QueueId);
                 }
+
                 throw new RpcException(new Status(result.ApiResult.ResultCode.ToGrpcStatus(), result.ApiResult.Message));
             }
             catch (Exception e)

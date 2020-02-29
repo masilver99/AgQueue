@@ -9,13 +9,12 @@ namespace NWorkQueue.Common.Models
     [DataContract]
     public class CreateQueueResponse
     {
+        public CreateQueueResponse(long queueId)
+        {
+            this.QueueId = queueId;
+        }
+
         [DataMember(Order = 1)]
-        public bool Success { get; set; }
-
-        [DataMember(Order = 2)]
         public long QueueId { get; set; }
-
-        [DataMember(Order = 3)]
-        public string Message { get; set; }
     }
 }

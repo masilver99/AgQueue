@@ -7,6 +7,7 @@ namespace NWorkQueue.Library
     using System;
     using System.Text.RegularExpressions;
     using System.Threading;
+    using System.Threading.Tasks;
     using MessagePack;
     using NWorkQueue.Common;
 
@@ -40,7 +41,7 @@ namespace NWorkQueue.Library
         /// </summary>
         /// <param name="name">Name of queue to create</param>
         /// <returns>The queue Id</returns>
-        public long Create(string name)
+        public async ValueTask<long> Create(string name)
         {
             // validation
             if (name.Length == 0)
@@ -51,7 +52,7 @@ namespace NWorkQueue.Library
             this.ValidateQueueName(name);
 
             // Check if queue already exists
-            if (this.storage.GetQueueId(name).HasValue)
+            if ((await this.storage.GetQueueId(name)).HasValue)
             {
                 throw new Exception("Queue already exists");
             }

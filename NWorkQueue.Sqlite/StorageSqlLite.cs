@@ -5,6 +5,8 @@
 namespace NWorkQueue.Sqlite
 {
     using System;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
     using Dapper;
     using Microsoft.Data.Sqlite;
     using NWorkQueue.Common;
@@ -15,50 +17,57 @@ namespace NWorkQueue.Sqlite
     /// </summary>
     public class StorageSqlLite : IStorage
     {
-        private SqliteConnection connection;
+        //private SqliteConnection connection;
+        private string connectionString;
 
         // IStorage methods below
         public StorageSqlLite(string connectionString)
         {
-            this.connection = new SqliteConnection(connectionString);
-            this.connection.Open();
+            this.connectionString = connectionString;
         }
 
+
         /// <inheritdoc/>
-        public void InitializeStorage(bool deleteExistingData)
+        public async ValueTask InitializeStorage(bool deleteExistingData)
         {
             // connection = new SqliteConnection(@"Data Source=:memory:;"); //About 30% faster, and NO durability
             if (deleteExistingData)
             {
-                this.DeleteAllTables();
+                await this.DeleteAllTables();
             }
 
-            this.CreateTables(); // Non-destructive
+            await this.CreateTables(); // Non-destructive
         }
 
         #region Transaction methods
 
         /// <inheritdoc/>
-        public long GetMaxTransactionId()
+        public async ValueTask<long> GetMaxTransactionId()
         {
-            // This is bad code.  Two transactions at the same time will cause a conflict.
-            // Need to go ahead and create a record in the DB
-            const string sql = "SELECT Max(ID) FROM TRANSACTIONS;";
-            var id = this.connection.ExecuteScalar<int?>(sql);
-            if (id.HasValue)
+            return await Execute<long>(async (connection) =>
             {
-                return id.Value + 1;
-            }
+                // This is bad code.  Two transactions at the same time will cause a conflict.
+                // Need to go ahead and create a record in the DB
+                const string sql = "SELECT Max(ID) FROM TRANSACTIONS;";
+                var id = await connection.ExecuteScalarAsync<int?>(sql);
+                if (id.HasValue)
+                {
+                    return id.Value + 1;
+                }
 
-            return 0;
+                return 0;
+            });
         }
 
         /// <inheritdoc/>
-        public void StartTransaction(long newId, int expiryTimeInMinutes)
+        public async ValueTask StartTransaction(long newId, int expiryTimeInMinutes)
         {
-            const string sql = "INSERT INTO Transactions (Id, Active, StartDateTime, ExpiryDateTime) VALUES (@Id, 1, @StartDateTime, @ExpiryDateTime)";
-            this.connection.Execute(sql, new { StartDateTime = DateTime.Now, ExpiryDateTime = DateTime.Now.AddMinutes(expiryTimeInMinutes), Id = newId });
-        }
+            await Execute(async (connection) =>
+                {
+                    const string sql = "INSERT INTO Transactions (Id, Active, StartDateTime, ExpiryDateTime) VALUES (@Id, 1, @StartDateTime, @ExpiryDateTime)";
+                    connection.Execute(sql, new { StartDateTime = DateTime.Now, ExpiryDateTime = DateTime.Now.AddMinutes(expiryTimeInMinutes), Id = newId });
+                });
+            }
 
         /// <inheritdoc/>
         public TransactionModel GetTransactionById(long transId, IStorageTransaction? storageTrans = null)
@@ -126,10 +135,10 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public long? GetQueueId(string name)
+        public async Task<long?> GetQueueId(string name)
         {
             const string sql = "SELECT ID FROM Queues WHERE Name LIKE @Name;";
-            var id = this.connection.ExecuteScalar<long?>(sql, new { Name = name });
+            var id = await this.connection.ExecuteScalarAsync<long?>(sql, new { Name = name });
             return id;
         }
 
@@ -260,7 +269,7 @@ namespace NWorkQueue.Sqlite
             this.connection.Dispose();
         }
 
-        private void CreateTables()
+        private async ValueTask CreateTables()
         {
 #pragma warning disable SA1515
 
@@ -310,7 +319,7 @@ namespace NWorkQueue.Sqlite
 #pragma warning restore SA1515
         }
 
-        private void DeleteAllTables()
+        private async ValueTask DeleteAllTables()
         {
             const string sql =
                 "BEGIN;" +
@@ -318,7 +327,71 @@ namespace NWorkQueue.Sqlite
                 "DROP TABLE IF EXISTS Queues;" +
                 "DROP table IF EXISTS Transactions;" +
                 "COMMIT;";
-            this.connection.Execute(sql);
+            await this.connection.ExecuteAsync(sql);
         }
+
+        /// <summary>
+        /// Executes an anonymous method wrapped with robust logging, command line options loading, and error handling
+        /// </summary>
+        /// <typeparam name="TOptions">Options class to load from command line</typeparam>
+        /// <param name="programName">name of the executing program</param>
+        /// <param name="args">Command line arguments</param>
+        /// <param name="action">The anonymous method to execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.
+        /// The method must be async.</param>
+        /// <returns>returns an async Task</returns>
+        public async ValueTask<T> Execute<T>(Func<SqliteConnection, ValueTask<T>> action)
+        {
+            // using (var logger = Utilities.BuildLogger(programName, EnvironmentConfig.AspNetCoreEnvironment, EnvironmentConfig.SeqServerUrl))
+            // logger.Information("Starting {ProgramName}", programName);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            // AppDomain.CurrentDomain.UnhandledException += Utilities.CurrentDomain_UnhandledException;
+
+            try
+            {
+                using var connection = new SqliteConnection(this.connectionString);
+                T returnValue = await action(connection);
+                stopwatch.Stop();
+                return returnValue;
+                // logger.Information("{ProgramName} completed in {ElapsedTime}ms", programName, stopwatch.ElapsedMilliseconds);
+            }
+            catch (Exception exc)
+            {
+                //logger.Fatal(exc, "A fatal exception prevented this application from running to completion.");
+            }
+            finally
+            {
+                //Log.CloseAndFlush();
+            }
+        }
+
+        public async ValueTask Execute(Func<SqliteConnection, ValueTask> action)
+        {
+            // using (var logger = Utilities.BuildLogger(programName, EnvironmentConfig.AspNetCoreEnvironment, EnvironmentConfig.SeqServerUrl))
+            // logger.Information("Starting {ProgramName}", programName);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            // AppDomain.CurrentDomain.UnhandledException += Utilities.CurrentDomain_UnhandledException;
+
+            try
+            {
+                using var connection = new SqliteConnection(this.connectionString);
+                await action(connection);
+                stopwatch.Stop();
+                // logger.Information("{ProgramName} completed in {ElapsedTime}ms", programName, stopwatch.ElapsedMilliseconds);
+            }
+            catch (Exception exc)
+            {
+                //logger.Fatal(exc, "A fatal exception prevented this application from running to completion.");
+            }
+            finally
+            {
+                //Log.CloseAndFlush();
+            }
+        }
+        //Environment.Exit(returnStatus);
     }
 }
+    

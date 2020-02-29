@@ -5,6 +5,7 @@
 namespace NWorkQueue.Common
 {
     using System;
+    using System.Threading.Tasks;
     using NWorkQueue.Common.Models;
 
     /// <summary>
@@ -16,7 +17,7 @@ namespace NWorkQueue.Common
         /// Called when Queue process starts.  Connections to the storage should be made here, etc.
         /// </summary>
         /// <param name="deleteExistingData">Should all existing queues and messages be deleted.</param>
-        void InitializeStorage(bool deleteExistingData);
+        ValueTask InitializeStorage(bool deleteExistingData);
 
         /// <summary>
         /// Get the id of the last transaction created, assuming the last ID is the largest.
@@ -174,7 +175,7 @@ namespace NWorkQueue.Common
         /// </remarks>
         /// <param name="name">Name of the queue to lookup.</param>
         /// <returns>Queue ID or null if queue not found.</returns>
-        long? GetQueueId(string name);
+        Task<long?> GetQueueId(string name);
 
         /// <summary>
         /// Does a Quque exist for the specified id.
