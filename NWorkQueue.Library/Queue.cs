@@ -30,11 +30,13 @@ namespace NWorkQueue.Library
         /// <param name="storage">storage engine</param>
         internal Queue(IStorage storage)
         {
+            /*
             this.storage = storage;
 
             // Get starting Id. These are used to increment primary keys.
             this.currQueueId = this.storage.GetMaxQueueId();
-        }
+        */
+            }
 
         /// <summary>
         /// Creates a new queue. Queue cannot already exist
@@ -69,10 +71,12 @@ namespace NWorkQueue.Library
         /// </summary>
         /// <param name="queueId">Queue id</param>
         /// <returns>Message count</returns>
+        /*
         public long GetMessageCount()
         {
             return this.storage.GetMessageCount(this.currQueueId);
         }
+        */
 
         /* Not sure this is needed
         public WorkQueue GetQueue(string queueName)
@@ -101,12 +105,15 @@ namespace NWorkQueue.Library
         /// <returns>Message ID.</returns>
         public long AddMessage(Transaction trans, object message, string metaData, int priority = 0, int maxRetries = 3, DateTime? rawExpiryDateTime = null, int correlation = 0, string groupName = null)
         {
+            throw new NotImplementedException();
+            /*
             var addDateTime = DateTime.Now;
             DateTime expiryDateTime = rawExpiryDateTime ?? DateTime.MaxValue;
             var nextId = this.storage.GetMaxMessageId();
             var compressedMessage = MessagePackSerializer.Serialize(message);
             this.storage.AddMessage(trans.Id, null, nextId, this.currQueueId, compressedMessage, addDateTime, metaData, priority, maxRetries, expiryDateTime, correlation, groupName);
             return nextId;
+*/
         }
 
         private void ValidateQueueName(string queueName)

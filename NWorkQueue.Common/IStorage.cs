@@ -11,7 +11,7 @@ namespace NWorkQueue.Common
     /// <summary>
     /// The interface for storing and retrieving queue information from a storage mechinism, usually a database.
     /// </summary>
-    public interface IStorage : IDisposable
+    public interface IStorage
     {
         /// <summary>
         /// Called when Queue process starts.  Connections to the storage should be made here, etc.
@@ -23,12 +23,15 @@ namespace NWorkQueue.Common
         /// Get the id of the last transaction created, assuming the last ID is the largest.
         /// </summary>
         /// <returns>Returns the  Transaction Id.</returns>
+        /*
         long GetMaxTransactionId();
 
         /// <summary>
         /// Get the id of the last message created, assuming the last ID is the largest.
         /// </summary>
         /// <returns>Returns the max message Id.</returns>
+        
+        /*
         long GetMaxMessageId();
 
         /// <summary>
@@ -129,20 +132,20 @@ namespace NWorkQueue.Common
         /// <param name="storageTrans">Storage Transaction.</param>
         /// <param name="commitDateTime">Datetime of the commit.</param>
         void CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime);
-
+        */
         /// <summary>
         /// Create a new Queue in storage.
         /// </summary>
         /// <param name="name">Queue name.</param>
-        long AddQueue(string name);
+        ValueTask<long> AddQueue(string name);
 
         /// <summary>
         /// Delete a Queue and ALL messages in the Queue.
         /// </summary>
         /// <param name="id">Queue Id of the queue to delete.</param>
         /// <param name="storageTrans">The storage transaction to perform the operation under.</param>
-        void DeleteQueue(long id, IStorageTransaction storageTrans);
-
+        ValueTask DeleteQueue(long id, IStorageTransaction storageTrans);
+        /*
         /// <summary>
         /// Add a message to the storage.
         /// </summary>
@@ -166,7 +169,7 @@ namespace NWorkQueue.Common
         /// <param name="queueId">ID of the message queue.</param>
         /// <returns>Returns the count.</returns>
         long GetMessageCount(long queueId);
-
+        */
         /// <summary>
         /// Returns the id of the Queue.  If no queue is found, returns null.
         /// </summary>
@@ -175,8 +178,8 @@ namespace NWorkQueue.Common
         /// </remarks>
         /// <param name="name">Name of the queue to lookup.</param>
         /// <returns>Queue ID or null if queue not found.</returns>
-        Task<long?> GetQueueId(string name);
-
+        ValueTask<long?> GetQueueId(string name);
+        /*
         /// <summary>
         /// Does a Quque exist for the specified id.
         /// </summary>
@@ -190,5 +193,6 @@ namespace NWorkQueue.Common
         /// <param name="queueId">Queue id.</param>
         /// <param name="storageTrans">Storage transaction.</param>
         void DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans);
+        */
     }
 }

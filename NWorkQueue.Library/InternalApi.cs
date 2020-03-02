@@ -56,7 +56,7 @@ namespace NWorkQueue.Library
                 return (0, new ApiResult { ResultCode = ResultCode.AlreadyExists, Message = $"Queue name {fixedName} already exists" });
             }
 
-            return (this.storage.AddQueue(queueName), new ApiResult { ResultCode = ResultCode.Ok });
+            return (await this.storage.AddQueue(queueName), new ApiResult { ResultCode = ResultCode.Ok });
         }
 
         private string StandardizeQueueName(string rawQueueName)
@@ -92,6 +92,7 @@ namespace NWorkQueue.Library
         /// <param name="queueId">Queue id.</param>
         public void DeleteQueue(long queueId)
         {
+            /*
             // Throw exception if queue does not exist
             if (!this.storage.DoesQueueExist(queueId))
             {
@@ -116,6 +117,7 @@ namespace NWorkQueue.Library
                 Console.WriteLine(e);
                 trans.Rollback();
             }
+            */
         }
 
         /// <summary>
@@ -159,7 +161,7 @@ namespace NWorkQueue.Library
         /// </summary>
         public void Dispose()
         {
-            this.storage.Dispose();
+            ///Need to add OnDsiapose action in case some storage services require disposal
         }
 
         public void InitializeStorage(bool deleteExistingData)
