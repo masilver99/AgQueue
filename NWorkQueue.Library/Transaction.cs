@@ -44,7 +44,7 @@ namespace NWorkQueue.Library
         internal long Start()
         {
             var newId = Interlocked.Increment(ref this.currTransId);
-            this.storage.StartTransaction(newId, this.expiryTimeInMinutes);
+            //this.storage.StartTransaction(newId, this.expiryTimeInMinutes);
             return newId;
         }
 
@@ -55,7 +55,9 @@ namespace NWorkQueue.Library
         /// <returns>Enum detailing if update was successul</returns>
         internal TransactionResult UpdateTransaction(long transId)
         {
-            var transModel = this.storage.GetTransactionById(transId);
+            throw new NotImplementedException();
+            /*
+            object transModel = null;//this.storage.GetTransactionById(transId);
 
             // Validate Transaction
             if (transModel == null)
@@ -78,6 +80,7 @@ namespace NWorkQueue.Library
             // Transaction is valid, so let's update it
             this.storage.ExtendTransaction(transId, this.expiryTimeInMinutes);
             return TransactionResult.Success;
+            */
         }
 
         /// <summary>
@@ -99,6 +102,8 @@ namespace NWorkQueue.Library
         /// <returns>Was the commit successful</returns>
         public TransactionResult Commit()
         {
+            throw new NotImplementedException();
+            /*
             var storageTransaction = this.storage.BeginStorageTransaction();
 
             // Check if transaction has expired
@@ -133,6 +138,7 @@ namespace NWorkQueue.Library
 
             storageTransaction.Commit();
             return TransactionResult.Success;
+            */
         }
 
         /// <summary>
@@ -141,6 +147,7 @@ namespace NWorkQueue.Library
         /// <param name="transId">Queue transaction id</param>
         public void RollbackTransaction(long transId)
         {
+            /*
             var storageTrans = this.storage.BeginStorageTransaction();
             var closeDateTime = DateTime.Now;
 
@@ -160,6 +167,7 @@ namespace NWorkQueue.Library
             this.storage.UpdateRetriesOnRollbackedMessages(transId, storageTrans);
 
             storageTrans.Commit();
+            */
         }
     }
 }

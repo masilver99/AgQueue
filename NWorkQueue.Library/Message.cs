@@ -24,8 +24,10 @@ namespace NWorkQueue.Library
         /// <param name="storage">Storage library.</param>
         internal Message(IStorage storage)
         {
+            /*
             this.storage = storage;
             this.currMessageId = this.storage.GetMaxMessageId();
+            */
         }
     }
 }
