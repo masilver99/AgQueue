@@ -29,10 +29,12 @@ namespace NWorkQueue.Library
         /// <param name="storage">An IStorage interface</param>
         internal Transaction(IStorage storage)
         {
+            /*
             this.storage = storage;
 
             // Get starting Id.  used to increment primary keys.
             this.currTransId = this.storage.GetMaxTransactionId();
+            */
         }
 
         /// <summary>

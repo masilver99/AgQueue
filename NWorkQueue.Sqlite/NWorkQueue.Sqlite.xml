@@ -40,24 +40,6 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.StartTransaction(System.Int64,System.Int32)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetTransactionById(System.Int64,NWorkQueue.Common.IStorageTransaction)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.ExtendTransaction(System.Int64,System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.BeginStorageTransaction">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.CloseTransaction(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.CommitMessageTransaction(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetMaxQueueId">
-            <inheritdoc/>
-        </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.AddQueue(System.String)">
             <inheritdoc/>
         </member>
@@ -67,41 +49,16 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetQueueId(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.DoesQueueExist(System.Int64)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetMaxMessageId">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.DeleteMessagesByTransId(System.Int64,NWorkQueue.Common.IStorageTransaction)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.CloseRetriedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.ExpireOlderMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime,System.DateTime)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.UpdateRetriesOnRollbackedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.CommitAddedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.CommitPulledMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetMessageCount(System.Int64)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.AddMessage(System.Int64,NWorkQueue.Common.IStorageTransaction,System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.NWorkQueue#Common#IStorage#DeleteMessagesByQueueId(System.Int64,NWorkQueue.Common.IStorageTransaction)">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.System#IDisposable#Dispose">
-            <inheritdoc/>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.Execute``1(System.Func{Microsoft.Data.Sqlite.SqliteConnection,System.Threading.Tasks.ValueTask{``0}},Microsoft.Data.Sqlite.SqliteConnection)">
+            <summary>
+            Executes an anonymous method wrapped with robust logging, command line options loading, and error handling
+            </summary>
+            <typeparam name="TOptions">Options class to load from command line</typeparam>
+            <param name="programName">name of the executing program</param>
+            <param name="args">Command line arguments</param>
+            <param name="action">The anonymous method to execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.
+            The method must be async.</param>
+            <returns>returns an async Task</returns>
         </member>
     </members>
 </doc>

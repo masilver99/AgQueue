@@ -6,7 +6,7 @@
     <members>
         <member name="T:NWorkQueue.Common.INWorkQueueClient">
             <summary>
-            Interface for Client to implement
+            Interface for Client to implement.
             </summary>
         </member>
         <member name="T:NWorkQueue.Common.IStorage">
@@ -19,117 +19,6 @@
             Called when Queue process starts.  Connections to the storage should be made here, etc.
             </summary>
             <param name="deleteExistingData">Should all existing queues and messages be deleted.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.GetMaxTransactionId">
-            <summary>
-            Get the id of the last transaction created, assuming the last ID is the largest.
-            </summary>
-            <returns>Returns the  Transaction Id.</returns>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.GetMaxMessageId">
-            <summary>
-            Get the id of the last message created, assuming the last ID is the largest.
-            </summary>
-            <returns>Returns the max message Id.</returns>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.GetMaxQueueId">
-            <summary>
-            Get the id of the last queue created, assuming the last ID is the largest.
-            </summary>
-            <returns>Returns the max queue Id.</returns>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.StartTransaction(System.Int64,System.Int32)">
-            <summary>
-            Starts a Queue transaction (not a database one).
-            </summary>
-            <param name="newId">The id to use as primary key.</param>
-            <param name="expiryTimeInMinutes">When the transaction will expire.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.ExtendTransaction(System.Int64,System.Int32)">
-            <summary>
-            Extends the transaction's expiration datetime.
-            </summary>
-            <param name="transId">The id of the transaction to update.</param>
-            <param name="expiryTimeInMinutes">The new expiration datetime.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.BeginStorageTransaction">
-            <summary>
-            Starts a storage (database) transaction, not a queue transaction.
-            </summary>
-            <remarks>
-            Not all Storage classes will have internal transactions, so this can return a dummy class that performs no actions.
-            </remarks>
-            <returns>Returns a class represented by IStorageTransaction which can commit or rollbacl the transaction.</returns>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.GetTransactionById(System.Int64,NWorkQueue.Common.IStorageTransaction)">
-            <summary>
-            Retrieves Queue transaction data based on the transaction id.
-            </summary>
-            <param name="transId">Id of the tranaction to lookup.</param>
-            <param name="storageTrans">Optional Storage transaction to perform this within.</param>
-            <returns>Transaction Model.</returns>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.CloseTransaction(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
-            <summary>
-            Mark the Queue Transaction as closed.
-            </summary>
-            <param name="transId">Queue Transaction to mark as closed.</param>
-            <param name="storageTrans">The db transaction to assodicate with this update.</param>
-            <param name="closeDateTime">Datetime transaction was closed.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.DeleteMessagesByTransId(System.Int64,NWorkQueue.Common.IStorageTransaction)">
-            <summary>
-            Delete all messages by their queue transaction id.
-            </summary>
-            <param name="transId">Id of the queue transaction.</param>
-            <param name="storageTrans">Storage Transaction.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.CloseRetriedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
-            <summary>
-            Close messages that have too many retries.
-            </summary>
-            <param name="transId">Queue transaction id.</param>
-            <param name="storageTrans">Storage Transaction.</param>
-            <param name="closeDateTime">Datetime the message should be marked as closed.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.ExpireOlderMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime,System.DateTime)">
-            <summary>
-            Expire messages past their expiration date/time.
-            </summary>
-            <param name="transId">Queue transaction id.</param>
-            <param name="storageTrans">Storage Transaction.</param>
-            <param name="closeDateTime">Datetime the message should be marked as closed.</param>
-            <param name="expiryDateTime">Messages with expiry times before this will be marked closed.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.UpdateRetriesOnRollbackedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
-            <summary>
-            Update retry counts on rolledback transaction.
-            </summary>
-            <param name="transId">Queue transaction id.</param>
-            <param name="storageTrans">Storage Transaction.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.CommitAddedMessages(System.Int64,NWorkQueue.Common.IStorageTransaction)">
-            <summary>
-            Commit added messages marking them as queued.
-            </summary>
-            <param name="transId">Queue transaction id.</param>
-            <param name="storageTrans">Storage Transaction.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.CommitPulledMessages(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
-            <summary>
-            Commit pulled messages marking them as complete.
-            </summary>
-            <param name="transId">Queue transaction id.</param>
-            <param name="storageTrans">Storage Transaction.</param>
-            <param name="commitDateTime">Datetime of the commit.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.CommitMessageTransaction(System.Int64,NWorkQueue.Common.IStorageTransaction,System.DateTime)">
-            <summary>
-            Commit a queue transaction.
-            </summary>
-            <param name="transId">Queue transaction id.</param>
-            <param name="storageTrans">Storage Transaction.</param>
-            <param name="commitDateTime">Datetime of the commit.</param>
         </member>
         <member name="M:NWorkQueue.Common.IStorage.AddQueue(System.String)">
             <summary>
@@ -144,30 +33,6 @@
             <param name="id">Queue Id of the queue to delete.</param>
             <param name="storageTrans">The storage transaction to perform the operation under.</param>
         </member>
-        <member name="M:NWorkQueue.Common.IStorage.AddMessage(System.Int64,NWorkQueue.Common.IStorageTransaction,System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String)">
-            <summary>
-            Add a message to the storage.
-            </summary>
-            <param name="transId">Queue Transaction ID.</param>
-            <param name="storageTrans">Storage transaction.</param>
-            <param name="nextId">The ID to be used at the primary id, i.e. the message id.</param>
-            <param name="queueId">ID of the storage queue.</param>
-            <param name="compressedMessage">Message data, compressed.</param>
-            <param name="addDateTime">Datetime the message was added.</param>
-            <param name="metaData">String metadata on message data.</param>
-            <param name="priority">Message priority.</param>
-            <param name="maxRetries">How many retries before expires.</param>
-            <param name="expiryDateTime">Datetime the message will expire.</param>
-            <param name="correlation">Correlation ID.</param>
-            <param name="groupName">Group name.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.GetMessageCount(System.Int64)">
-            <summary>
-            Returns message total message count for a queue.
-            </summary>
-            <param name="queueId">ID of the message queue.</param>
-            <returns>Returns the count.</returns>
-        </member>
         <member name="M:NWorkQueue.Common.IStorage.GetQueueId(System.String)">
             <summary>
             Returns the id of the Queue.  If no queue is found, returns null.
@@ -177,20 +42,6 @@
             </remarks>
             <param name="name">Name of the queue to lookup.</param>
             <returns>Queue ID or null if queue not found.</returns>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.DoesQueueExist(System.Int64)">
-            <summary>
-            Does a Quque exist for the specified id.
-            </summary>
-            <param name="id">Quque ID.</param>
-            <returns>true if quque exists.</returns>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.DeleteMessagesByQueueId(System.Int64,NWorkQueue.Common.IStorageTransaction)">
-            <summary>
-            Delete all messages in a specified queue.
-            </summary>
-            <param name="queueId">Queue id.</param>
-            <param name="storageTrans">Storage transaction.</param>
         </member>
         <member name="T:NWorkQueue.Common.IStorageTransaction">
             <summary>
