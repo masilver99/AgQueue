@@ -26,7 +26,7 @@
         </member>
         <member name="M:NWorkQueue.Library.InternalApi.CreateQueue(System.String)">
             <summary>
-            Creates a new queue. 
+            Creates a new queue.
             </summary>
             <param name="queueName">The name of the queue.</param>
             <returns>A Queue object.</returns>

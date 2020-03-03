@@ -13,6 +13,7 @@ namespace NWorkQueue.Common
     public interface IQueueApi
     {
         ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request);
-        ValueTask<ActionResponse> InitializeStorage(InitializeStorageRequest request);
+
+        ValueTask InitializeStorage(InitializeStorageRequest request);
     }
 }

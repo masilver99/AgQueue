@@ -42,7 +42,7 @@ namespace NWorkQueue.Library
         }
 
         /// <summary>
-        /// Creates a new queue. 
+        /// Creates a new queue.
         /// </summary>
         /// <param name="queueName">The name of the queue.</param>
         /// <returns>A Queue object.</returns>
@@ -51,7 +51,7 @@ namespace NWorkQueue.Library
             var fixedName = this.StandardizeQueueName(queueName);
 
             // Check if Queue already exists
-            if ((await this.storage.GetQueueId(fixedName)).HasValue)
+            if ((await this.storage.GetQueueId(fixedName)) != null)
             {
                 return (0, new ApiResult { ResultCode = ResultCode.AlreadyExists, Message = $"Queue name {fixedName} already exists" });
             }
@@ -164,9 +164,9 @@ namespace NWorkQueue.Library
             ///Need to add OnDsiapose action in case some storage services require disposal
         }
 
-        public void InitializeStorage(bool deleteExistingData)
+        public async ValueTask InitializeStorage(bool deleteExistingData)
         {
-            this.storage.InitializeStorage(deleteExistingData);
+            await this.storage.InitializeStorage(deleteExistingData);
         }
 
         internal Transaction CreateTransaction()

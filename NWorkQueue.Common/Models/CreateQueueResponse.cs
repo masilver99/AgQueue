@@ -9,6 +9,11 @@ namespace NWorkQueue.Common.Models
     [DataContract]
     public class CreateQueueResponse
     {
+        public CreateQueueResponse()
+        {
+
+        }
+
         public CreateQueueResponse(long queueId)
         {
             this.QueueId = queueId;

@@ -38,10 +38,9 @@ namespace NWorkQueue.Server
             }
         }
 
-        public ValueTask<ActionResponse> InitializeStorage(InitializeStorageRequest request)
+        public async ValueTask InitializeStorage(InitializeStorageRequest request)
         {
-            this.internalApi.InitializeStorage(request.DeleteExistingData);
-            return new ValueTask<ActionResponse>(new ActionResponse { Success = true });
+            await this.internalApi.InitializeStorage(request.DeleteExistingData);
         }
 
         //DeleteQueue

@@ -2,16 +2,17 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
+
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Dapper;
+using Microsoft.Data.Sqlite;
+using NWorkQueue.Common;
+using NWorkQueue.Common.Models;
+
 namespace NWorkQueue.Sqlite
 {
-    using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Microsoft.Data.Sqlite;
-    using NWorkQueue.Common;
-    using NWorkQueue.Common.Models;
-
     /// <summary>
     /// Implements the IStorage interface for storing and retriving queue date to SQLite
     /// </summary>
@@ -148,8 +149,8 @@ namespace NWorkQueue.Sqlite
             return await this.Execute<long?>(async (connection) =>
             {
 
-                const string sql = "SELECT ID FROM Queues WHERE Name LIKE @Name;";
-                return await connection.ExecuteScalarAsync<long?>(sql, new { Name = name });
+                const string sql = "SELECT ID FROM Queues WHERE Name = @Name";
+                return await connection.QueryFirstOrDefaultAsync<long?>(sql, new { Name = name });
             });
         }
         /*
@@ -367,7 +368,7 @@ namespace NWorkQueue.Sqlite
                     liveConnection = connection;
                 }
 
-                T returnValue = await action(connection);
+                T returnValue = await action(liveConnection);
                 stopwatch.Stop();
                 return returnValue;
                 // logger.Information("{ProgramName} completed in {ElapsedTime}ms", programName, stopwatch.ElapsedMilliseconds);

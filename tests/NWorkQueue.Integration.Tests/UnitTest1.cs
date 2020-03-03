@@ -8,6 +8,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using NWorkQueue.Server;
 using NWorkQueue.Common;
+using System.Threading.Tasks;
 
 namespace NWorkQueue.Integration.Tests
 {
@@ -34,15 +35,17 @@ namespace NWorkQueue.Integration.Tests
 
     
         [TestMethod]
-        public void TestMethod1()
+        public async Task TestMethod1()
         {
             var webHost = StartServer();
             GrpcClientFactory.AllowUnencryptedHttp2 = true;
             using var http = GrpcChannel.ForAddress("http://localhost:10042");
             var service = http.CreateGrpcService<IQueueApi>();
-            var response = service.CreateQueue(new Common.Models.CreateQueueRequest() { QueueName = "Test" });
-            var result = response.Result;
-            webHost.StopAsync();
+            await service.InitializeStorage(new InitializeStorageRequest { DeleteExistingData = true });
+            var createResponse = await service.CreateQueue(new Common.Models.CreateQueueRequest() { QueueName = "Test" });
+            Assert.AreEqual(1, createResponse.QueueId);
+            //var result = createResponse.Result;
+            await webHost.StopAsync();
         }
     }
 }
