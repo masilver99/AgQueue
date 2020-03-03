@@ -1,6 +1,8 @@
 # NWorkQueue
 A simple, opinionated, transactional work queue
 
+![.NET Core](https://github.com/masilver99/NWorkQueue/workflows/.NET%20Core/badge.svg?branch=master)
+
 ## Purpose
 
 To reliably deliver messages to a requestor/subscriber.  Successful messages are only delivered to one REQ/SUB.  In case of failure, the message will be redelivered, after a delay, unless the retry count is exceeded.
