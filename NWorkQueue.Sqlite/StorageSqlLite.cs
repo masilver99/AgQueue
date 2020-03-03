@@ -123,6 +123,7 @@ namespace NWorkQueue.Sqlite
             return 0;
         }
         */
+
         /// <inheritdoc/>
         public async ValueTask<long> AddQueue(string name)
         {
@@ -154,15 +155,7 @@ namespace NWorkQueue.Sqlite
             });
         }
         /*
-        /// <inheritdoc/>
-        public bool DoesQueueExist(long id)
-        {
-            const string sql = "SELECT ID FROM Queues WHERE ID = @id;";
-            var newId = this.connection.ExecuteScalar<long?>(sql, new { id });
-            return newId.HasValue;
-        }
-        #endregion
-
+        
         #region Message methods
 
         /// <inheritdoc/>

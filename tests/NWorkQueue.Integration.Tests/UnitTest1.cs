@@ -35,7 +35,7 @@ namespace NWorkQueue.Integration.Tests
 
     
         [TestMethod]
-        public async Task TestMethod1()
+        public async Task CreateQueue()
         {
             var webHost = StartServer();
             GrpcClientFactory.AllowUnencryptedHttp2 = true;
