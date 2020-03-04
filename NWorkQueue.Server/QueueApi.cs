@@ -8,12 +8,17 @@ using Grpc.Core;
 using NWorkQueue.Common;
 using NWorkQueue.Common.Models;
 using NWorkQueue.Library;
+using NWorkQueue.Library.Extensions;
 
 namespace NWorkQueue.Server
 {
     /// <summary>
     /// Contains service methods for accessing and manipulating queues.
     /// </summary>
+    /// <remarks>
+    /// All methods expect one object to bew returned and one object as a parameter.  This is inline with gRPC design considerations.
+    /// This allows for expansion of parameters without causing breaking changes in the client library.
+    /// </remarks>
     public class QueueApi : IQueueApi
     {
         private readonly InternalApi internalApi;
@@ -55,19 +60,35 @@ namespace NWorkQueue.Server
         /// </summary>
         /// <param name="request">InitializeStorageRequest object.  Note: if DeleteExistingData is true, all data will be deleted.</param>
         /// <returns>ValueTask for async.</returns>
-        public async ValueTask InitializeStorage(InitializeStorageRequest request)
+        public async ValueTask<InitializeStorageResponse> InitializeStorage(InitializeStorageRequest request)
         {
             await this.internalApi.InitializeStorage(request.DeleteExistingData);
+            return new InitializeStorageResponse();
         }
 
-        public async ValueTask DeleteQueue(DeleteQueueByNameRequest request)
+        public async ValueTask<DeleteQueueResponse> DeleteQueue(DeleteQueueByNameRequest request)
         {
+            var result = await this.internalApi.GetQueueId(request.QueueName);
+            if (result.ApiResult.IsSuccess)
+            {
+                await this.internalApi.DeleteQueue(result.QueueId);
+                return new DeleteQueueResponse();
+            }
 
+            throw result.ApiResult.CreateRpcException(); 
         }
 
-        public async ValueTask DeleteQueue(DeleteQueueByIdRequest request)
+        public async ValueTask<DeleteQueueResponse> DeleteQueue(DeleteQueueByIdRequest request)
         {
 
+            var result = await this.internalApi.GetQueueName(request.QueueId);
+            if (result.ApiResult.IsSuccess)
+            {
+                await this.internalApi.DeleteQueue(request.QueueId);
+                return new DeleteQueueResponse();
+            }
+
+            throw result.ApiResult.CreateRpcException();
         }
 
 

@@ -14,6 +14,10 @@ namespace NWorkQueue.Common
     {
         ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request);
 
-        ValueTask InitializeStorage(InitializeStorageRequest request);
+        ValueTask<InitializeStorageResponse> InitializeStorage(InitializeStorageRequest request);
+
+        ValueTask<DeleteQueueResponse> DeleteQueue(DeleteQueueByNameRequest request);
+
+        ValueTask<DeleteQueueResponse> DeleteQueue(DeleteQueueByIdRequest request);
     }
 }

@@ -144,7 +144,7 @@ namespace NWorkQueue.Common
         /// </summary>
         /// <param name="id">Queue Id of the queue to delete.</param>
         /// <param name="storageTrans">The storage transaction to perform the operation under.</param>
-        ValueTask DeleteQueue(long id, IStorageTransaction storageTrans);
+        ValueTask DeleteQueue(long id /*, IStorageTransaction storageTrans*/);
         /*
         /// <summary>
         /// Add a message to the storage.
@@ -179,6 +179,9 @@ namespace NWorkQueue.Common
         /// <param name="name">Name of the queue to lookup.</param>
         /// <returns>Queue ID or null if queue not found.</returns>
         ValueTask<long?> GetQueueId(string name);
+
+        ValueTask<string?> GetQueueName(long queueId);
+
         /*
         /// <summary>
         /// Does a Quque exist for the specified id.

@@ -135,12 +135,12 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask DeleteQueue(long id, IStorageTransaction storageTrans)
+        public async ValueTask DeleteQueue(long id/*, IStorageTransaction storageTrans*/)
         {
             await this.Execute(async (connection) =>
             {
                 const string sql = "DELETE FROM Queues WHERE Id = @Id;";
-                await connection.ExecuteAsync(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: new { Id = id });
+                await connection.ExecuteAsync(sql,/* transaction: (storageTrans as DbTransaction)?.SqliteTransaction,*/ param: new { Id = id });
             });
         }
 
@@ -149,11 +149,21 @@ namespace NWorkQueue.Sqlite
         {
             return await this.Execute<long?>(async (connection) =>
             {
-
                 const string sql = "SELECT ID FROM Queues WHERE Name = @Name";
                 return await connection.QueryFirstOrDefaultAsync<long?>(sql, new { Name = name });
             });
         }
+
+        /// <inheritdoc/>
+        public async ValueTask<string?> GetQueueName(long queueId)
+        {
+            return await this.Execute<string?>(async (connection) =>
+            {
+                const string sql = "SELECT NAME FROM Queues WHERE ID = @Id";
+                return await connection.QuerySingleOrDefaultAsync<string?>(sql, new { Id = queueId });
+            });
+        }
+
         /*
         
         #region Message methods
@@ -268,7 +278,7 @@ namespace NWorkQueue.Sqlite
 
         #endregion
         */
-     
+
         private async ValueTask CreateTables(SqliteConnection connection)
         {
 #pragma warning disable SA1515

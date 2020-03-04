@@ -13,18 +13,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NWorkQueue.Common", "NWorkQ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NWorkQueue.Sqlite", "NWorkQueue.Sqlite\NWorkQueue.Sqlite.csproj", "{6FD84ECB-9595-4847-8FD9-F5B3E8E99847}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NWorkQueue.Server", "NWorkQueue.Server\NWorkQueue.Server.csproj", "{A0C72BBA-4BBC-4B72-9E55-1FD22F6C8412}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NWorkQueue.Server", "NWorkQueue.Server\NWorkQueue.Server.csproj", "{A0C72BBA-4BBC-4B72-9E55-1FD22F6C8412}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3D549DFA-1001-43E4-A70F-7FB55F222F0A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		NWorkQueue.Protos\greet.proto = NWorkQueue.Protos\greet.proto
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DD29545F-A6A2-4167-97EE-B61191E0CE10}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NWorkQueue.Library.Tests", "tests\NWorkQueue.Library.Tests\NWorkQueue.Library.Tests.csproj", "{14567643-F0E0-46F5-B43E-D1DCD4BC3905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NWorkQueue.Integration.Tests", "tests\NWorkQueue.Integration.Tests\NWorkQueue.Integration.Tests.csproj", "{D3E4B18B-337A-4CE8-B194-5F6C5D4456BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NWorkQueue.Integration.Tests", "tests\NWorkQueue.Integration.Tests\NWorkQueue.Integration.Tests.csproj", "{D3E4B18B-337A-4CE8-B194-5F6C5D4456BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

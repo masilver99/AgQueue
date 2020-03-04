@@ -13,5 +13,10 @@ namespace NWorkQueue.Server
         {
             return (StatusCode)(int)resultCode;
         }
+
+        public static RpcException CreateRpcException(this ApiResult apiResult)
+        {
+            return new RpcException(new Status(apiResult.ResultCode.ToGrpcStatus(), apiResult.Message));
+        }
     }
 }

@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using NWorkQueue.Common;
+using NWorkQueue.Library.Extensions;
 using NWorkQueue.Sqlite;
 
 [assembly: InternalsVisibleTo("NWorkQueue.Tests")]
@@ -48,50 +49,76 @@ namespace NWorkQueue.Library
         /// <returns>A Queue object.</returns>
         public async ValueTask<(long QueueId, ApiResult ApiResult)> CreateQueue(string queueName)
         {
-            var fixedName = this.StandardizeQueueName(queueName);
+            var fixedName = queueName.StandardizeQueueName();
 
             // Check if Queue already exists
-            if ((await this.storage.GetQueueId(fixedName)) != null)
+            if (!(await this.GetQueueId(fixedName)).ApiResult.IsSuccess)
             {
                 return (0, new ApiResult { ResultCode = ResultCode.AlreadyExists, Message = $"Queue name {fixedName} already exists" });
             }
 
-            return (await this.storage.AddQueue(queueName), new ApiResult { ResultCode = ResultCode.Ok });
+            return (await this.storage.AddQueue(fixedName), new ApiResult { ResultCode = ResultCode.Ok });
         }
-
-        private string StandardizeQueueName(string rawQueueName)
-        {
-            return rawQueueName.Replace(" ", string.Empty);
-        }
-
+        
         /// <summary>
         /// Delete a queue and all messages in the queue.
         /// </summary>
         /// <param name="queueName">Name of the queue to delete.</param>
-        public async ValueTask DeleteQueue(string queueName)
+        public async ValueTask<ApiResult> DeleteQueue(string queueName)
         {
-            var fixedName = this.StandardizeQueueName(queueName);
+            var fixedName = queueName.StandardizeQueueName();
             if (fixedName.Length == 0)
             {
-                throw new ArgumentException("Queue name cannot be empty", nameof(queueName));
+                return new ApiResult(ResultCode.InvalidArgument, "Queue name is empty.");
             }
 
-            var id = await this.storage.GetQueueId(fixedName);
+            var result = await this.GetQueueId(fixedName);
 
-            if (!id.HasValue)
+            if (result.ApiResult.ResultCode != ResultCode.Ok)
             {
-                throw new Exception("Queue not found");
+                return result.ApiResult;
             }
 
-            this.DeleteQueue(id.Value);
+            return await this.DeleteQueue(result.QueueId);
+        }
+
+        public async ValueTask<(long QueueId, ApiResult ApiResult)> GetQueueId(string queueName)
+        {
+            var queueId = await this.storage.GetQueueId(queueName.StandardizeQueueName());
+            if (queueId.HasValue)
+            {
+                return (queueId.Value, new ApiResult(ResultCode.Ok));
+            }
+
+            return (queueId.Value, new ApiResult(ResultCode.NotFound, $"Queue name not found {queueName}"));
+        }
+
+        public async ValueTask<(string QueueName, ApiResult ApiResult)> GetQueueName(long queueId)
+        {
+            var queueName = await this.storage.GetQueueName(queueId);
+            if (string.IsNullOrEmpty(queueName))
+            {
+                return (string.Empty, new ApiResult(ResultCode.NotFound, $"Queue ID {queueId} not found"));
+            }
+
+            return (queueName, new ApiResult(ResultCode.Ok));
         }
 
         /// <summary>
         /// Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue.
         /// </summary>
         /// <param name="queueId">Queue id.</param>
-        public void DeleteQueue(long queueId)
+        public async ValueTask<ApiResult> DeleteQueue(long queueId)
         {
+            var result = await this.GetQueueName(queueId);
+
+            if (result.ApiResult.ResultCode != ResultCode.Ok)
+            {
+                return result.ApiResult;
+            }
+
+            await this.storage.DeleteQueue(queueId);
+            return new ApiResult(ResultCode.Ok);
             /*
             // Throw exception if queue does not exist
             if (!this.storage.DoesQueueExist(queueId))
@@ -118,17 +145,6 @@ namespace NWorkQueue.Library
                 trans.Rollback();
             }
             */
-        }
-
-        /// <summary>
-        /// Returns a Queue object by name.
-        /// </summary>
-        /// <param name="queueName">The name of the queue to return.</param>
-        /// <param name="autoCreate">If the name doesn't exist, create it otherwise throw an exception.</param>
-        /// <returns>A Queue object.</returns>
-        public Queue GetQueueByName(string queueName, bool autoCreate)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
