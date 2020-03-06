@@ -5,7 +5,7 @@
 using System.Runtime.Serialization;
 using System.ServiceModel;
 
-namespace NWorkQueue.Common
+namespace NWorkQueue.Common.Models
 {
     [ServiceContract]
     public class DeleteQueueByNameRequest

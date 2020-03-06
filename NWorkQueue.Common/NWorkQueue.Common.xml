@@ -26,7 +26,7 @@
             </summary>
             <param name="name">Queue name.</param>
         </member>
-        <member name="M:NWorkQueue.Common.IStorage.DeleteQueue(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+        <member name="M:NWorkQueue.Common.IStorage.DeleteQueue(System.Int64)">
             <summary>
             Delete a Queue and ALL messages in the Queue.
             </summary>

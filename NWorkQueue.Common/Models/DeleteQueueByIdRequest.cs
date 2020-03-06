@@ -1,11 +1,11 @@
-﻿// <copyright file="QueueApi.cs" company="Michael Silver">
+﻿// <copyright file="DeleteQueueByIdRequest.cs" company="Michael Silver">
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
 using System.Runtime.Serialization;
 using System.ServiceModel;
 
-namespace NWorkQueue.Server
+namespace NWorkQueue.Common.Models
 {
     [ServiceContract]
     public class DeleteQueueByIdRequest

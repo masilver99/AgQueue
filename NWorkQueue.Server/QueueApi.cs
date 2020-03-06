@@ -39,6 +39,7 @@ namespace NWorkQueue.Server
         /// <returns><see cref="CreateQueueResponse"/> object.</returns>
         public async ValueTask<CreateQueueResponse> CreateQueue(CreateQueueRequest request)
         {
+            RpcException rcpException;
             try
             {
                 var result = await this.internalApi.CreateQueue(request.QueueName);
@@ -47,16 +48,18 @@ namespace NWorkQueue.Server
                     return new CreateQueueResponse(result.QueueId);
                 }
 
-                throw new RpcException(new Status(result.ApiResult.ResultCode.ToGrpcStatus(), result.ApiResult.Message));
+                rcpException = new RpcException(new Status(result.ApiResult.ResultCode.ToGrpcStatus(), result.ApiResult.Message));
             }
             catch (Exception e)
             {
-                throw new RpcException(new Status(StatusCode.Unknown, e.Message));
+                rcpException = new RpcException(new Status(StatusCode.Unknown, e.Message));
             }
+
+            throw rcpException;
         }
 
         /// <summary>
-        /// Creates the underlying storage for the queue.  
+        /// Creates the underlying storage for the queue.
         /// </summary>
         /// <param name="request">InitializeStorageRequest object.  Note: if DeleteExistingData is true, all data will be deleted.</param>
         /// <returns>ValueTask for async.</returns>
@@ -68,31 +71,53 @@ namespace NWorkQueue.Server
 
         public async ValueTask<DeleteQueueResponse> DeleteQueue(DeleteQueueByNameRequest request)
         {
+            // May need to add code to check if messages exist before deleting.
             var result = await this.internalApi.GetQueueId(request.QueueName);
             if (result.ApiResult.IsSuccess)
             {
-                await this.internalApi.DeleteQueue(result.QueueId);
-                return new DeleteQueueResponse();
-            }
-
-            throw result.ApiResult.CreateRpcException(); 
-        }
-
-        public async ValueTask<DeleteQueueResponse> DeleteQueue(DeleteQueueByIdRequest request)
-        {
-
-            var result = await this.internalApi.GetQueueName(request.QueueId);
-            if (result.ApiResult.IsSuccess)
-            {
-                await this.internalApi.DeleteQueue(request.QueueId);
-                return new DeleteQueueResponse();
+                return this.ReturnIfSuccess<DeleteQueueResponse>(await this.internalApi.DeleteQueue(result.QueueId));
             }
 
             throw result.ApiResult.CreateRpcException();
         }
 
+        public async ValueTask<DeleteQueueResponse> DeleteQueue(DeleteQueueByIdRequest request)
+        {
+            // May need to add code to check if messages exist before deleting.
+            var result = await this.internalApi.GetQueueName(request.QueueId);
+            if (result.ApiResult.IsSuccess)
+            {
+                return this.ReturnIfSuccess<DeleteQueueResponse>(await this.internalApi.DeleteQueue(request.QueueId));
+            }
 
-        //DeleteQueue
+            throw result.ApiResult.CreateRpcException();
+        }
+
+        private bool IsApiSuccess(ApiResult apiResult)
+        {
+            if (apiResult.IsSuccess)
+            {
+                return true;
+            }
+            else
+            {
+                throw apiResult.CreateRpcException();
+            }
+        }
+
+        private T ReturnIfSuccess<T>(ApiResult apiResult)
+            where T : new()
+        {
+            if (apiResult.IsSuccess)
+            {
+                return new T();
+            }
+            else
+            {
+                throw apiResult.CreateRpcException();
+            }
+        }
+
         //AddMessage
         ///PeekMessage
         //PullMessage

@@ -47,5 +47,23 @@ namespace NWorkQueue.Integration.Tests
             //var result = createResponse.Result;
             await webHost.StopAsync();
         }
+
+        [TestMethod]
+        public async Task DeleteQueueById()
+        {
+            var webHost = StartServer();
+            GrpcClientFactory.AllowUnencryptedHttp2 = true;
+            using var http = GrpcChannel.ForAddress("http://localhost:10042");
+            var service = http.CreateGrpcService<IQueueApi>();
+            await service.InitializeStorage(new InitializeStorageRequest { DeleteExistingData = true });
+            var createResponse = await service.CreateQueue(new Common.Models.CreateQueueRequest() { QueueName = "DeleteById" });
+            Assert.AreEqual(1, createResponse.QueueId);
+
+            var deleteResponse = await service.DeleteQueue(new Common.Models.DeleteQueueByIdRequest() { QueueId = 1 });
+
+            //var result = createResponse.Result;
+            await webHost.StopAsync();
+        }
+
     }
 }

@@ -149,7 +149,7 @@ namespace NWorkQueue.Sqlite
         {
             return await this.Execute<long?>(async (connection) =>
             {
-                const string sql = "SELECT ID FROM Queues WHERE Name = @Name";
+                const string sql = "SELECT ID FROM Queues WHERE Name = @Name;";
                 return await connection.QueryFirstOrDefaultAsync<long?>(sql, new { Name = name });
             });
         }
@@ -159,7 +159,7 @@ namespace NWorkQueue.Sqlite
         {
             return await this.Execute<string?>(async (connection) =>
             {
-                const string sql = "SELECT NAME FROM Queues WHERE ID = @Id";
+                const string sql = "SELECT NAME FROM Queues WHERE ID = @Id;";
                 return await connection.QuerySingleOrDefaultAsync<string?>(sql, new { Id = queueId });
             });
         }

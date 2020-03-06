@@ -43,10 +43,13 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.AddQueue(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.DeleteQueue(System.Int64,NWorkQueue.Common.IStorageTransaction)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.DeleteQueue(System.Int64)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetQueueId(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetQueueName(System.Int64)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.Execute``1(System.Func{Microsoft.Data.Sqlite.SqliteConnection,System.Threading.Tasks.ValueTask{``0}},Microsoft.Data.Sqlite.SqliteConnection)">

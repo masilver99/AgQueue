@@ -51,15 +51,22 @@ namespace NWorkQueue.Library
         {
             var fixedName = queueName.StandardizeQueueName();
 
+            var queueCheck = await this.GetQueueId(fixedName);
             // Check if Queue already exists
-            if (!(await this.GetQueueId(fixedName)).ApiResult.IsSuccess)
+            if (queueCheck.ApiResult.ResultCode == ResultCode.NotFound)
+            {
+                return (await this.storage.AddQueue(fixedName), new ApiResult { ResultCode = ResultCode.Ok });
+            }
+
+            // Check if Queue already exists
+            if (queueCheck.ApiResult.IsSuccess)
             {
                 return (0, new ApiResult { ResultCode = ResultCode.AlreadyExists, Message = $"Queue name {fixedName} already exists" });
             }
 
-            return (await this.storage.AddQueue(fixedName), new ApiResult { ResultCode = ResultCode.Ok });
+            throw new Exception($"Unknown error attempting to add queue.  ApiResult.ResultCode: {queueCheck.ApiResult.ResultCode}");
         }
-        
+
         /// <summary>
         /// Delete a queue and all messages in the queue.
         /// </summary>
@@ -90,7 +97,7 @@ namespace NWorkQueue.Library
                 return (queueId.Value, new ApiResult(ResultCode.Ok));
             }
 
-            return (queueId.Value, new ApiResult(ResultCode.NotFound, $"Queue name not found {queueName}"));
+            return (0, new ApiResult(ResultCode.NotFound, $"Queue name not found {queueName}"));
         }
 
         public async ValueTask<(string QueueName, ApiResult ApiResult)> GetQueueName(long queueId)
@@ -117,34 +124,33 @@ namespace NWorkQueue.Library
                 return result.ApiResult;
             }
 
-            await this.storage.DeleteQueue(queueId);
-            return new ApiResult(ResultCode.Ok);
+            return await this.DeleteQueue(queueId);
             /*
-            // Throw exception if queue does not exist
-            if (!this.storage.DoesQueueExist(queueId))
-            {
-                throw new Exception("Queue not found");
-            }
+             // Throw exception if queue does not exist
+             if (!this.storage.DoesQueueExist(queueId))
+             {
+                 throw new Exception("Queue not found");
+             }
 
-            var trans = this.storage.BeginStorageTransaction();
-            try
-            {
-                // TODO: Rollback queue transactions that were being used in message for this queue
-                // ExtendTransaction Set Active = false
+             var trans = this.storage.BeginStorageTransaction();
+             try
+             {
+                 // TODO: Rollback queue transactions that were being used in message for this queue
+                 // ExtendTransaction Set Active = false
 
-                // TODO: Delete Messages
-                this.storage.DeleteMessagesByQueueId(queueId, trans);
+                 // TODO: Delete Messages
+                 this.storage.DeleteMessagesByQueueId(queueId, trans);
 
-                // Delete From Queue Table
-                this.storage.DeleteQueue(queueId, trans);
-                trans.Commit();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                trans.Rollback();
-            }
-            */
+                 // Delete From Queue Table
+                 this.storage.DeleteQueue(queueId, trans);
+                 trans.Commit();
+             }
+             catch (Exception e)
+             {
+                 Console.WriteLine(e);
+                 trans.Rollback();
+             }
+             */
         }
 
         /// <summary>
