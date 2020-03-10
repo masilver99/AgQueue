@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -19,6 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\GrpcService1\NWorkQueue.GrpcServer.csproj" />
+    <ProjectReference Include="..\..\NWorkQueue.Models\NWorkQueue.Models.csproj" />
     <ProjectReference Include="..\..\NWorkQueue.Server\NWorkQueue.Server.csproj" />
   </ItemGroup>
 

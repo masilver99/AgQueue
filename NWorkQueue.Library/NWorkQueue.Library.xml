@@ -43,13 +43,6 @@
             </summary>
             <param name="queueId">Queue id.</param>
         </member>
-        <member name="M:NWorkQueue.Library.InternalApi.GetQueueById(System.Int64)">
-            <summary>
-            Returns a Queue object based on a queue ID.
-            </summary>
-            <param name="queueId">The Queue ID to lookup.</param>
-            <returns>A Queue object.</returns>
-        </member>
         <member name="M:NWorkQueue.Library.InternalApi.Dispose">
             <summary>
             Disposes of storage resources

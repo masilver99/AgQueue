@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Protobuf Include="**/*.proto" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\NWorkQueue.Common\NWorkQueue.Common.csproj" />
+    <ProjectReference Include="..\NWorkQueue.Library\NWorkQueue.Library.csproj" />
+    <ProjectReference Include="..\NWorkQueue.Models\NWorkQueue.Models.csproj" />
+    <ProjectReference Include="..\NWorkQueue.Sqlite\NWorkQueue.Sqlite.csproj" />
+  </ItemGroup>
+
+</Project>

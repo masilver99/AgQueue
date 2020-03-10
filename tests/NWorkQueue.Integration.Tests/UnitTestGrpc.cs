@@ -6,14 +6,14 @@ using Grpc.Net.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using NWorkQueue.Server;
 using NWorkQueue.Common;
+using NWorkQueue.Models;
 using System.Threading.Tasks;
 
 namespace NWorkQueue.Integration.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class UnitTestGrpc
     {
         private IWebHost StartServer()
         {
@@ -27,11 +27,11 @@ namespace NWorkQueue.Integration.Tests
             WebHost.CreateDefaultBuilder(new string[0])
                 .ConfigureKestrel(option =>
                 {
-                    option.ListenLocalhost(10042, listenOptions =>
+                    option.ListenLocalhost(10043, listenOptions =>
                     {
                         listenOptions.Protocols = HttpProtocols.Http2;
                     });
-                }).UseStartup<StartupTest>();
+                }).UseStartup<StartupGrpc>();
 
     
         [TestMethod]
@@ -39,15 +39,15 @@ namespace NWorkQueue.Integration.Tests
         {
             var webHost = StartServer();
             GrpcClientFactory.AllowUnencryptedHttp2 = true;
-            using var http = GrpcChannel.ForAddress("http://localhost:10042");
-            var service = http.CreateGrpcService<IQueueApi>();
-            await service.InitializeStorage(new InitializeStorageRequest { DeleteExistingData = true });
-            var createResponse = await service.CreateQueue(new Common.Models.CreateQueueRequest() { QueueName = "Test" });
-            Assert.AreEqual(1, createResponse.QueueId);
+            using var channel = GrpcChannel.ForAddress("http://localhost:10043");
+            var client = new QueueApi.QueueApiClient(channel);
+            //await service.InitializeStorage(new InitializeStorageRequest { DeleteExistingData = true });
+            var createResponse = client.CreateQueue(new CreateQueueRequest() /*{ QueueName = "Test" }*/);
+            //Assert.AreEqual(1, createResponse.QueueId);
             //var result = createResponse.Result;
             await webHost.StopAsync();
         }
-
+        /*
         [TestMethod]
         public async Task DeleteQueueById()
         {
@@ -65,6 +65,6 @@ namespace NWorkQueue.Integration.Tests
             //var result = createResponse.Result;
             await webHost.StopAsync();
         }
-
+        */
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NWorkQueue.Server
+namespace NWorkQueue.Library.Extensions;
 {
     public static class ResultCodeExtensions
     {

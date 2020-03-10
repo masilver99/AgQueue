@@ -124,7 +124,9 @@ namespace NWorkQueue.Library
                 return result.ApiResult;
             }
 
-            return await this.DeleteQueue(queueId);
+            await this.storage.DeleteQueue(queueId);
+
+            return new ApiResult(ResultCode.Ok);
             /*
              // Throw exception if queue does not exist
              if (!this.storage.DoesQueueExist(queueId))
@@ -151,16 +153,6 @@ namespace NWorkQueue.Library
                  trans.Rollback();
              }
              */
-        }
-
-        /// <summary>
-        /// Returns a Queue object based on a queue ID.
-        /// </summary>
-        /// <param name="queueId">The Queue ID to lookup.</param>
-        /// <returns>A Queue object.</returns>
-        public Queue GetQueueById(long queueId)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

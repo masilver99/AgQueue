@@ -7,7 +7,15 @@ using System.Runtime.Serialization;
 namespace NWorkQueue.Server
 {
     [DataContract]
-    public class DeleteQueueResponse
+    public class DeleteQueueByNameResponse
     {
     }
+
+    [DataContract]
+    public class DeleteQueueByIdResponse
+    {
+        public DeleteQueueByIdResponse()
+        { }
+    }
+
 }

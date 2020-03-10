@@ -1,0 +1,41 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "NWorkQueue.Models";
+
+package greet;
+
+// The service definition.
+service QueueApi {
+  rpc CreateQueue (CreateQueueRequest) returns (CreateQueueResponse);
+  rpc InitializeStorage (InitializeStorageRequest) returns (InitializeStorageResponse);
+  rpc DeleteQueueById (DeleteQueueByIdRequest) returns (DeleteQueueByIdResponse);
+  rpc DeleteQueueByName (DeleteQueueByNameRequest) returns (DeleteQueueByIdResponse);
+}
+
+// The request message containing the user's name.
+message CreateQueueRequest {
+  string QueueName = 1;
+}
+
+// The response message containing the greetings.
+message CreateQueueResponse {
+  long QueueId = 1;
+}
+
+message InitializeStorageRequest {
+}
+
+message InitializeStorageResponse {
+}
+
+message DeleteQueueByIdRequest {
+}
+
+message DeleteQueueByIdResponse {
+}
+
+message DeleteQueueByNameRequest {
+}
+
+message DeleteQueueByNameResponse {
+}
