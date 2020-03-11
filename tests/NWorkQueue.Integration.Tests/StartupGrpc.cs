@@ -9,7 +9,7 @@ using ProtoBuf.Grpc.Server;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NWorkQueue.GrpcService;
+using NWorkQueue.GrpcServer;
 
 namespace NWorkQueue.Integration.Tests
 {

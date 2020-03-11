@@ -9,7 +9,7 @@ service QueueApi {
   rpc CreateQueue (CreateQueueRequest) returns (CreateQueueResponse);
   rpc InitializeStorage (InitializeStorageRequest) returns (InitializeStorageResponse);
   rpc DeleteQueueById (DeleteQueueByIdRequest) returns (DeleteQueueByIdResponse);
-  rpc DeleteQueueByName (DeleteQueueByNameRequest) returns (DeleteQueueByIdResponse);
+  rpc DeleteQueueByName (DeleteQueueByNameRequest) returns (DeleteQueueByNameResponse);
 }
 
 // The request message containing the user's name.
@@ -19,22 +19,25 @@ message CreateQueueRequest {
 
 // The response message containing the greetings.
 message CreateQueueResponse {
-  long QueueId = 1;
+  int64 QueueId = 1;
 }
 
 message InitializeStorageRequest {
+  bool DeleteExistingData = 1;
 }
 
 message InitializeStorageResponse {
 }
 
 message DeleteQueueByIdRequest {
+  int64 QueueId = 1;
 }
 
 message DeleteQueueByIdResponse {
 }
 
 message DeleteQueueByNameRequest {
+  string QueueName = 1;
 }
 
 message DeleteQueueByNameResponse {

@@ -35,36 +35,40 @@ namespace NWorkQueue.Integration.Tests
 
     
         [TestMethod]
+        [DoNotParallelize]
         public async Task CreateQueue()
         {
             var webHost = StartServer();
             GrpcClientFactory.AllowUnencryptedHttp2 = true;
             using var channel = GrpcChannel.ForAddress("http://localhost:10043");
             var client = new QueueApi.QueueApiClient(channel);
-            //await service.InitializeStorage(new InitializeStorageRequest { DeleteExistingData = true });
-            var createResponse = client.CreateQueue(new CreateQueueRequest() /*{ QueueName = "Test" }*/);
-            //Assert.AreEqual(1, createResponse.QueueId);
+
+            await client.InitializeStorageAsync(new InitializeStorageRequest { DeleteExistingData = true });
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "Test" });
+
+            Assert.AreEqual(1, createResponse.QueueId);
             //var result = createResponse.Result;
             await webHost.StopAsync();
         }
-        /*
+        
         [TestMethod]
+        [DoNotParallelize]
         public async Task DeleteQueueById()
         {
             var webHost = StartServer();
             GrpcClientFactory.AllowUnencryptedHttp2 = true;
-            using var http = GrpcChannel.ForAddress("http://localhost:10042");
-            var service = http.CreateGrpcService<IQueueApi>();
-            await service.InitializeStorage(new InitializeStorageRequest { DeleteExistingData = true });
-            var createResponse = await service.CreateQueue(new Common.Models.CreateQueueRequest { QueueName = "DeleteById" });
+            using var channel = GrpcChannel.ForAddress("http://localhost:10043");
+            var client = new QueueApi.QueueApiClient(channel);
+
+            await client.InitializeStorageAsync(new InitializeStorageRequest { DeleteExistingData = true });
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DeleteById" });
             Assert.AreEqual(1, createResponse.QueueId);
-            var request = new Common.Models.DeleteQueueByNameRequest { QueueName = "blah" };
-            await service.DeleteQueueByName(request);
+            var request = new DeleteQueueByNameRequest { QueueName = "DeleteById" };
+            await client.DeleteQueueByNameAsync(request);
 
 
             //var result = createResponse.Result;
             await webHost.StopAsync();
         }
-        */
     }
 }

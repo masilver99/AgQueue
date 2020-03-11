@@ -22,6 +22,7 @@ namespace NWorkQueue.Models {
     static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByIdRequest> __Marshaller_greet_DeleteQueueByIdRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByIdRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByIdResponse> __Marshaller_greet_DeleteQueueByIdResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByIdResponse.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByNameRequest> __Marshaller_greet_DeleteQueueByNameRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByNameRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByNameResponse> __Marshaller_greet_DeleteQueueByNameResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByNameResponse.Parser.ParseFrom);
 
     static readonly grpc::Method<global::NWorkQueue.Models.CreateQueueRequest, global::NWorkQueue.Models.CreateQueueResponse> __Method_CreateQueue = new grpc::Method<global::NWorkQueue.Models.CreateQueueRequest, global::NWorkQueue.Models.CreateQueueResponse>(
         grpc::MethodType.Unary,
@@ -44,12 +45,12 @@ namespace NWorkQueue.Models {
         __Marshaller_greet_DeleteQueueByIdRequest,
         __Marshaller_greet_DeleteQueueByIdResponse);
 
-    static readonly grpc::Method<global::NWorkQueue.Models.DeleteQueueByNameRequest, global::NWorkQueue.Models.DeleteQueueByIdResponse> __Method_DeleteQueueByName = new grpc::Method<global::NWorkQueue.Models.DeleteQueueByNameRequest, global::NWorkQueue.Models.DeleteQueueByIdResponse>(
+    static readonly grpc::Method<global::NWorkQueue.Models.DeleteQueueByNameRequest, global::NWorkQueue.Models.DeleteQueueByNameResponse> __Method_DeleteQueueByName = new grpc::Method<global::NWorkQueue.Models.DeleteQueueByNameRequest, global::NWorkQueue.Models.DeleteQueueByNameResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "DeleteQueueByName",
         __Marshaller_greet_DeleteQueueByNameRequest,
-        __Marshaller_greet_DeleteQueueByIdResponse);
+        __Marshaller_greet_DeleteQueueByNameResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -76,7 +77,7 @@ namespace NWorkQueue.Models {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.DeleteQueueByIdResponse> DeleteQueueByName(global::NWorkQueue.Models.DeleteQueueByNameRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.DeleteQueueByNameResponse> DeleteQueueByName(global::NWorkQueue.Models.DeleteQueueByNameRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -154,19 +155,19 @@ namespace NWorkQueue.Models {
       {
         return CallInvoker.AsyncUnaryCall(__Method_DeleteQueueById, null, options, request);
       }
-      public virtual global::NWorkQueue.Models.DeleteQueueByIdResponse DeleteQueueByName(global::NWorkQueue.Models.DeleteQueueByNameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::NWorkQueue.Models.DeleteQueueByNameResponse DeleteQueueByName(global::NWorkQueue.Models.DeleteQueueByNameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return DeleteQueueByName(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::NWorkQueue.Models.DeleteQueueByIdResponse DeleteQueueByName(global::NWorkQueue.Models.DeleteQueueByNameRequest request, grpc::CallOptions options)
+      public virtual global::NWorkQueue.Models.DeleteQueueByNameResponse DeleteQueueByName(global::NWorkQueue.Models.DeleteQueueByNameRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_DeleteQueueByName, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.DeleteQueueByIdResponse> DeleteQueueByNameAsync(global::NWorkQueue.Models.DeleteQueueByNameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.DeleteQueueByNameResponse> DeleteQueueByNameAsync(global::NWorkQueue.Models.DeleteQueueByNameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return DeleteQueueByNameAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.DeleteQueueByIdResponse> DeleteQueueByNameAsync(global::NWorkQueue.Models.DeleteQueueByNameRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.DeleteQueueByNameResponse> DeleteQueueByNameAsync(global::NWorkQueue.Models.DeleteQueueByNameRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_DeleteQueueByName, null, options, request);
       }
@@ -197,7 +198,7 @@ namespace NWorkQueue.Models {
       serviceBinder.AddMethod(__Method_CreateQueue, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.CreateQueueRequest, global::NWorkQueue.Models.CreateQueueResponse>(serviceImpl.CreateQueue));
       serviceBinder.AddMethod(__Method_InitializeStorage, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.InitializeStorageRequest, global::NWorkQueue.Models.InitializeStorageResponse>(serviceImpl.InitializeStorage));
       serviceBinder.AddMethod(__Method_DeleteQueueById, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.DeleteQueueByIdRequest, global::NWorkQueue.Models.DeleteQueueByIdResponse>(serviceImpl.DeleteQueueById));
-      serviceBinder.AddMethod(__Method_DeleteQueueByName, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.DeleteQueueByNameRequest, global::NWorkQueue.Models.DeleteQueueByIdResponse>(serviceImpl.DeleteQueueByName));
+      serviceBinder.AddMethod(__Method_DeleteQueueByName, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.DeleteQueueByNameRequest, global::NWorkQueue.Models.DeleteQueueByNameResponse>(serviceImpl.DeleteQueueByName));
     }
 
   }

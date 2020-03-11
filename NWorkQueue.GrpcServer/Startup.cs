@@ -11,7 +11,7 @@ using NWorkQueue.Common;
 using NWorkQueue.Library;
 using NWorkQueue.Sqlite;
 
-namespace NWorkQueue.GrpcService
+namespace NWorkQueue.GrpcServer
 {
     public class Startup
     {
