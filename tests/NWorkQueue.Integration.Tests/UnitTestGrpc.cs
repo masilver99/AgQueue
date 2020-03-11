@@ -1,7 +1,4 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ProtoBuf.Grpc.Client;
-using Grpc.Core;
-using ProtoBuf.Grpc;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
@@ -9,12 +6,21 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using NWorkQueue.Common;
 using NWorkQueue.Models;
 using System.Threading.Tasks;
+using Grpc.Net.ClientFactory;
+using System;
 
 namespace NWorkQueue.Integration.Tests
 {
     [TestClass]
     public class UnitTestGrpc
     {
+        private IWebHost? _webHost;
+
+        public UnitTestGrpc()
+        {
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+        }
+
         private IWebHost StartServer()
         {
             var webHostBuilder = CreateHostBuilder();
@@ -33,42 +39,60 @@ namespace NWorkQueue.Integration.Tests
                     });
                 }).UseStartup<StartupGrpc>();
 
-    
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _webHost = StartServer();
+        }
+
+        [TestCleanup]
+        public async Task TestCleanup()
+        {
+            await _webHost.StopAsync();
+        }
+
         [TestMethod]
-        [DoNotParallelize]
+        //[DoNotParallelize]
         public async Task CreateQueue()
         {
-            var webHost = StartServer();
-            GrpcClientFactory.AllowUnencryptedHttp2 = true;
-            using var channel = GrpcChannel.ForAddress("http://localhost:10043");
-            var client = new QueueApi.QueueApiClient(channel);
+            var client = await CreateClient();
 
-            await client.InitializeStorageAsync(new InitializeStorageRequest { DeleteExistingData = true });
             var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "Test" });
 
             Assert.AreEqual(1, createResponse.QueueId);
-            //var result = createResponse.Result;
-            await webHost.StopAsync();
         }
         
         [TestMethod]
-        [DoNotParallelize]
+        //[DoNotParallelize]
         public async Task DeleteQueueById()
         {
-            var webHost = StartServer();
-            GrpcClientFactory.AllowUnencryptedHttp2 = true;
-            using var channel = GrpcChannel.ForAddress("http://localhost:10043");
-            var client = new QueueApi.QueueApiClient(channel);
+            var client = await CreateClient();
 
-            await client.InitializeStorageAsync(new InitializeStorageRequest { DeleteExistingData = true });
             var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DeleteById" });
             Assert.AreEqual(1, createResponse.QueueId);
             var request = new DeleteQueueByNameRequest { QueueName = "DeleteById" };
             await client.DeleteQueueByNameAsync(request);
+        }
+
+        [TestMethod]
+        public async Task DeleteQueueByName()
+        {
+            var client = await CreateClient();
+
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DeleteByName" });
+            Assert.AreEqual(1, createResponse.QueueId);
+            var request = new DeleteQueueByNameRequest { QueueName = "DeleteByName" };
 
 
-            //var result = createResponse.Result;
-            await webHost.StopAsync();
+            await client.DeleteQueueByNameAsync(request);
+        }
+
+        private static async Task<QueueApi.QueueApiClient> CreateClient()
+        {
+            var channel = GrpcChannel.ForAddress("http://localhost:10043");
+            var client = new QueueApi.QueueApiClient(channel);
+            await client.InitializeStorageAsync(new InitializeStorageRequest { DeleteExistingData = true });
+            return client;
         }
     }
 }

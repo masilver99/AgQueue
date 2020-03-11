@@ -70,7 +70,33 @@ namespace NWorkQueue.GrpcServer
 
             throw result.ApiResult.CreateRpcException();
         }
+        /*
+        public override async Task<QueueInfoResponse> QueueInfoById(QueueInfoByIdRequest request, ServerCallContext context)
+        {
+            RpcException rcpException;
+            try
+            {
+                var result = await this.internalApi.CreateQueue(request.QueueName);
+                if (result.ApiResult.IsSuccess)
+                {
+                    return new CreateQueueResponse { QueueId = result.QueueId };
+                }
 
+                rcpException = new RpcException(new Status(result.ApiResult.ResultCode.ToGrpcStatus(), result.ApiResult.Message));
+            }
+            catch (Exception e)
+            {
+                rcpException = new RpcException(new Status(StatusCode.Unknown, e.Message));
+            }
+
+            throw rcpException;
+
+        }
+
+        public override async Task<QueueInfoResponse> QueueInfoByName(QueueInfoByNameRequest request, ServerCallContext context)
+        {
+        }
+        */
         private T ReturnIfSuccess<T>(ApiResult apiResult)
             where T : new()
         {

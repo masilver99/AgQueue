@@ -10,6 +10,21 @@ service QueueApi {
   rpc InitializeStorage (InitializeStorageRequest) returns (InitializeStorageResponse);
   rpc DeleteQueueById (DeleteQueueByIdRequest) returns (DeleteQueueByIdResponse);
   rpc DeleteQueueByName (DeleteQueueByNameRequest) returns (DeleteQueueByNameResponse);
+  rpc QueueInfoById (QueueInfoByIdRequest) returns (QueueInfoResponse);
+  rpc QueueInfoByName (QueueInfoByNameRequest) returns (QueueInfoResponse);
+}
+
+message QueueInfoResponse {
+  int64 QueueId = 1;
+  string QueueName = 2;
+}
+
+message QueueInfoByNameRequest {
+  string QueueName = 1;
+}
+
+message QueueInfoByIdRequest {
+  int64 QueueId = 1;
 }
 
 // The request message containing the user's name.

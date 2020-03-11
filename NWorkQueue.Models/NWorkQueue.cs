@@ -24,25 +24,35 @@ namespace NWorkQueue.Models {
     static NWorkQueueReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChBOV29ya1F1ZXVlLnByb3RvEgVncmVldCInChJDcmVhdGVRdWV1ZVJlcXVl",
-            "c3QSEQoJUXVldWVOYW1lGAEgASgJIiYKE0NyZWF0ZVF1ZXVlUmVzcG9uc2US",
-            "DwoHUXVldWVJZBgBIAEoAyI2ChhJbml0aWFsaXplU3RvcmFnZVJlcXVlc3QS",
-            "GgoSRGVsZXRlRXhpc3RpbmdEYXRhGAEgASgIIhsKGUluaXRpYWxpemVTdG9y",
-            "YWdlUmVzcG9uc2UiKQoWRGVsZXRlUXVldWVCeUlkUmVxdWVzdBIPCgdRdWV1",
-            "ZUlkGAEgASgDIhkKF0RlbGV0ZVF1ZXVlQnlJZFJlc3BvbnNlIi0KGERlbGV0",
-            "ZVF1ZXVlQnlOYW1lUmVxdWVzdBIRCglRdWV1ZU5hbWUYASABKAkiGwoZRGVs",
-            "ZXRlUXVldWVCeU5hbWVSZXNwb25zZTLSAgoIUXVldWVBcGkSRAoLQ3JlYXRl",
-            "UXVldWUSGS5ncmVldC5DcmVhdGVRdWV1ZVJlcXVlc3QaGi5ncmVldC5DcmVh",
-            "dGVRdWV1ZVJlc3BvbnNlElYKEUluaXRpYWxpemVTdG9yYWdlEh8uZ3JlZXQu",
-            "SW5pdGlhbGl6ZVN0b3JhZ2VSZXF1ZXN0GiAuZ3JlZXQuSW5pdGlhbGl6ZVN0",
-            "b3JhZ2VSZXNwb25zZRJQCg9EZWxldGVRdWV1ZUJ5SWQSHS5ncmVldC5EZWxl",
-            "dGVRdWV1ZUJ5SWRSZXF1ZXN0Gh4uZ3JlZXQuRGVsZXRlUXVldWVCeUlkUmVz",
-            "cG9uc2USVgoRRGVsZXRlUXVldWVCeU5hbWUSHy5ncmVldC5EZWxldGVRdWV1",
-            "ZUJ5TmFtZVJlcXVlc3QaIC5ncmVldC5EZWxldGVRdWV1ZUJ5TmFtZVJlc3Bv",
-            "bnNlQhSqAhFOV29ya1F1ZXVlLk1vZGVsc2IGcHJvdG8z"));
+            "ChBOV29ya1F1ZXVlLnByb3RvEgVncmVldCI3ChFRdWV1ZUluZm9SZXNwb25z",
+            "ZRIPCgdRdWV1ZUlkGAEgASgDEhEKCVF1ZXVlTmFtZRgCIAEoCSIrChZRdWV1",
+            "ZUluZm9CeU5hbWVSZXF1ZXN0EhEKCVF1ZXVlTmFtZRgBIAEoCSInChRRdWV1",
+            "ZUluZm9CeUlkUmVxdWVzdBIPCgdRdWV1ZUlkGAEgASgDIicKEkNyZWF0ZVF1",
+            "ZXVlUmVxdWVzdBIRCglRdWV1ZU5hbWUYASABKAkiJgoTQ3JlYXRlUXVldWVS",
+            "ZXNwb25zZRIPCgdRdWV1ZUlkGAEgASgDIjYKGEluaXRpYWxpemVTdG9yYWdl",
+            "UmVxdWVzdBIaChJEZWxldGVFeGlzdGluZ0RhdGEYASABKAgiGwoZSW5pdGlh",
+            "bGl6ZVN0b3JhZ2VSZXNwb25zZSIpChZEZWxldGVRdWV1ZUJ5SWRSZXF1ZXN0",
+            "Eg8KB1F1ZXVlSWQYASABKAMiGQoXRGVsZXRlUXVldWVCeUlkUmVzcG9uc2Ui",
+            "LQoYRGVsZXRlUXVldWVCeU5hbWVSZXF1ZXN0EhEKCVF1ZXVlTmFtZRgBIAEo",
+            "CSIbChlEZWxldGVRdWV1ZUJ5TmFtZVJlc3BvbnNlMuYDCghRdWV1ZUFwaRJE",
+            "CgtDcmVhdGVRdWV1ZRIZLmdyZWV0LkNyZWF0ZVF1ZXVlUmVxdWVzdBoaLmdy",
+            "ZWV0LkNyZWF0ZVF1ZXVlUmVzcG9uc2USVgoRSW5pdGlhbGl6ZVN0b3JhZ2US",
+            "Hy5ncmVldC5Jbml0aWFsaXplU3RvcmFnZVJlcXVlc3QaIC5ncmVldC5Jbml0",
+            "aWFsaXplU3RvcmFnZVJlc3BvbnNlElAKD0RlbGV0ZVF1ZXVlQnlJZBIdLmdy",
+            "ZWV0LkRlbGV0ZVF1ZXVlQnlJZFJlcXVlc3QaHi5ncmVldC5EZWxldGVRdWV1",
+            "ZUJ5SWRSZXNwb25zZRJWChFEZWxldGVRdWV1ZUJ5TmFtZRIfLmdyZWV0LkRl",
+            "bGV0ZVF1ZXVlQnlOYW1lUmVxdWVzdBogLmdyZWV0LkRlbGV0ZVF1ZXVlQnlO",
+            "YW1lUmVzcG9uc2USRgoNUXVldWVJbmZvQnlJZBIbLmdyZWV0LlF1ZXVlSW5m",
+            "b0J5SWRSZXF1ZXN0GhguZ3JlZXQuUXVldWVJbmZvUmVzcG9uc2USSgoPUXVl",
+            "dWVJbmZvQnlOYW1lEh0uZ3JlZXQuUXVldWVJbmZvQnlOYW1lUmVxdWVzdBoY",
+            "LmdyZWV0LlF1ZXVlSW5mb1Jlc3BvbnNlQhSqAhFOV29ya1F1ZXVlLk1vZGVs",
+            "c2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueInfoResponse), global::NWorkQueue.Models.QueueInfoResponse.Parser, new[]{ "QueueId", "QueueName" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueInfoByNameRequest), global::NWorkQueue.Models.QueueInfoByNameRequest.Parser, new[]{ "QueueName" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueInfoByIdRequest), global::NWorkQueue.Models.QueueInfoByIdRequest.Parser, new[]{ "QueueId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.CreateQueueRequest), global::NWorkQueue.Models.CreateQueueRequest.Parser, new[]{ "QueueName" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.CreateQueueResponse), global::NWorkQueue.Models.CreateQueueResponse.Parser, new[]{ "QueueId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.InitializeStorageRequest), global::NWorkQueue.Models.InitializeStorageRequest.Parser, new[]{ "DeleteExistingData" }, null, null, null, null),
@@ -57,6 +67,421 @@ namespace NWorkQueue.Models {
 
   }
   #region Messages
+  public sealed partial class QueueInfoResponse : pb::IMessage<QueueInfoResponse> {
+    private static readonly pb::MessageParser<QueueInfoResponse> _parser = new pb::MessageParser<QueueInfoResponse>(() => new QueueInfoResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<QueueInfoResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[0]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QueueInfoResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QueueInfoResponse(QueueInfoResponse other) : this() {
+      queueId_ = other.queueId_;
+      queueName_ = other.queueName_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QueueInfoResponse Clone() {
+      return new QueueInfoResponse(this);
+    }
+
+    /// <summary>Field number for the "QueueId" field.</summary>
+    public const int QueueIdFieldNumber = 1;
+    private long queueId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long QueueId {
+      get { return queueId_; }
+      set {
+        queueId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "QueueName" field.</summary>
+    public const int QueueNameFieldNumber = 2;
+    private string queueName_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string QueueName {
+      get { return queueName_; }
+      set {
+        queueName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as QueueInfoResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(QueueInfoResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (QueueId != other.QueueId) return false;
+      if (QueueName != other.QueueName) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (QueueId != 0L) hash ^= QueueId.GetHashCode();
+      if (QueueName.Length != 0) hash ^= QueueName.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (QueueId != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(QueueId);
+      }
+      if (QueueName.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(QueueName);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (QueueId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(QueueId);
+      }
+      if (QueueName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(QueueName);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(QueueInfoResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.QueueId != 0L) {
+        QueueId = other.QueueId;
+      }
+      if (other.QueueName.Length != 0) {
+        QueueName = other.QueueName;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            QueueId = input.ReadInt64();
+            break;
+          }
+          case 18: {
+            QueueName = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class QueueInfoByNameRequest : pb::IMessage<QueueInfoByNameRequest> {
+    private static readonly pb::MessageParser<QueueInfoByNameRequest> _parser = new pb::MessageParser<QueueInfoByNameRequest>(() => new QueueInfoByNameRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<QueueInfoByNameRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QueueInfoByNameRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QueueInfoByNameRequest(QueueInfoByNameRequest other) : this() {
+      queueName_ = other.queueName_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QueueInfoByNameRequest Clone() {
+      return new QueueInfoByNameRequest(this);
+    }
+
+    /// <summary>Field number for the "QueueName" field.</summary>
+    public const int QueueNameFieldNumber = 1;
+    private string queueName_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string QueueName {
+      get { return queueName_; }
+      set {
+        queueName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as QueueInfoByNameRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(QueueInfoByNameRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (QueueName != other.QueueName) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (QueueName.Length != 0) hash ^= QueueName.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (QueueName.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(QueueName);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (QueueName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(QueueName);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(QueueInfoByNameRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.QueueName.Length != 0) {
+        QueueName = other.QueueName;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            QueueName = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class QueueInfoByIdRequest : pb::IMessage<QueueInfoByIdRequest> {
+    private static readonly pb::MessageParser<QueueInfoByIdRequest> _parser = new pb::MessageParser<QueueInfoByIdRequest>(() => new QueueInfoByIdRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<QueueInfoByIdRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[2]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QueueInfoByIdRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QueueInfoByIdRequest(QueueInfoByIdRequest other) : this() {
+      queueId_ = other.queueId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QueueInfoByIdRequest Clone() {
+      return new QueueInfoByIdRequest(this);
+    }
+
+    /// <summary>Field number for the "QueueId" field.</summary>
+    public const int QueueIdFieldNumber = 1;
+    private long queueId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long QueueId {
+      get { return queueId_; }
+      set {
+        queueId_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as QueueInfoByIdRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(QueueInfoByIdRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (QueueId != other.QueueId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (QueueId != 0L) hash ^= QueueId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (QueueId != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(QueueId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (QueueId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(QueueId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(QueueInfoByIdRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.QueueId != 0L) {
+        QueueId = other.QueueId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            QueueId = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
   /// <summary>
   /// The request message containing the user's name.
   /// </summary>
@@ -68,7 +493,7 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[0]; }
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -200,7 +625,7 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[1]; }
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -329,7 +754,7 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[2]; }
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -458,7 +883,7 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[3]; }
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -559,7 +984,7 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[4]; }
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -688,7 +1113,7 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[5]; }
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -789,7 +1214,7 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[6]; }
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -918,7 +1343,7 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[7]; }
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
