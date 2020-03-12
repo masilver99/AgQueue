@@ -2,7 +2,7 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace NWorkQueue.Library
+namespace NWorkQueue.Server.Common
 {
     public class ApiResult
     {

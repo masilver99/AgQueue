@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\NWorkQueue.GrpcServer\NWorkQueue.GrpcServer.csproj" />
+    <ProjectReference Include="..\..\NWorkQueue.Server.Common\NWorkQueue.Server.Common.csproj" />
     <ProjectReference Include="..\..\NWorkQueue.Models\NWorkQueue.Models.csproj" />
   </ItemGroup>
 

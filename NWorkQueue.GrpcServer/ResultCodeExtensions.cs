@@ -1,5 +1,5 @@
 ﻿using Grpc.Core;
-using NWorkQueue.Library;
+using NWorkQueue.Server.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

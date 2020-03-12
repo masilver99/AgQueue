@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NWorkQueue.Common;
-using NWorkQueue.Library;
+using NWorkQueue.Server.Common;
 using NWorkQueue.Sqlite;
 using System;
 using System.Collections.Generic;

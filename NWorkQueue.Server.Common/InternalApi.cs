@@ -12,12 +12,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using NWorkQueue.Common;
-using NWorkQueue.Library.Extensions;
+using NWorkQueue.Server.Common.Extensions;
 using NWorkQueue.Sqlite;
 
 [assembly: InternalsVisibleTo("NWorkQueue.Tests")]
 
-namespace NWorkQueue.Library
+namespace NWorkQueue.Server.Common
 {
     /// <summary>
     /// Starting point for accessing all queue related APIS

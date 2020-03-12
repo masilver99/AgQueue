@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NWorkQueue.Library.Extensions
+namespace NWorkQueue.Server.Common.Extensions
 {
     public static class StringExtensions
     {

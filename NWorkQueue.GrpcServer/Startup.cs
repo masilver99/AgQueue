@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NWorkQueue.Common;
-using NWorkQueue.Library;
+using NWorkQueue.Server.Common;
 using NWorkQueue.Sqlite;
 
 namespace NWorkQueue.GrpcServer

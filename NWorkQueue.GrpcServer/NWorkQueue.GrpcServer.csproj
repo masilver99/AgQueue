@@ -14,7 +14,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\NWorkQueue.Common\NWorkQueue.Common.csproj" />
-    <ProjectReference Include="..\NWorkQueue.Library\NWorkQueue.Library.csproj" />
+    <ProjectReference Include="..\NWorkQueue.Server.Common\NWorkQueue.Server.Common.csproj" />
     <ProjectReference Include="..\NWorkQueue.Models\NWorkQueue.Models.csproj" />
     <ProjectReference Include="..\NWorkQueue.Sqlite\NWorkQueue.Sqlite.csproj" />
   </ItemGroup>
