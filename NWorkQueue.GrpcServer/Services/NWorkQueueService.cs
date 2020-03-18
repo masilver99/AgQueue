@@ -70,19 +70,19 @@ namespace NWorkQueue.GrpcServer
 
             throw result.ApiResult.CreateRpcException();
         }
-        /*
+        
         public override async Task<QueueInfoResponse> QueueInfoById(QueueInfoByIdRequest request, ServerCallContext context)
         {
             RpcException rcpException;
             try
             {
-                var result = await this.internalApi.CreateQueue(request.QueueName);
-                if (result.ApiResult.IsSuccess)
+                var result = await this.internalApi.GetQueueInfoById(request.QueueId);
+                if (result.apiResult.IsSuccess)
                 {
-                    return new CreateQueueResponse { QueueId = result.QueueId };
+                    return new QueueInfoResponse { QueueId = result.queueInfo.Id, QueueName = result.queueInfo.Name };
                 }
 
-                rcpException = new RpcException(new Status(result.ApiResult.ResultCode.ToGrpcStatus(), result.ApiResult.Message));
+                rcpException = new RpcException(new Status(result.apiResult.ResultCode.ToGrpcStatus(), result.apiResult.Message));
             }
             catch (Exception e)
             {
@@ -90,13 +90,29 @@ namespace NWorkQueue.GrpcServer
             }
 
             throw rcpException;
-
         }
 
         public override async Task<QueueInfoResponse> QueueInfoByName(QueueInfoByNameRequest request, ServerCallContext context)
         {
+            RpcException rcpException;
+            try
+            {
+                var result = await this.internalApi.GetQueueInfoByName(request.QueueName);
+                if (result.apiResult.IsSuccess)
+                {
+                    return new QueueInfoResponse { QueueId = result.queueInfo.Id, QueueName = result.queueInfo.Name };
+                }
+
+                rcpException = new RpcException(new Status(result.apiResult.ResultCode.ToGrpcStatus(), result.apiResult.Message));
+            }
+            catch (Exception e)
+            {
+                rcpException = new RpcException(new Status(StatusCode.Unknown, e.Message));
+            }
+
+            throw rcpException;
         }
-        */
+
         private T ReturnIfSuccess<T>(ApiResult apiResult)
             where T : new()
         {

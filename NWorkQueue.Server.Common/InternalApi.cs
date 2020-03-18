@@ -13,7 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NWorkQueue.Common;
 using NWorkQueue.Server.Common.Extensions;
-using NWorkQueue.Sqlite;
+using NWorkQueue.Server.Common.Models;
 
 [assembly: InternalsVisibleTo("NWorkQueue.Tests")]
 
@@ -79,36 +79,61 @@ namespace NWorkQueue.Server.Common
                 return new ApiResult(ResultCode.InvalidArgument, "Queue name is empty.");
             }
 
-            var result = await this.GetQueueId(fixedName);
+            var result = await this.GetQueueInfoByName(fixedName);
 
-            if (result.ApiResult.ResultCode != ResultCode.Ok)
+            // QueueInfo should never be null if IsSuccess = true
+            if (result.apiResult.IsSuccess)
             {
-                return result.ApiResult;
+                return await this.DeleteQueue(result.queueInfo!.Id);
             }
 
-            return await this.DeleteQueue(result.QueueId);
+            return result.apiResult;
+        }
+
+        public async ValueTask<(QueueInfo? queueInfo, ApiResult apiResult)> GetQueueInfoById(long queueId)
+        {
+            var queueInfo = await this.storage.GetQueueInfoById(queueId);
+ 
+            if (queueInfo == null)
+            {
+                return (null, new ApiResult { ResultCode = ResultCode.NotFound, Message = $"Queue Id {queueId} not found." });
+            }
+
+            return (queueInfo, new ApiResult { ResultCode = ResultCode.Ok });
+        }
+
+        public async ValueTask<(QueueInfo? queueInfo, ApiResult apiResult)> GetQueueInfoByName(string queueName)
+        {
+            var queueInfo = await this.storage.GetQueueInfoByName(queueName.StandardizeQueueName());
+
+            if (queueInfo == null)
+            {
+                return (null, new ApiResult { ResultCode = ResultCode.NotFound, Message = $"Queue Name {queueName} not found." });
+            }
+
+            return (queueInfo, new ApiResult { ResultCode = ResultCode.Ok });
         }
 
         public async ValueTask<(long QueueId, ApiResult ApiResult)> GetQueueId(string queueName)
         {
-            var queueId = await this.storage.GetQueueId(queueName.StandardizeQueueName());
-            if (queueId.HasValue)
+            var queueResult = await this.GetQueueInfoByName(queueName);
+            if (queueResult.apiResult.IsSuccess)
             {
-                return (queueId.Value, new ApiResult(ResultCode.Ok));
+                return (queueResult.queueInfo.Id, queueResult.apiResult);
             }
 
-            return (0, new ApiResult(ResultCode.NotFound, $"Queue name not found {queueName}"));
+            return (0, queueResult.apiResult);
         }
 
         public async ValueTask<(string QueueName, ApiResult ApiResult)> GetQueueName(long queueId)
         {
-            var queueName = await this.storage.GetQueueName(queueId);
-            if (string.IsNullOrEmpty(queueName))
+            var queueResult = await this.GetQueueInfoById(queueId);
+            if (queueResult.apiResult.IsSuccess)
             {
-                return (string.Empty, new ApiResult(ResultCode.NotFound, $"Queue ID {queueId} not found"));
+                return (queueResult.queueInfo.Name, queueResult.apiResult);
             }
 
-            return (queueName, new ApiResult(ResultCode.Ok));
+            return (string.Empty, queueResult.apiResult);
         }
 
         /// <summary>

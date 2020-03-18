@@ -19,7 +19,7 @@
             this is handled without an exception.  This is mostly for speed and simplicity with the gRPC interface.
             </remarks>
         </member>
-        <member name="M:NWorkQueue.Server.Common.InternalApi.#ctor(NWorkQueue.Common.IStorage)">
+        <member name="M:NWorkQueue.Server.Common.InternalApi.#ctor(NWorkQueue.Server.Common.IStorage)">
             <summary>
             Initializes a new instance of the <see cref="T:NWorkQueue.Server.Common.InternalApi"/> class.
             </summary>
@@ -48,49 +48,65 @@
             Disposes of storage resources
             </summary>
         </member>
+        <member name="T:NWorkQueue.Server.Common.IStorage">
+            <summary>
+            The interface for storing and retrieving queue information from a storage mechinism, usually a database.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.InitializeStorage(System.Boolean)">
+            <summary>
+            Called when Queue process starts.  Connections to the storage should be made here, etc.
+            </summary>
+            <param name="deleteExistingData">Should all existing queues and messages be deleted.</param>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.AddQueue(System.String)">
+            <summary>
+            Create a new Queue in storage.
+            </summary>
+            <param name="name">Queue name.</param>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.DeleteQueue(System.Int64)">
+            <summary>
+            Delete a Queue and ALL messages in the Queue.
+            </summary>
+            <param name="id">Queue Id of the queue to delete.</param>
+            <param name="storageTrans">The storage transaction to perform the operation under.</param>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.GetQueueInfoByName(System.String)">
+            <summary>
+            Returns the id of the Queue.  If no queue is found, returns null.
+            </summary>
+            <remarks>
+            This search should be case sensitive, only use LIKE with SQLite.
+            </remarks>
+            <param name="name">Name of the queue to lookup.</param>
+            <returns>Queue ID or null if queue not found.</returns>
+        </member>
+        <member name="T:NWorkQueue.Server.Common.IStorageTransaction">
+            <summary>
+            Represents a transaction used by the storage (usually a database transaction)
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorageTransaction.Commit">
+            <summary>
+            Commits the transaction, usually this reprents a database transaction
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorageTransaction.Rollback">
+            <summary>
+            Rollsback the transaction, usually this reprents a database transaction
+            </summary>
+        </member>
         <member name="T:NWorkQueue.Server.Common.Message">
             <summary>
             APIS's for accessing and manging queue messages.
             </summary>
         </member>
-        <member name="M:NWorkQueue.Server.Common.Message.#ctor(NWorkQueue.Common.IStorage)">
+        <member name="M:NWorkQueue.Server.Common.Message.#ctor(NWorkQueue.Server.Common.IStorage)">
             <summary>
             Initializes a new instance of the <see cref="T:NWorkQueue.Server.Common.Message"/> class.
             </summary>
             <param name="storage">Storage library.</param>
-        </member>
-        <member name="T:NWorkQueue.Server.Common.Queue">
-            <summary>
-            Queue API from which to manage queue.
-            </summary>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Queue.#ctor(NWorkQueue.Common.IStorage)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NWorkQueue.Server.Common.Queue"/> class.
-            </summary>
-            <param name="storage">storage engine</param>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Queue.Create(System.String)">
-            <summary>
-            Creates a new queue. Queue cannot already exist
-            </summary>
-            <param name="name">Name of queue to create</param>
-            <returns>The queue Id</returns>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Queue.AddMessage(NWorkQueue.Server.Common.Transaction,System.Object,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String)">
-            <summary>
-            Adds a message to a queue.
-            </summary>
-            <param name="transId">Queue Transaction id.  All messages must be added in a transaction.</param>
-            <param name="queueId">The queue id to add the message to.</param>
-            <param name="message">Message object to be serialized.</param>
-            <param name="metaData">String of optional data describing the message.</param>
-            <param name="priority">Message priority.  Lower the number, the higher the priority.</param>
-            <param name="maxRetries">How many failures before the message will be expired.</param>
-            <param name="rawExpiryDateTime">Datetime that the message will expire if it's not already been processed.</param>
-            <param name="correlation">Optional correlation id.  ID's are defined by the calling application.</param>
-            <param name="groupName" >Optional group string.  Defined by calling application.</param>
-            <returns>Message ID.</returns>
         </member>
         <member name="T:NWorkQueue.Server.Common.ResultCode">
             <summary>
@@ -208,7 +224,7 @@
             Represents a Queue Transaction.  Most message functions require a transaction
             </summary>
         </member>
-        <member name="M:NWorkQueue.Server.Common.Transaction.#ctor(NWorkQueue.Common.IStorage)">
+        <member name="M:NWorkQueue.Server.Common.Transaction.#ctor(NWorkQueue.Server.Common.IStorage)">
             <summary>
             Initializes a new instance of the <see cref="T:NWorkQueue.Server.Common.Transaction"/> class.
             </summary>

@@ -1,13 +1,12 @@
 ﻿// <copyright file="DbTransaction.cs" company="Michael Silver">
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
+using Microsoft.Data.Sqlite;
+using NWorkQueue.Common;
 
 namespace NWorkQueue.Sqlite
 {
-    using Microsoft.Data.Sqlite;
-    using NWorkQueue.Common;
-
-    /// <summary>
+/*    /// <summary>
     /// Wrapper around SQLite transaction.  Used by storage classes
     /// </summary>
     internal class DbTransaction : IStorageTransaction
@@ -38,4 +37,5 @@ namespace NWorkQueue.Sqlite
             this.SqliteTransaction.Rollback();
         }
     }
+*/
 }

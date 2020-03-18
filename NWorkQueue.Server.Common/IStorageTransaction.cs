@@ -2,7 +2,7 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace NWorkQueue.Common
+namespace NWorkQueue.Server.Common
 {
     /// <summary>
     /// Represents a transaction used by the storage (usually a database transaction)

@@ -4,31 +4,9 @@
         <name>NWorkQueue.Sqlite</name>
     </assembly>
     <members>
-        <member name="T:NWorkQueue.Sqlite.DbTransaction">
-            <summary>
-            Wrapper around SQLite transaction.  Used by storage classes
-            </summary>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.DbTransaction.#ctor(Microsoft.Data.Sqlite.SqliteConnection)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NWorkQueue.Sqlite.DbTransaction"/> class.
-            </summary>
-            <param name="connection">SQLite connection</param>
-        </member>
-        <member name="P:NWorkQueue.Sqlite.DbTransaction.SqliteTransaction">
-            <summary>
-            Gets the internal SQLite transaction
-            </summary>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.DbTransaction.Commit">
-            <inheritdoc/>
-        </member>
-        <member name="M:NWorkQueue.Sqlite.DbTransaction.Rollback">
-            <inheritdoc/>
-        </member>
         <member name="T:NWorkQueue.Sqlite.StorageSqlLite">
             <summary>
-            Implements the IStorage interface for storing and retriving queue date to SQLite
+            Implements the IStorage interface for storing and retriving queue date to SQLite.
             </summary>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.InitializeStorage(System.Boolean)">
@@ -46,10 +24,10 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.DeleteQueue(System.Int64)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetQueueId(System.String)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetQueueInfoByName(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetQueueName(System.Int64)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetQueueInfoById(System.Int64)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.Execute``1(System.Func{Microsoft.Data.Sqlite.SqliteConnection,System.Threading.Tasks.ValueTask{``0}},Microsoft.Data.Sqlite.SqliteConnection)">

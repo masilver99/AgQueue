@@ -9,55 +9,6 @@
             Interface for Client to implement.
             </summary>
         </member>
-        <member name="T:NWorkQueue.Common.IStorage">
-            <summary>
-            The interface for storing and retrieving queue information from a storage mechinism, usually a database.
-            </summary>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.InitializeStorage(System.Boolean)">
-            <summary>
-            Called when Queue process starts.  Connections to the storage should be made here, etc.
-            </summary>
-            <param name="deleteExistingData">Should all existing queues and messages be deleted.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.AddQueue(System.String)">
-            <summary>
-            Create a new Queue in storage.
-            </summary>
-            <param name="name">Queue name.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.DeleteQueue(System.Int64)">
-            <summary>
-            Delete a Queue and ALL messages in the Queue.
-            </summary>
-            <param name="id">Queue Id of the queue to delete.</param>
-            <param name="storageTrans">The storage transaction to perform the operation under.</param>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorage.GetQueueId(System.String)">
-            <summary>
-            Returns the id of the Queue.  If no queue is found, returns null.
-            </summary>
-            <remarks>
-            This search should be case sensitive, only use LIKE with SQLite.
-            </remarks>
-            <param name="name">Name of the queue to lookup.</param>
-            <returns>Queue ID or null if queue not found.</returns>
-        </member>
-        <member name="T:NWorkQueue.Common.IStorageTransaction">
-            <summary>
-            Represents a transaction used by the storage (usually a database transaction)
-            </summary>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorageTransaction.Commit">
-            <summary>
-            Commits the transaction, usually this reprents a database transaction
-            </summary>
-        </member>
-        <member name="M:NWorkQueue.Common.IStorageTransaction.Rollback">
-            <summary>
-            Rollsback the transaction, usually this reprents a database transaction
-            </summary>
-        </member>
         <member name="T:NWorkQueue.Common.MessageState">
             <summary>
             Current state of a message

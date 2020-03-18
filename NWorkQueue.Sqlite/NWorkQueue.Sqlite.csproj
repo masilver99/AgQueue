@@ -19,11 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NWorkQueue.Common\NWorkQueue.Common.csproj" />
+    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
+    <ProjectReference Include="..\NWorkQueue.Server.Common\NWorkQueue.Server.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,11 +2,12 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace NWorkQueue.Common
+namespace NWorkQueue.Server.Common
 {
     using System;
     using System.Threading.Tasks;
     using NWorkQueue.Common.Models;
+    using NWorkQueue.Server.Common.Models;
 
     /// <summary>
     /// The interface for storing and retrieving queue information from a storage mechinism, usually a database.
@@ -178,9 +179,9 @@ namespace NWorkQueue.Common
         /// </remarks>
         /// <param name="name">Name of the queue to lookup.</param>
         /// <returns>Queue ID or null if queue not found.</returns>
-        ValueTask<long?> GetQueueId(string name);
+        ValueTask<QueueInfo?> GetQueueInfoByName(string name);
 
-        ValueTask<string?> GetQueueName(long queueId);
+        ValueTask<QueueInfo?> GetQueueInfoById(long queueId);
 
         /*
         /// <summary>

@@ -2,7 +2,6 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -10,11 +9,13 @@ using Dapper;
 using Microsoft.Data.Sqlite;
 using NWorkQueue.Common;
 using NWorkQueue.Common.Models;
+using NWorkQueue.Server.Common.Models;
+using NWorkQueue.Server.Common;
 
 namespace NWorkQueue.Sqlite
 {
     /// <summary>
-    /// Implements the IStorage interface for storing and retriving queue date to SQLite
+    /// Implements the IStorage interface for storing and retriving queue date to SQLite.
     /// </summary>
     public class StorageSqlLite : IStorage
     {
@@ -145,22 +146,22 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask<long?> GetQueueId(string name)
+        public async ValueTask<QueueInfo?> GetQueueInfoByName(string name)
         {
-            return await this.Execute<long?>(async (connection) =>
+            return await this.Execute<QueueInfo?>(async (connection) =>
             {
-                const string sql = "SELECT ID FROM Queues WHERE Name = @Name;";
-                return await connection.QueryFirstOrDefaultAsync<long?>(sql, new { Name = name });
+                const string sql = "SELECT ID, NAME FROM Queues WHERE Name = @Name;";
+                return await connection.QueryFirstOrDefaultAsync<QueueInfo?>(sql, new { Name = name });
             });
         }
 
         /// <inheritdoc/>
-        public async ValueTask<string?> GetQueueName(long queueId)
+        public async ValueTask<QueueInfo?> GetQueueInfoById(long queueId)
         {
-            return await this.Execute<string?>(async (connection) =>
+            return await this.Execute<QueueInfo?>(async (connection) =>
             {
-                const string sql = "SELECT NAME FROM Queues WHERE ID = @Id;";
-                return await connection.QuerySingleOrDefaultAsync<string?>(sql, new { Id = queueId });
+                const string sql = "SELECT ID, NAME FROM Queues WHERE ID = @Id;";
+                return await connection.QuerySingleOrDefaultAsync<QueueInfo?>(sql, new { Id = queueId });
             });
         }
 

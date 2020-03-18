@@ -2,48 +2,50 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
+using System;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using MessagePack;
+using NWorkQueue.Common;
+
 namespace NWorkQueue.Server.Common
 {
-    using System;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using MessagePack;
-    using NWorkQueue.Common;
+    /*
 
-    /// <summary>
-    /// Queue API from which to manage queue.
-    /// </summary>
-    public class Queue
-    {
-        private static readonly Regex QueueNameRegex = new Regex(@"^[A-Za-z0-9\.\-_]+$", RegexOptions.Compiled);
 
-        private readonly IStorage storage;
+/// <summary>
+/// Queue API from which to manage queue.
+/// </summary>
+public class Queue
+{
+private static readonly Regex QueueNameRegex = new Regex(@"^[A-Za-z0-9\.\-_]+$", RegexOptions.Compiled);
 
-        private long currQueueId = 0;
+private readonly IStorage storage;
 
-        public long Id => this.currQueueId;
+private long currQueueId = 0;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Queue"/> class.
-        /// </summary>
-        /// <param name="storage">storage engine</param>
-        internal Queue(IStorage storage)
-        {
-            /*
-            this.storage = storage;
+public long Id => this.currQueueId;
 
-            // Get starting Id. These are used to increment primary keys.
-            this.currQueueId = this.storage.GetMaxQueueId();
-        */
-            }
+/// <summary>
+/// Initializes a new instance of the <see cref="Queue"/> class.
+/// </summary>
+/// <param name="storage">storage engine</param>
+internal Queue(IStorage storage)
+{
+/*
+this.storage = storage;
 
-        /// <summary>
-        /// Creates a new queue. Queue cannot already exist
-        /// </summary>
-        /// <param name="name">Name of queue to create</param>
-        /// <returns>The queue Id</returns>
-        public async ValueTask<long> Create(string name)
+// Get starting Id. These are used to increment primary keys.
+this.currQueueId = this.storage.GetMaxQueueId();
+}
+
+/// <summary>
+/// Creates a new queue. Queue cannot already exist
+/// </summary>
+/// <param name="name">Name of queue to create</param>
+/// <returns>The queue Id</returns>
+public async ValueTask<long> Create(string name)
         {
             // validation
             if (name.Length == 0)
@@ -88,7 +90,6 @@ namespace NWorkQueue.Server.Common
                 throw new Exception("Queue does not exist");
             return new WorkQueue(this, workQueueModel);
         }
-        */
 
         /// <summary>
         /// Adds a message to a queue.
@@ -106,14 +107,12 @@ namespace NWorkQueue.Server.Common
         public long AddMessage(Transaction trans, object message, string metaData, int priority = 0, int maxRetries = 3, DateTime? rawExpiryDateTime = null, int correlation = 0, string groupName = null)
         {
             throw new NotImplementedException();
-            /*
             var addDateTime = DateTime.Now;
             DateTime expiryDateTime = rawExpiryDateTime ?? DateTime.MaxValue;
             var nextId = this.storage.GetMaxMessageId();
             var compressedMessage = MessagePackSerializer.Serialize(message);
             this.storage.AddMessage(trans.Id, null, nextId, this.currQueueId, compressedMessage, addDateTime, metaData, priority, maxRetries, expiryDateTime, correlation, groupName);
             return nextId;
-*/
         }
 
         private void ValidateQueueName(string queueName)
@@ -126,4 +125,5 @@ namespace NWorkQueue.Server.Common
 
 
     }
+    */
 }
