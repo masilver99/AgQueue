@@ -104,6 +104,19 @@ namespace NWorkQueue.Models {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      /// <summary>
+      ///
+      /////rpc StartTransaction
+      /////rpc CommitTransaction
+      /////rpc RollbackTranaction
+      /////rpc QueueMessage
+      /////rpc PullMessage
+      /////rpc PeelMessage
+      /////rpc Subscribe
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
       public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.QueueInfoResponse> QueueInfoByName(global::NWorkQueue.Models.QueueInfoByNameRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
@@ -214,18 +227,74 @@ namespace NWorkQueue.Models {
       {
         return CallInvoker.AsyncUnaryCall(__Method_QueueInfoById, null, options, request);
       }
+      /// <summary>
+      ///
+      /////rpc StartTransaction
+      /////rpc CommitTransaction
+      /////rpc RollbackTranaction
+      /////rpc QueueMessage
+      /////rpc PullMessage
+      /////rpc PeelMessage
+      /////rpc Subscribe
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
       public virtual global::NWorkQueue.Models.QueueInfoResponse QueueInfoByName(global::NWorkQueue.Models.QueueInfoByNameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return QueueInfoByName(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      ///
+      /////rpc StartTransaction
+      /////rpc CommitTransaction
+      /////rpc RollbackTranaction
+      /////rpc QueueMessage
+      /////rpc PullMessage
+      /////rpc PeelMessage
+      /////rpc Subscribe
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
       public virtual global::NWorkQueue.Models.QueueInfoResponse QueueInfoByName(global::NWorkQueue.Models.QueueInfoByNameRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_QueueInfoByName, null, options, request);
       }
+      /// <summary>
+      ///
+      /////rpc StartTransaction
+      /////rpc CommitTransaction
+      /////rpc RollbackTranaction
+      /////rpc QueueMessage
+      /////rpc PullMessage
+      /////rpc PeelMessage
+      /////rpc Subscribe
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
       public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.QueueInfoResponse> QueueInfoByNameAsync(global::NWorkQueue.Models.QueueInfoByNameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return QueueInfoByNameAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      /// <summary>
+      ///
+      /////rpc StartTransaction
+      /////rpc CommitTransaction
+      /////rpc RollbackTranaction
+      /////rpc QueueMessage
+      /////rpc PullMessage
+      /////rpc PeelMessage
+      /////rpc Subscribe
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
       public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.QueueInfoResponse> QueueInfoByNameAsync(global::NWorkQueue.Models.QueueInfoByNameRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_QueueInfoByName, null, options, request);

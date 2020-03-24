@@ -4,11 +4,6 @@
         <name>NWorkQueue.Server.Common</name>
     </assembly>
     <members>
-        <member name="P:NWorkQueue.Server.Common.ApiResult.IsSuccess">
-            <summary>
-            Gets a value indicating whether an api call was successful? This should be the only way to determine if a call was successfull.
-            </summary>
-        </member>
         <member name="T:NWorkQueue.Server.Common.InternalApi">
             <summary>
             Starting point for accessing all queue related APIS
@@ -29,11 +24,12 @@
             Creates a new queue.
             </summary>
             <param name="queueName">The name of the queue.</param>
-            <returns>A Queue object.</returns>
+            <returns>A Queue info object.  Note: the queueName is the stadnardized name.</returns>
         </member>
         <member name="M:NWorkQueue.Server.Common.InternalApi.DeleteQueue(System.String)">
             <summary>
             Delete a queue and all messages in the queue.
+            Throws an exception if Queue doesn't exist
             </summary>
             <param name="queueName">Name of the queue to delete.</param>
         </member>

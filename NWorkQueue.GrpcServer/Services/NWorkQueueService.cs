@@ -22,23 +22,8 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<CreateQueueResponse> CreateQueue(CreateQueueRequest request, ServerCallContext context)
         {
-            RpcException rcpException;
-            try
-            {
-                var result = await this.internalApi.CreateQueue(request.QueueName);
-                if (result.ApiResult.IsSuccess)
-                {
-                    return new CreateQueueResponse { QueueId = result.QueueId };
-                }
-
-                rcpException = new RpcException(new Status(result.ApiResult.ResultCode.ToGrpcStatus(), result.ApiResult.Message));
-            }
-            catch (Exception e)
-            {
-                rcpException = new RpcException(new Status(StatusCode.Unknown, e.Message));
-            }
-
-            throw rcpException;
+            var queueInfo = await this.internalApi.CreateQueue(request.QueueName);
+            return new CreateQueueResponse { QueueId = queueInfo.Id, QueueName = queueInfo.Name };
         }
 
         public override async Task<InitializeStorageResponse> InitializeStorage(InitializeStorageRequest request, ServerCallContext context)
@@ -49,81 +34,46 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<DeleteQueueByIdResponse> DeleteQueueById(DeleteQueueByIdRequest request, ServerCallContext context)
         {
-            // May need to add code to check if messages exist before deleting.
-            var result = await this.internalApi.GetQueueName(request.QueueId);
-            if (result.ApiResult.IsSuccess)
+            var queueInfo = await this.internalApi.GetQueueInfoById(request.QueueId);
+            if (queueInfo == null)
             {
-                return this.ReturnIfSuccess<DeleteQueueByIdResponse>(await this.internalApi.DeleteQueue(request.QueueId));
+                throw new RpcException(new Status(StatusCode.NotFound, $"Queue not found: {request.QueueId}"));
             }
-
-            throw result.ApiResult.CreateRpcException();
+            await this.internalApi.DeleteQueue(request.QueueId);
+            return  new DeleteQueueByIdResponse();
         }
 
         public override async Task<DeleteQueueByNameResponse> DeleteQueueByName(DeleteQueueByNameRequest request, ServerCallContext context)
         {
-            // May need to add code to check if messages exist before deleting.
-            var result = await this.internalApi.GetQueueId(request.QueueName);
-            if (result.ApiResult.IsSuccess)
+            var queueInfo = await this.internalApi.GetQueueInfoByName(request.QueueName);
+            if (queueInfo == null)
             {
-                return this.ReturnIfSuccess<DeleteQueueByNameResponse>(await this.internalApi.DeleteQueue(result.QueueId));
+                throw new RpcException(new Status(StatusCode.NotFound, $"Queue not found: {request.QueueName}"));
             }
-
-            throw result.ApiResult.CreateRpcException();
+            await this.internalApi.DeleteQueue(queueInfo.Id);
+            return new DeleteQueueByNameResponse();
         }
-        
+
         public override async Task<QueueInfoResponse> QueueInfoById(QueueInfoByIdRequest request, ServerCallContext context)
         {
-            RpcException rcpException;
-            try
+            var queueInfo = await this.internalApi.GetQueueInfoById(request.QueueId);
+            if (queueInfo == null)
             {
-                var result = await this.internalApi.GetQueueInfoById(request.QueueId);
-                if (result.apiResult.IsSuccess)
-                {
-                    return new QueueInfoResponse { QueueId = result.queueInfo.Id, QueueName = result.queueInfo.Name };
-                }
-
-                rcpException = new RpcException(new Status(result.apiResult.ResultCode.ToGrpcStatus(), result.apiResult.Message));
-            }
-            catch (Exception e)
-            {
-                rcpException = new RpcException(new Status(StatusCode.Unknown, e.Message));
+                return new QueueInfoResponse { RecordFound = false };
             }
 
-            throw rcpException;
+            return new QueueInfoResponse { RecordFound = true, QueueId = queueInfo.Id, QueueName = queueInfo.Name };
         }
 
         public override async Task<QueueInfoResponse> QueueInfoByName(QueueInfoByNameRequest request, ServerCallContext context)
         {
-            RpcException rcpException;
-            try
+            var queueInfo = await this.internalApi.GetQueueInfoByName(request.QueueName);
+            if (queueInfo == null)
             {
-                var result = await this.internalApi.GetQueueInfoByName(request.QueueName);
-                if (result.apiResult.IsSuccess)
-                {
-                    return new QueueInfoResponse { QueueId = result.queueInfo.Id, QueueName = result.queueInfo.Name };
-                }
-
-                rcpException = new RpcException(new Status(result.apiResult.ResultCode.ToGrpcStatus(), result.apiResult.Message));
-            }
-            catch (Exception e)
-            {
-                rcpException = new RpcException(new Status(StatusCode.Unknown, e.Message));
+                return new QueueInfoResponse { RecordFound = false };
             }
 
-            throw rcpException;
-        }
-
-        private T ReturnIfSuccess<T>(ApiResult apiResult)
-            where T : new()
-        {
-            if (apiResult.IsSuccess)
-            {
-                return new T();
-            }
-            else
-            {
-                throw apiResult.CreateRpcException();
-            }
+            return new QueueInfoResponse { RecordFound = true, QueueId = queueInfo.Id, QueueName = queueInfo.Name };
         }
     }
 }

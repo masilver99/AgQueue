@@ -1,9 +1,9 @@
-﻿// <copyright file="InternalApi.cs" company="Michael Silver">
+﻿// <copyright file="ApiResult.cs" company="Michael Silver">
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
 namespace NWorkQueue.Server.Common
-{
+{/*
     public class ApiResult
     {
         public ResultCode ResultCode { get; set; }
@@ -30,4 +30,5 @@ namespace NWorkQueue.Server.Common
         /// </summary>
         public bool IsSuccess => this.ResultCode == ResultCode.Ok;
     }
+    */
 }

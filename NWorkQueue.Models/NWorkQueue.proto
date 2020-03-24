@@ -12,11 +12,21 @@ service QueueApi {
   rpc DeleteQueueByName (DeleteQueueByNameRequest) returns (DeleteQueueByNameResponse);
   rpc QueueInfoById (QueueInfoByIdRequest) returns (QueueInfoResponse);
   rpc QueueInfoByName (QueueInfoByNameRequest) returns (QueueInfoResponse);
+  /*
+  //rpc StartTransaction
+  //rpc CommitTransaction
+  //rpc RollbackTranaction
+  //rpc QueueMessage
+  //rpc PullMessage
+  //rpc PeelMessage
+  //rpc Subscribe
+  */
 }
 
 message QueueInfoResponse {
-  int64 QueueId = 1;
-  string QueueName = 2;
+  bool RecordFound = 1;
+  int64 QueueId = 2;
+  string QueueName = 3;
 }
 
 message QueueInfoByNameRequest {
@@ -35,6 +45,8 @@ message CreateQueueRequest {
 // The response message containing the greetings.
 message CreateQueueResponse {
   int64 QueueId = 1;
+  // Standardized Name
+  string QueueName = 2;
 }
 
 message InitializeStorageRequest {

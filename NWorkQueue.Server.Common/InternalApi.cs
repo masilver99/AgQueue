@@ -46,138 +46,68 @@ namespace NWorkQueue.Server.Common
         /// Creates a new queue.
         /// </summary>
         /// <param name="queueName">The name of the queue.</param>
-        /// <returns>A Queue object.</returns>
-        public async ValueTask<(long QueueId, ApiResult ApiResult)> CreateQueue(string queueName)
+        /// <returns>A Queue info object.  Note: the queueName is the stadnardized name.</returns>
+        public async ValueTask<QueueInfo> CreateQueue(string queueName)
         {
             var fixedName = queueName.StandardizeQueueName();
 
-            var queueCheck = await this.GetQueueId(fixedName);
-            // Check if Queue already exists
-            if (queueCheck.ApiResult.ResultCode == ResultCode.NotFound)
-            {
-                return (await this.storage.AddQueue(fixedName), new ApiResult { ResultCode = ResultCode.Ok });
-            }
+            var queueInfo = await this.GetQueueInfoByName(fixedName);
 
             // Check if Queue already exists
-            if (queueCheck.ApiResult.IsSuccess)
+            if (queueInfo != null)
             {
-                return (0, new ApiResult { ResultCode = ResultCode.AlreadyExists, Message = $"Queue name {fixedName} already exists" });
+                throw new Exception($"Queue name already exists. {queueName}");
             }
 
-            throw new Exception($"Unknown error attempting to add queue.  ApiResult.ResultCode: {queueCheck.ApiResult.ResultCode}");
+            return new QueueInfo { Id = await this.storage.AddQueue(fixedName), Name = queueName };
         }
 
         /// <summary>
         /// Delete a queue and all messages in the queue.
+        /// Throws an exception if Queue doesn't exist
         /// </summary>
         /// <param name="queueName">Name of the queue to delete.</param>
-        public async ValueTask<ApiResult> DeleteQueue(string queueName)
+        public async void DeleteQueue(string queueName)
         {
             var fixedName = queueName.StandardizeQueueName();
             if (fixedName.Length == 0)
             {
-                return new ApiResult(ResultCode.InvalidArgument, "Queue name is empty.");
+                throw new ArgumentNullException("Queue name is empty");
             }
 
-            var result = await this.GetQueueInfoByName(fixedName);
+            var queueInfo = await this.GetQueueInfoByName(fixedName);
 
             // QueueInfo should never be null if IsSuccess = true
-            if (result.apiResult.IsSuccess)
-            {
-                return await this.DeleteQueue(result.queueInfo!.Id);
-            }
-
-            return result.apiResult;
-        }
-
-        public async ValueTask<(QueueInfo? queueInfo, ApiResult apiResult)> GetQueueInfoById(long queueId)
-        {
-            var queueInfo = await this.storage.GetQueueInfoById(queueId);
- 
             if (queueInfo == null)
             {
-                return (null, new ApiResult { ResultCode = ResultCode.NotFound, Message = $"Queue Id {queueId} not found." });
+                throw new Exception($"Queue name not found: {queueName}.");
             }
-
-            return (queueInfo, new ApiResult { ResultCode = ResultCode.Ok });
         }
 
-        public async ValueTask<(QueueInfo? queueInfo, ApiResult apiResult)> GetQueueInfoByName(string queueName)
+        public async ValueTask<QueueInfo?> GetQueueInfoById(long queueId)
         {
-            var queueInfo = await this.storage.GetQueueInfoByName(queueName.StandardizeQueueName());
-
-            if (queueInfo == null)
-            {
-                return (null, new ApiResult { ResultCode = ResultCode.NotFound, Message = $"Queue Name {queueName} not found." });
-            }
-
-            return (queueInfo, new ApiResult { ResultCode = ResultCode.Ok });
+            return await this.storage.GetQueueInfoById(queueId);
         }
 
-        public async ValueTask<(long QueueId, ApiResult ApiResult)> GetQueueId(string queueName)
+        public async ValueTask<QueueInfo?> GetQueueInfoByName(string queueName)
         {
-            var queueResult = await this.GetQueueInfoByName(queueName);
-            if (queueResult.apiResult.IsSuccess)
-            {
-                return (queueResult.queueInfo.Id, queueResult.apiResult);
-            }
-
-            return (0, queueResult.apiResult);
-        }
-
-        public async ValueTask<(string QueueName, ApiResult ApiResult)> GetQueueName(long queueId)
-        {
-            var queueResult = await this.GetQueueInfoById(queueId);
-            if (queueResult.apiResult.IsSuccess)
-            {
-                return (queueResult.queueInfo.Name, queueResult.apiResult);
-            }
-
-            return (string.Empty, queueResult.apiResult);
+            return await this.storage.GetQueueInfoByName(queueName.StandardizeQueueName());
         }
 
         /// <summary>
         /// Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue.
         /// </summary>
         /// <param name="queueId">Queue id.</param>
-        public async ValueTask<ApiResult> DeleteQueue(long queueId)
+        public async ValueTask DeleteQueue(long queueId)
         {
-            var result = await this.GetQueueName(queueId);
+            var queueInfo = await this.GetQueueInfoById(queueId);
 
-            if (result.ApiResult.ResultCode != ResultCode.Ok)
+            if (queueInfo == null)
             {
-                return result.ApiResult;
+                throw new Exception($"Queue ID not found: {queueId}.");
             }
 
             await this.storage.DeleteQueue(queueId);
-
-            return new ApiResult(ResultCode.Ok);
-            /*
-             // Throw exception if queue does not exist
-             if (!this.storage.DoesQueueExist(queueId))
-             {
-                 throw new Exception("Queue not found");
-             }
-
-             var trans = this.storage.BeginStorageTransaction();
-             try
-             {
-                 // TODO: Rollback queue transactions that were being used in message for this queue
-                 // ExtendTransaction Set Active = false
-
-                 // TODO: Delete Messages
-                 this.storage.DeleteMessagesByQueueId(queueId, trans);
-
-                 // Delete From Queue Table
-                 this.storage.DeleteQueue(queueId, trans);
-                 trans.Commit();
-             }
-             catch (Exception e)
-             {
-                 Console.WriteLine(e);
-                 trans.Rollback();
-             }
-             */
         }
 
         /// <summary>
