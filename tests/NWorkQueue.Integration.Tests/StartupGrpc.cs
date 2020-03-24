@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NWorkQueue.GrpcServer;
+using NWorkQueue.GrpcServer.Interceptors;
 
 namespace NWorkQueue.Integration.Tests
 {
@@ -22,6 +23,8 @@ namespace NWorkQueue.Integration.Tests
         {
             services.AddGrpc(config =>
             {
+                config.Interceptors.Add<ExceptionInterceptor>();
+
                 //config.ResponseCompressionLevel = System.IO.Compression.CompressionLevel.Optimal;
             });
 

@@ -98,11 +98,32 @@ namespace NWorkQueue.Integration.Tests
             Assert.IsFalse(queueInfoAfter.RecordFound);
         }
 
+        [TestMethod]
+        //[DoNotParallelize]
+        public async Task TestExceptionInterceptor()
+        {
+            var client = await CreateBadClient();
+
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "Test" });
+            Assert.AreEqual(1, createResponse.QueueId);
+
+            var queueInfo = await client.QueueInfoByIdAsync(new QueueInfoByIdRequest { QueueId = 1 });
+            Assert.AreEqual("Test", queueInfo.QueueName);
+            Assert.IsTrue(queueInfo.RecordFound);
+        }
+
+
         private static async Task<QueueApi.QueueApiClient> CreateClient()
         {
             var channel = GrpcChannel.ForAddress("http://localhost:10043");
             var client = new QueueApi.QueueApiClient(channel);
             await client.InitializeStorageAsync(new InitializeStorageRequest { DeleteExistingData = true });
+            return client;
+        }
+        private static async Task<QueueApi.QueueApiClient> CreateBadClient()
+        {
+            var channel = GrpcChannel.ForAddress("http://localhost:10043");
+            var client = new QueueApi.QueueApiClient(channel);
             return client;
         }
     }

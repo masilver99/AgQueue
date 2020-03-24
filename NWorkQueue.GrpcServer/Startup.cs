@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NWorkQueue.Common;
+using NWorkQueue.GrpcServer.Interceptors;
 using NWorkQueue.Server.Common;
 using NWorkQueue.Sqlite;
 
@@ -19,7 +20,10 @@ namespace NWorkQueue.GrpcServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddGrpc();
+            services.AddGrpc(options =>
+            {
+                options.Interceptors.Add<ExceptionInterceptor>();
+            });
             services.AddSingleton<IStorage>(new StorageSqlLite(@"Data Source=SqlLite.db;"));
             services.AddSingleton(typeof(InternalApi));
         }
