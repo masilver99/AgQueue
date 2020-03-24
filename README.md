@@ -13,6 +13,8 @@ Besides, for simple work queues, MSMQ may be overkill.  Same with RabbitMQ and o
 
 [Development Overview](dev_overview.md)
 
+[Usage Workflows](workflows.md)
+
 [Development Status](dev_status.md)
 
 ### Example
