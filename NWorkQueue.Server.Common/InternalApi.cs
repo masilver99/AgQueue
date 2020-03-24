@@ -84,11 +84,21 @@ namespace NWorkQueue.Server.Common
             }
         }
 
+        /// <summary>
+        /// Returns information about the requested queue.
+        /// </summary>
+        /// <param name="queueId">The ID of the queue.</param>
+        /// <returns>QueueInfo object. Returns null if not found.</returns>
         public async ValueTask<QueueInfo?> GetQueueInfoById(long queueId)
         {
             return await this.storage.GetQueueInfoById(queueId);
         }
 
+        /// <summary>
+        /// Returns information about the requested queue.
+        /// </summary>
+        /// <param name="queueName">The Name of the queue to lookup.</param>
+        /// <returns>QueueInfo object.  Null if not found.</returns>
         public async ValueTask<QueueInfo?> GetQueueInfoByName(string queueName)
         {
             return await this.storage.GetQueueInfoByName(queueName.StandardizeQueueName());
@@ -111,36 +121,60 @@ namespace NWorkQueue.Server.Common
         }
 
         /// <summary>
-        /// Gets Queue related APIs.
-        /// </summary>
-        // public Queue Queue { get; }
-
-        /// <summary>
-        /// Gets Transaction related APIs
-        /// </summary>
-        // public Transaction Transaction { get; }
-
-        /// <summary>
-        /// Gets Message related APIs
-        /// </summary>
-        // public Message Message { get; }
-
-        /// <summary>
         /// Disposes of storage resources
         /// </summary>
         public void Dispose()
         {
-            ///Need to add OnDsiapose action in case some storage services require disposal
+            // Need to add OnDsiapose action in case some storage services require disposal
         }
 
+        /// <summary>
+        /// Creates underlying structure in the storage layer.
+        /// </summary>
+        /// <param name="deleteExistingData">Will delete and recreate underlying structures.</param>
+        /// <returns>Returns ValueTask.</returns>
         public async ValueTask InitializeStorage(bool deleteExistingData)
         {
             await this.storage.InitializeStorage(deleteExistingData);
         }
 
-        internal Transaction CreateTransaction()
+        /// <summary>
+        /// Starts a transaction used my add message and pull message.
+        /// </summary>
+        /// <param name="expiryTimeInMin">Override default expiration time.</param>
+        /// <returns>Transaction ID.</returns>
+        public async ValueTask<long> StartTrasaction(int expiryTimeInMin = 0)
+        {
+            return await this.storage.StartTransaction(expiryTimeInMin);
+        }
+
+        /// <summary>
+        /// Commits Transaction, updating all message in transaction.
+        /// </summary>
+        /// <param name="transactionId">Transaction Id to commit.</param>
+        /// <returns>ValueTask.</returns>
+        public async ValueTask CommitTrasaction(long transactionId)
+        {
+            // Validate Trans 1) exists, 2) Is active, 3) Is  not expired
+            // Start DB Trans ---
+            // Change status of added messages
+            // Change status of pulled messages
+            // Mark Transaction complete
+            // Commit DB Trans ---
+            throw new NotImplementedException();
+
+            //return await this.storage.CommitTransaction(transactionId);
+        }
+
+        /// <summary>
+        /// Rollsback a transaction, undoing any changes to messages in the transaction.
+        /// </summary>
+        /// <param name="transactionId">The transaction ID of the transaction to rollback.</param>
+        /// <returns>ValueTask.</returns>
+        public async ValueTask RollbackTrasaction(long transactionId)
         {
             throw new NotImplementedException();
+            //return await this.storage.RollbackTransaction(transactionId);
         }
     }
 }

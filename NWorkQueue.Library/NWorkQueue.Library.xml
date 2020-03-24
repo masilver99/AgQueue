@@ -33,6 +33,20 @@
             </summary>
             <param name="queueName">Name of the queue to delete.</param>
         </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.GetQueueInfoById(System.Int64)">
+            <summary>
+            Returns information about the requested queue.
+            </summary>
+            <param name="queueId">The ID of the queue.</param>
+            <returns>QueueInfo object. Returns null if not found.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.GetQueueInfoByName(System.String)">
+            <summary>
+            Returns information about the requested queue.
+            </summary>
+            <param name="queueName">The Name of the queue to lookup.</param>
+            <returns>QueueInfo object.  Null if not found.</returns>
+        </member>
         <member name="M:NWorkQueue.Server.Common.InternalApi.DeleteQueue(System.Int64)">
             <summary>
             Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue.
@@ -43,6 +57,34 @@
             <summary>
             Disposes of storage resources
             </summary>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.InitializeStorage(System.Boolean)">
+            <summary>
+            Creates underlying structure in the storage layer.
+            </summary>
+            <param name="deleteExistingData">Will delete and recreate underlying structures.</param>
+            <returns>Returns ValueTask.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.StartTrasaction(System.Int32)">
+            <summary>
+            Starts a transaction used my add message and pull message.
+            </summary>
+            <param name="expiryTimeInMin">Override default expiration time.</param>
+            <returns>Transaction ID.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.CommitTrasaction(System.Int64)">
+            <summary>
+            Commits Transaction, updating all message in transaction.
+            </summary>
+            <param name="transactionId">Transaction Id to commit.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.RollbackTrasaction(System.Int64)">
+            <summary>
+            Rollsback a transaction, undoing any changes to messages in the transaction.
+            </summary>
+            <param name="transactionId">The transaction ID of the transaction to rollback.</param>
+            <returns>ValueTask.</returns>
         </member>
         <member name="T:NWorkQueue.Server.Common.IStorage">
             <summary>
@@ -66,17 +108,34 @@
             Delete a Queue and ALL messages in the Queue.
             </summary>
             <param name="id">Queue Id of the queue to delete.</param>
-            <param name="storageTrans">The storage transaction to perform the operation under.</param>
+            <returns>ValueTask.</returns>
         </member>
         <member name="M:NWorkQueue.Server.Common.IStorage.GetQueueInfoByName(System.String)">
             <summary>
-            Returns the id of the Queue.  If no queue is found, returns null.
+            Returns the id and name of the Queue.  If no queue is found, returns null.
             </summary>
             <remarks>
             This search should be case sensitive, only use LIKE with SQLite.
             </remarks>
             <param name="name">Name of the queue to lookup.</param>
-            <returns>Queue ID or null if queue not found.</returns>
+            <returns>QueueInfo containing ID and Name of queue.  Null if not found.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.GetQueueInfoById(System.Int64)">
+            <summary>
+            Returns the id and name of the Queue.  If no queue is found, returns null.
+            </summary>
+            <remarks>
+            This search should be case sensitive, only use LIKE with SQLite.
+            </remarks>
+            <param name="queueId">ID of the queue to lookup.</param>
+            <returns>QueueInfo containing ID and Name of queue.  Null if not found.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.StartTransaction(System.Int32)">
+            <summary>
+            Starts a transaction for use when adding or pulling messages.
+            </summary>
+            <param name="expiryTimeInMinutes">How long before a Transaction is rolled back automatically.</param>
+            <returns>Returns transaction ID.</returns>
         </member>
         <member name="T:NWorkQueue.Server.Common.IStorageTransaction">
             <summary>

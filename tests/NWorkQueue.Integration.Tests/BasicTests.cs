@@ -12,11 +12,11 @@ using System;
 namespace NWorkQueue.Integration.Tests
 {
     [TestClass]
-    public class UnitTestGrpc
+    public class BasicTests
     {
         private IWebHost? _webHost;
 
-        public UnitTestGrpc()
+        public BasicTests()
         {
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
         }
@@ -58,10 +58,13 @@ namespace NWorkQueue.Integration.Tests
             var client = await CreateClient();
 
             var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "Test" });
-
             Assert.AreEqual(1, createResponse.QueueId);
+
+            var queueInfo = await client.QueueInfoByIdAsync(new QueueInfoByIdRequest { QueueId = 1 });
+            Assert.AreEqual("Test", queueInfo.QueueName);
+            Assert.IsTrue(queueInfo.RecordFound);
         }
-        
+
         [TestMethod]
         //[DoNotParallelize]
         public async Task DeleteQueueById()
@@ -89,8 +92,10 @@ namespace NWorkQueue.Integration.Tests
             Assert.AreEqual(1, createResponse.QueueId);
             var request = new DeleteQueueByNameRequest { QueueName = "DeleteByName" };
 
-
             await client.DeleteQueueByNameAsync(request);
+
+            var queueInfoAfter = await client.QueueInfoByNameAsync(new QueueInfoByNameRequest { QueueName = "DeleteByName" });
+            Assert.IsFalse(queueInfoAfter.RecordFound);
         }
 
         private static async Task<QueueApi.QueueApiClient> CreateClient()

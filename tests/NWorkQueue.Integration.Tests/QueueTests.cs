@@ -4,7 +4,7 @@ namespace NWorkQueue.Integration.Tests
 {
 
     public class QueueTests
-    {/*
+    {/*r
         [Test]
         public void InvalidCreateQueueName()
         {

@@ -15,7 +15,7 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetMaxTransactionId">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.StartTransaction(System.Int64,System.Int32)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.StartTransaction(System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlLite.AddQueue(System.String)">

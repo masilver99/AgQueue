@@ -12,15 +12,13 @@ service QueueApi {
   rpc DeleteQueueByName (DeleteQueueByNameRequest) returns (DeleteQueueByNameResponse);
   rpc QueueInfoById (QueueInfoByIdRequest) returns (QueueInfoResponse);
   rpc QueueInfoByName (QueueInfoByNameRequest) returns (QueueInfoResponse);
-  /*
-  //rpc StartTransaction
-  //rpc CommitTransaction
-  //rpc RollbackTranaction
+  rpc StartTransaction (StartTransactionRequest) returns (StartTransactionResponse);
+  rpc CommitTransaction (CommitTransactionRequest) returns (CommitTransactionResponse);
+  rpc RollbackTranaction (RollbackTransactionRequest) returns (RollbackTransactionResponse);
   //rpc QueueMessage
   //rpc PullMessage
   //rpc PeelMessage
   //rpc Subscribe
-  */
 }
 
 message QueueInfoResponse {
@@ -68,4 +66,26 @@ message DeleteQueueByNameRequest {
 }
 
 message DeleteQueueByNameResponse {
+}
+
+message StartTransactionRequest {
+  int32 ExpireInMin = 1;
+}
+
+message StartTransactionResponse {
+  int64 TransId = 1;
+}
+
+message CommitTransactionRequest {
+  int64 TransId = 1;
+}
+
+message CommitTransactionResponse {
+}
+
+message RollbackTransactionRequest {
+  int64 TransId = 1;
+}
+
+message RollbackTransactionResponse {
 }

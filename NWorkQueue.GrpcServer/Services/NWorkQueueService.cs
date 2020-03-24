@@ -75,5 +75,23 @@ namespace NWorkQueue.GrpcServer
 
             return new QueueInfoResponse { RecordFound = true, QueueId = queueInfo.Id, QueueName = queueInfo.Name };
         }
+
+        public override async Task<StartTransactionResponse> StartTransaction(StartTransactionRequest request, ServerCallContext context)
+        {
+            await this.internalApi.StartTrasaction(request.ExpireInMin);
+            return new StartTransactionResponse();
+        }
+
+        public override async Task<CommitTransactionResponse> CommitTransaction(CommitTransactionRequest request, ServerCallContext context)
+        {
+            await this.internalApi.CommitTrasaction(request.TransId);
+            return new CommitTransactionResponse();
+        }
+
+        public override async Task<RollbackTransactionResponse> RollbackTranaction(RollbackTransactionRequest request, ServerCallContext context)
+        {
+            await this.internalApi.RollbackTrasaction(request.TransId);
+            return new RollbackTransactionResponse();
+        }
     }
 }

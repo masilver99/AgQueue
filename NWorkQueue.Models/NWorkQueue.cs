@@ -35,19 +35,30 @@ namespace NWorkQueue.Models {
             "dG9yYWdlUmVzcG9uc2UiKQoWRGVsZXRlUXVldWVCeUlkUmVxdWVzdBIPCgdR",
             "dWV1ZUlkGAEgASgDIhkKF0RlbGV0ZVF1ZXVlQnlJZFJlc3BvbnNlIi0KGERl",
             "bGV0ZVF1ZXVlQnlOYW1lUmVxdWVzdBIRCglRdWV1ZU5hbWUYASABKAkiGwoZ",
-            "RGVsZXRlUXVldWVCeU5hbWVSZXNwb25zZTLmAwoIUXVldWVBcGkSRAoLQ3Jl",
-            "YXRlUXVldWUSGS5ncmVldC5DcmVhdGVRdWV1ZVJlcXVlc3QaGi5ncmVldC5D",
-            "cmVhdGVRdWV1ZVJlc3BvbnNlElYKEUluaXRpYWxpemVTdG9yYWdlEh8uZ3Jl",
-            "ZXQuSW5pdGlhbGl6ZVN0b3JhZ2VSZXF1ZXN0GiAuZ3JlZXQuSW5pdGlhbGl6",
-            "ZVN0b3JhZ2VSZXNwb25zZRJQCg9EZWxldGVRdWV1ZUJ5SWQSHS5ncmVldC5E",
-            "ZWxldGVRdWV1ZUJ5SWRSZXF1ZXN0Gh4uZ3JlZXQuRGVsZXRlUXVldWVCeUlk",
-            "UmVzcG9uc2USVgoRRGVsZXRlUXVldWVCeU5hbWUSHy5ncmVldC5EZWxldGVR",
-            "dWV1ZUJ5TmFtZVJlcXVlc3QaIC5ncmVldC5EZWxldGVRdWV1ZUJ5TmFtZVJl",
-            "c3BvbnNlEkYKDVF1ZXVlSW5mb0J5SWQSGy5ncmVldC5RdWV1ZUluZm9CeUlk",
-            "UmVxdWVzdBoYLmdyZWV0LlF1ZXVlSW5mb1Jlc3BvbnNlEkoKD1F1ZXVlSW5m",
-            "b0J5TmFtZRIdLmdyZWV0LlF1ZXVlSW5mb0J5TmFtZVJlcXVlc3QaGC5ncmVl",
-            "dC5RdWV1ZUluZm9SZXNwb25zZUIUqgIRTldvcmtRdWV1ZS5Nb2RlbHNiBnBy",
-            "b3RvMw=="));
+            "RGVsZXRlUXVldWVCeU5hbWVSZXNwb25zZSIuChdTdGFydFRyYW5zYWN0aW9u",
+            "UmVxdWVzdBITCgtFeHBpcmVJbk1pbhgBIAEoBSIrChhTdGFydFRyYW5zYWN0",
+            "aW9uUmVzcG9uc2USDwoHVHJhbnNJZBgBIAEoAyIrChhDb21taXRUcmFuc2Fj",
+            "dGlvblJlcXVlc3QSDwoHVHJhbnNJZBgBIAEoAyIbChlDb21taXRUcmFuc2Fj",
+            "dGlvblJlc3BvbnNlIi0KGlJvbGxiYWNrVHJhbnNhY3Rpb25SZXF1ZXN0Eg8K",
+            "B1RyYW5zSWQYASABKAMiHQobUm9sbGJhY2tUcmFuc2FjdGlvblJlc3BvbnNl",
+            "MvAFCghRdWV1ZUFwaRJECgtDcmVhdGVRdWV1ZRIZLmdyZWV0LkNyZWF0ZVF1",
+            "ZXVlUmVxdWVzdBoaLmdyZWV0LkNyZWF0ZVF1ZXVlUmVzcG9uc2USVgoRSW5p",
+            "dGlhbGl6ZVN0b3JhZ2USHy5ncmVldC5Jbml0aWFsaXplU3RvcmFnZVJlcXVl",
+            "c3QaIC5ncmVldC5Jbml0aWFsaXplU3RvcmFnZVJlc3BvbnNlElAKD0RlbGV0",
+            "ZVF1ZXVlQnlJZBIdLmdyZWV0LkRlbGV0ZVF1ZXVlQnlJZFJlcXVlc3QaHi5n",
+            "cmVldC5EZWxldGVRdWV1ZUJ5SWRSZXNwb25zZRJWChFEZWxldGVRdWV1ZUJ5",
+            "TmFtZRIfLmdyZWV0LkRlbGV0ZVF1ZXVlQnlOYW1lUmVxdWVzdBogLmdyZWV0",
+            "LkRlbGV0ZVF1ZXVlQnlOYW1lUmVzcG9uc2USRgoNUXVldWVJbmZvQnlJZBIb",
+            "LmdyZWV0LlF1ZXVlSW5mb0J5SWRSZXF1ZXN0GhguZ3JlZXQuUXVldWVJbmZv",
+            "UmVzcG9uc2USSgoPUXVldWVJbmZvQnlOYW1lEh0uZ3JlZXQuUXVldWVJbmZv",
+            "QnlOYW1lUmVxdWVzdBoYLmdyZWV0LlF1ZXVlSW5mb1Jlc3BvbnNlElMKEFN0",
+            "YXJ0VHJhbnNhY3Rpb24SHi5ncmVldC5TdGFydFRyYW5zYWN0aW9uUmVxdWVz",
+            "dBofLmdyZWV0LlN0YXJ0VHJhbnNhY3Rpb25SZXNwb25zZRJWChFDb21taXRU",
+            "cmFuc2FjdGlvbhIfLmdyZWV0LkNvbW1pdFRyYW5zYWN0aW9uUmVxdWVzdBog",
+            "LmdyZWV0LkNvbW1pdFRyYW5zYWN0aW9uUmVzcG9uc2USWwoSUm9sbGJhY2tU",
+            "cmFuYWN0aW9uEiEuZ3JlZXQuUm9sbGJhY2tUcmFuc2FjdGlvblJlcXVlc3Qa",
+            "Ii5ncmVldC5Sb2xsYmFja1RyYW5zYWN0aW9uUmVzcG9uc2VCFKoCEU5Xb3Jr",
+            "UXVldWUuTW9kZWxzYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -61,7 +72,13 @@ namespace NWorkQueue.Models {
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DeleteQueueByIdRequest), global::NWorkQueue.Models.DeleteQueueByIdRequest.Parser, new[]{ "QueueId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DeleteQueueByIdResponse), global::NWorkQueue.Models.DeleteQueueByIdResponse.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DeleteQueueByNameRequest), global::NWorkQueue.Models.DeleteQueueByNameRequest.Parser, new[]{ "QueueName" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DeleteQueueByNameResponse), global::NWorkQueue.Models.DeleteQueueByNameResponse.Parser, null, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DeleteQueueByNameResponse), global::NWorkQueue.Models.DeleteQueueByNameResponse.Parser, null, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.StartTransactionRequest), global::NWorkQueue.Models.StartTransactionRequest.Parser, new[]{ "ExpireInMin" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.StartTransactionResponse), global::NWorkQueue.Models.StartTransactionResponse.Parser, new[]{ "TransId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.CommitTransactionRequest), global::NWorkQueue.Models.CommitTransactionRequest.Parser, new[]{ "TransId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.CommitTransactionResponse), global::NWorkQueue.Models.CommitTransactionResponse.Parser, null, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.RollbackTransactionRequest), global::NWorkQueue.Models.RollbackTransactionRequest.Parser, new[]{ "TransId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.RollbackTransactionResponse), global::NWorkQueue.Models.RollbackTransactionResponse.Parser, null, null, null, null, null)
           }));
     }
     #endregion
@@ -1476,6 +1493,724 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(DeleteQueueByNameResponse other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class StartTransactionRequest : pb::IMessage<StartTransactionRequest> {
+    private static readonly pb::MessageParser<StartTransactionRequest> _parser = new pb::MessageParser<StartTransactionRequest>(() => new StartTransactionRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<StartTransactionRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[11]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public StartTransactionRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public StartTransactionRequest(StartTransactionRequest other) : this() {
+      expireInMin_ = other.expireInMin_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public StartTransactionRequest Clone() {
+      return new StartTransactionRequest(this);
+    }
+
+    /// <summary>Field number for the "ExpireInMin" field.</summary>
+    public const int ExpireInMinFieldNumber = 1;
+    private int expireInMin_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int ExpireInMin {
+      get { return expireInMin_; }
+      set {
+        expireInMin_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as StartTransactionRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(StartTransactionRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (ExpireInMin != other.ExpireInMin) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ExpireInMin != 0) hash ^= ExpireInMin.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (ExpireInMin != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(ExpireInMin);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (ExpireInMin != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ExpireInMin);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(StartTransactionRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ExpireInMin != 0) {
+        ExpireInMin = other.ExpireInMin;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            ExpireInMin = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class StartTransactionResponse : pb::IMessage<StartTransactionResponse> {
+    private static readonly pb::MessageParser<StartTransactionResponse> _parser = new pb::MessageParser<StartTransactionResponse>(() => new StartTransactionResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<StartTransactionResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[12]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public StartTransactionResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public StartTransactionResponse(StartTransactionResponse other) : this() {
+      transId_ = other.transId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public StartTransactionResponse Clone() {
+      return new StartTransactionResponse(this);
+    }
+
+    /// <summary>Field number for the "TransId" field.</summary>
+    public const int TransIdFieldNumber = 1;
+    private long transId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long TransId {
+      get { return transId_; }
+      set {
+        transId_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as StartTransactionResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(StartTransactionResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TransId != other.TransId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TransId != 0L) hash ^= TransId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (TransId != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(TransId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (TransId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(TransId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(StartTransactionResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TransId != 0L) {
+        TransId = other.TransId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            TransId = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class CommitTransactionRequest : pb::IMessage<CommitTransactionRequest> {
+    private static readonly pb::MessageParser<CommitTransactionRequest> _parser = new pb::MessageParser<CommitTransactionRequest>(() => new CommitTransactionRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<CommitTransactionRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[13]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CommitTransactionRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CommitTransactionRequest(CommitTransactionRequest other) : this() {
+      transId_ = other.transId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CommitTransactionRequest Clone() {
+      return new CommitTransactionRequest(this);
+    }
+
+    /// <summary>Field number for the "TransId" field.</summary>
+    public const int TransIdFieldNumber = 1;
+    private long transId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long TransId {
+      get { return transId_; }
+      set {
+        transId_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as CommitTransactionRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(CommitTransactionRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TransId != other.TransId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TransId != 0L) hash ^= TransId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (TransId != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(TransId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (TransId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(TransId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(CommitTransactionRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TransId != 0L) {
+        TransId = other.TransId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            TransId = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class CommitTransactionResponse : pb::IMessage<CommitTransactionResponse> {
+    private static readonly pb::MessageParser<CommitTransactionResponse> _parser = new pb::MessageParser<CommitTransactionResponse>(() => new CommitTransactionResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<CommitTransactionResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[14]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CommitTransactionResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CommitTransactionResponse(CommitTransactionResponse other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public CommitTransactionResponse Clone() {
+      return new CommitTransactionResponse(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as CommitTransactionResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(CommitTransactionResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(CommitTransactionResponse other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class RollbackTransactionRequest : pb::IMessage<RollbackTransactionRequest> {
+    private static readonly pb::MessageParser<RollbackTransactionRequest> _parser = new pb::MessageParser<RollbackTransactionRequest>(() => new RollbackTransactionRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<RollbackTransactionRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[15]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public RollbackTransactionRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public RollbackTransactionRequest(RollbackTransactionRequest other) : this() {
+      transId_ = other.transId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public RollbackTransactionRequest Clone() {
+      return new RollbackTransactionRequest(this);
+    }
+
+    /// <summary>Field number for the "TransId" field.</summary>
+    public const int TransIdFieldNumber = 1;
+    private long transId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long TransId {
+      get { return transId_; }
+      set {
+        transId_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as RollbackTransactionRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(RollbackTransactionRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TransId != other.TransId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TransId != 0L) hash ^= TransId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (TransId != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(TransId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (TransId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(TransId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(RollbackTransactionRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TransId != 0L) {
+        TransId = other.TransId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            TransId = input.ReadInt64();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class RollbackTransactionResponse : pb::IMessage<RollbackTransactionResponse> {
+    private static readonly pb::MessageParser<RollbackTransactionResponse> _parser = new pb::MessageParser<RollbackTransactionResponse>(() => new RollbackTransactionResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<RollbackTransactionResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::NWorkQueue.Models.NWorkQueueReflection.Descriptor.MessageTypes[16]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public RollbackTransactionResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public RollbackTransactionResponse(RollbackTransactionResponse other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public RollbackTransactionResponse Clone() {
+      return new RollbackTransactionResponse(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as RollbackTransactionResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(RollbackTransactionResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(RollbackTransactionResponse other) {
       if (other == null) {
         return;
       }

@@ -144,8 +144,8 @@ namespace NWorkQueue.Server.Common
         /// Delete a Queue and ALL messages in the Queue.
         /// </summary>
         /// <param name="id">Queue Id of the queue to delete.</param>
-        /// <param name="storageTrans">The storage transaction to perform the operation under.</param>
-        ValueTask DeleteQueue(long id /*, IStorageTransaction storageTrans*/);
+        /// <returns>ValueTask.</returns>
+        ValueTask DeleteQueue(long id);
         /*
         /// <summary>
         /// Add a message to the storage.
@@ -171,17 +171,33 @@ namespace NWorkQueue.Server.Common
         /// <returns>Returns the count.</returns>
         long GetMessageCount(long queueId);
         */
+
         /// <summary>
-        /// Returns the id of the Queue.  If no queue is found, returns null.
+        /// Returns the id and name of the Queue.  If no queue is found, returns null.
         /// </summary>
         /// <remarks>
         /// This search should be case sensitive, only use LIKE with SQLite.
         /// </remarks>
         /// <param name="name">Name of the queue to lookup.</param>
-        /// <returns>Queue ID or null if queue not found.</returns>
+        /// <returns>QueueInfo containing ID and Name of queue.  Null if not found.</returns>
         ValueTask<QueueInfo?> GetQueueInfoByName(string name);
 
+        /// <summary>
+        /// Returns the id and name of the Queue.  If no queue is found, returns null.
+        /// </summary>
+        /// <remarks>
+        /// This search should be case sensitive, only use LIKE with SQLite.
+        /// </remarks>
+        /// <param name="queueId">ID of the queue to lookup.</param>
+        /// <returns>QueueInfo containing ID and Name of queue.  Null if not found.</returns>
         ValueTask<QueueInfo?> GetQueueInfoById(long queueId);
+
+        /// <summary>
+        /// Starts a transaction for use when adding or pulling messages.
+        /// </summary>
+        /// <param name="expiryTimeInMinutes">How long before a Transaction is rolled back automatically.</param>
+        /// <returns>Returns transaction ID.</returns>
+        ValueTask<long> StartTransaction(int expiryTimeInMinutes = 0);
 
         /*
         /// <summary>

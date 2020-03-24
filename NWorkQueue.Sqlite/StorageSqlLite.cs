@@ -63,14 +63,19 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask StartTransaction(long newId, int expiryTimeInMinutes)
+        public async ValueTask<long> StartTransaction(int expiryTimeInMinutes = 0)
         {
-            await this.Execute(async (connection) =>
+            return await this.Execute<long>(async (connection) =>
                 {
-                    const string sql = "INSERT INTO Transactions (Id, Active, StartDateTime, ExpiryDateTime) VALUES (@Id, 1, @StartDateTime, @ExpiryDateTime)";
-                    await connection.ExecuteAsync(sql, new { StartDateTime = DateTime.Now, ExpiryDateTime = DateTime.Now.AddMinutes(expiryTimeInMinutes), Id = newId });
+                    var expiryTime = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
+                    const string sql = "INSERT INTO Transactions (Active, StartDateTime, ExpiryDateTime) VALUES (1, @StartDateTime, @ExpiryDateTime);SELECT last_insert_rowid();";
+                    return await connection.ExecuteScalarAsync<long>(sql, new
+                    {
+                        StartDateTime = DateTime.Now,
+                        ExpiryDateTime = DateTime.Now.AddMinutes(expiryTime),
+                    });
                 });
-            }
+        }
 
         /*
         /// <inheritdoc/>
@@ -405,4 +410,3 @@ namespace NWorkQueue.Sqlite
         //Environment.Exit(returnStatus);
     }
 }
-    
