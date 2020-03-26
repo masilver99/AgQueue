@@ -9,42 +9,48 @@ namespace NWorkQueue.Common.Models
     /// <summary>
     /// Represents a Queue Transaction
     /// </summary>
-    public class TransactionModel
+    public class Transaction
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TransactionModel"/> class.
+        /// Initializes a new instance of the <see cref="Transaction"/> class.
         /// </summary>
         /// <param name="id">primary key</param>
-        /// <param name="active">Is transaction active</param>
+        /// <param name="state">Is transaction active</param>
         /// <param name="createDateTime">Datetime transaction was created</param>
         /// <param name="expiryDateTime">Datetime transaction will expire</param>
-        public TransactionModel(long id, bool active, DateTime createDateTime, DateTime expiryDateTime)
+        /// <param name="endDateTime">Datetime the transaction was closed</param>
+        public Transaction(long id, TransactionState state, DateTime createDateTime, DateTime expiryDateTime, DateTime? endDateTime)
         {
             this.Id = id;
-            this.Active = active;
+            this.State = state;
             this.CreateDateTime = createDateTime;
             this.ExpiryDateTime = expiryDateTime;
+            this.EndDateTime = endDateTime;
         }
 
         /// <summary>
-        /// Gets the unique ID for a transaction
+        /// Gets the unique ID for a transaction.
         /// </summary>
         public long Id { get; }
 
         /// <summary>
-        /// Gets a value indicating whether gets the transaction's active state
-        /// Is the transaction active?  e.g. has it been committed or rolled back
+        /// Gets a value indicating the state of the transaction.
         /// </summary>
-        public bool Active { get; }
+        public TransactionState State { get; }
 
         /// <summary>
-        /// Gets the date and time the transaction was creted
+        /// Gets the date and time the transaction was created.
         /// </summary>
         public DateTime CreateDateTime { get; }
 
         /// <summary>
-        /// Gets the date and time the transaction will expire. e.g. after this datetime, the transaction will automatically rollback
+        /// Gets the date and time the transaction will expire. e.g. after this datetime, the transaction will automatically rollback.
         /// </summary>
         public DateTime ExpiryDateTime { get; }
+
+        /// <summary>
+        /// Gets the date and time the transaction was closed, null if not closed.
+        /// </summary>
+        public DateTime? EndDateTime { get; }
     }
 }

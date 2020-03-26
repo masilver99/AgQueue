@@ -84,13 +84,13 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<CommitTransactionResponse> CommitTransaction(CommitTransactionRequest request, ServerCallContext context)
         {
-            await this.internalApi.CommitTrasaction(request.TransId);
+            await this.internalApi.CommitTransaction(request.TransId);
             return new CommitTransactionResponse();
         }
 
         public override async Task<RollbackTransactionResponse> RollbackTranaction(RollbackTransactionRequest request, ServerCallContext context)
         {
-            await this.internalApi.RollbackTrasaction(request.TransId);
+            await this.internalApi.RollbackTransaction(request.TransId);
             return new RollbackTransactionResponse();
         }
     }

@@ -2,15 +2,17 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
+using System;
+using System.Threading.Tasks;
+using NWorkQueue.Common.Models;
+using NWorkQueue.Server.Common.Models;
+
 namespace NWorkQueue.Server.Common
 {
-    using System;
-    using System.Threading.Tasks;
-    using NWorkQueue.Common.Models;
-    using NWorkQueue.Server.Common.Models;
-
     /// <summary>
     /// The interface for storing and retrieving queue information from a storage mechinism, usually a database.
+    /// When implementing IStorage, use the StorageSqlLite as an example.  There should be no business logic in
+    /// classes that implement IStorage.
     /// </summary>
     public interface IStorage
     {
@@ -40,29 +42,6 @@ namespace NWorkQueue.Server.Common
         /// </summary>
         /// <returns>Returns the max queue Id.</returns>
         long GetMaxQueueId();
-
-        /// <summary>
-        /// Starts a Queue transaction (not a database one).
-        /// </summary>
-        /// <param name="newId">The id to use as primary key.</param>
-        /// <param name="expiryTimeInMinutes">When the transaction will expire.</param>
-        void StartTransaction(long newId, int expiryTimeInMinutes);
-
-        /// <summary>
-        /// Extends the transaction's expiration datetime.
-        /// </summary>
-        /// <param name="transId">The id of the transaction to update.</param>
-        /// <param name="expiryTimeInMinutes">The new expiration datetime.</param>
-        void ExtendTransaction(long transId, int expiryTimeInMinutes);
-
-        /// <summary>
-        /// Starts a storage (database) transaction, not a queue transaction.
-        /// </summary>
-        /// <remarks>
-        /// Not all Storage classes will have internal transactions, so this can return a dummy class that performs no actions.
-        /// </remarks>
-        /// <returns>Returns a class represented by IStorageTransaction which can commit or rollbacl the transaction.</returns>
-        IStorageTransaction BeginStorageTransaction();
 
         /// <summary>
         /// Retrieves Queue transaction data based on the transaction id.
@@ -146,31 +125,39 @@ namespace NWorkQueue.Server.Common
         /// <param name="id">Queue Id of the queue to delete.</param>
         /// <returns>ValueTask.</returns>
         ValueTask DeleteQueue(long id);
-        /*
-        /// <summary>
-        /// Add a message to the storage.
-        /// </summary>
-        /// <param name="transId">Queue Transaction ID.</param>
-        /// <param name="storageTrans">Storage transaction.</param>
-        /// <param name="nextId">The ID to be used at the primary id, i.e. the message id.</param>
-        /// <param name="queueId">ID of the storage queue.</param>
-        /// <param name="compressedMessage">Message data, compressed.</param>
-        /// <param name="addDateTime">Datetime the message was added.</param>
-        /// <param name="metaData">String metadata on message data.</param>
-        /// <param name="priority">Message priority.</param>
-        /// <param name="maxRetries">How many retries before expires.</param>
-        /// <param name="expiryDateTime">Datetime the message will expire.</param>
-        /// <param name="correlation">Correlation ID.</param>
-        /// <param name="groupName">Group name.</param>
-        void AddMessage(long transId, IStorageTransaction? storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "");
 
         /// <summary>
-        /// Returns message total message count for a queue.
+        /// Returns a Transaction object or null value if not found.
         /// </summary>
-        /// <param name="queueId">ID of the message queue.</param>
-        /// <returns>Returns the count.</returns>
-        long GetMessageCount(long queueId);
-        */
+        /// <param name="transId">The Id of the transaction to lookup.</param>
+        /// <returns>Transaction object or null if not found.</returns>
+        ValueTask<Transaction?> GetTransactionById(long transId);
+
+        /*
+/// <summary>
+/// Add a message to the storage.
+/// </summary>
+/// <param name="transId">Queue Transaction ID.</param>
+/// <param name="storageTrans">Storage transaction.</param>
+/// <param name="nextId">The ID to be used at the primary id, i.e. the message id.</param>
+/// <param name="queueId">ID of the storage queue.</param>
+/// <param name="compressedMessage">Message data, compressed.</param>
+/// <param name="addDateTime">Datetime the message was added.</param>
+/// <param name="metaData">String metadata on message data.</param>
+/// <param name="priority">Message priority.</param>
+/// <param name="maxRetries">How many retries before expires.</param>
+/// <param name="expiryDateTime">Datetime the message will expire.</param>
+/// <param name="correlation">Correlation ID.</param>
+/// <param name="groupName">Group name.</param>
+void AddMessage(long transId, IStorageTransaction? storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "");
+
+/// <summary>
+/// Returns message total message count for a queue.
+/// </summary>
+/// <param name="queueId">ID of the message queue.</param>
+/// <returns>Returns the count.</returns>
+long GetMessageCount(long queueId);
+*/
 
         /// <summary>
         /// Returns the id and name of the Queue.  If no queue is found, returns null.
@@ -195,9 +182,27 @@ namespace NWorkQueue.Server.Common
         /// <summary>
         /// Starts a transaction for use when adding or pulling messages.
         /// </summary>
-        /// <param name="expiryTimeInMinutes">How long before a Transaction is rolled back automatically.</param>
+        /// <param name="startDateTime">When the transaction started.</param>
+        /// <param name="expiryDateTime">When the transaction will end.</param>
         /// <returns>Returns transaction ID.</returns>
-        ValueTask<long> StartTransaction(int expiryTimeInMinutes = 0);
+        ValueTask<long> StartTransaction(DateTime startDateTime, DateTime expiryDateTime);
+
+        /// <summary>
+        /// Extends the transaction's expiration datetime.
+        /// </summary>
+        /// <param name="transId">The id of the transaction to update.</param>
+        /// <param name="expiryDateTime">The new expiration datetime.</param>
+        /// <returns>ValueTask.</returns>
+        ValueTask ExtendTransaction(long transId, DateTime expiryDateTime);
+
+        /// <summary>
+        /// Starts a storage (database) transaction, not a queue transaction.
+        /// </summary>
+        /// <remarks>
+        /// Not all Storage classes will have internal transactions, so this can return a dummy class that performs no actions.
+        /// </remarks>
+        /// <returns>Returns a class represented by IStorageTransaction which can commit or rollbacl the transaction.</returns>
+        //IStorageTransaction BeginStorageTransaction();
 
         /*
         /// <summary>

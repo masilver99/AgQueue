@@ -28,7 +28,6 @@ namespace NWorkQueue.Sqlite
             this.connectionString = connectionString;
         }
 
-
         /// <inheritdoc/>
         public async ValueTask InitializeStorage(bool deleteExistingData)
         {
@@ -45,52 +44,113 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask<long> GetMaxTransactionId()
-        {
-            return await Execute<long>(async (connection) =>
-            {
-                // This is bad code.  Two transactions at the same time will cause a conflict.
-                // Need to go ahead and create a record in the DB
-                const string sql = "SELECT Max(ID) FROM TRANSACTIONS;";
-                var id = await connection.ExecuteScalarAsync<int?>(sql);
-                if (id.HasValue)
-                {
-                    return id.Value + 1;
-                }
-
-                return 0;
-            });
-        }
-
-        /// <inheritdoc/>
-        public async ValueTask<long> StartTransaction(int expiryTimeInMinutes = 0)
+        public async ValueTask<long> StartTransaction(DateTime startDateTime, DateTime expiryDateTime)
         {
             return await this.Execute<long>(async (connection) =>
                 {
-                    var expiryTime = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
-                    const string sql = "INSERT INTO Transactions (Active, StartDateTime, ExpiryDateTime) VALUES (1, @StartDateTime, @ExpiryDateTime);SELECT last_insert_rowid();";
+                    // State of 1 = Active
+                    const string sql = "INSERT INTO Transactions (State, StartDateTime, ExpiryDateTime) VALUES (@State, @StartDateTime, @ExpiryDateTime);SELECT last_insert_rowid();";
                     return await connection.ExecuteScalarAsync<long>(sql, new
                     {
-                        StartDateTime = DateTime.Now,
-                        ExpiryDateTime = DateTime.Now.AddMinutes(expiryTime),
+                        State = (int)TransactionState.Active,
+                        StartDateTime = startDateTime,
+                        ExpiryDateTime = expiryDateTime,
                     });
                 });
         }
 
-        /*
         /// <inheritdoc/>
-        public TransactionModel GetTransactionById(long transId, IStorageTransaction? storageTrans = null)
+        public async ValueTask ExtendTransaction(long transId, DateTime expiryDateTime)
         {
-            const string sql = "SELECT * FROM Transactions WHERE Id = @Id";
-            return this.connection.QueryFirstOrDefault<TransactionModel>(sql, new { Id = transId }, (storageTrans as DbTransaction)?.SqliteTransaction);
+            await this.Execute(async (connection) =>
+            {
+                const string sql = "UPDATE Transactions SET ExpiryDateTime = @ExpiryDateTime WHERE ID = @Id;";
+                await connection.ExecuteAsync(sql, new
+                {
+                    Id = transId,
+                    ExpiryDateTime = expiryDateTime,
+                });
+            });
         }
 
         /// <inheritdoc/>
-        public void ExtendTransaction(long transId, int expiryTimeInMinutes)
+        public async ValueTask<Transaction?> GetTransactionById(long transId)
         {
-            const string sql = "UPDATE Transaction SET ExpiryDateTime = @DateTime WHERE Id = @Id";
-            this.connection.Execute(sql, new { DateTime = DateTime.Now.AddMinutes(expiryTimeInMinutes), Id = transId });
+            const string sql = "SELECT Id, State, StartDateTime, ExpiryDateTime, EndDateTime FROM Transactions WHERE Id = @Id";
+            return await this.Execute<Transaction?>(async (connection) =>
+            {
+                return await connection.QuerySingleOrDefaultAsync<Transaction?>(sql, new { Id = transId });
+            });
         }
+
+        public async ValueTask CommitTransaction(long transId)
+        {
+            throw new NotImplementedException();
+            /*
+            var storageTransaction = this.storage.BeginStorageTransaction();
+
+            // Check if transaction has expired
+            var transModel = this.storage.GetTransactionById(this.Id, storageTransaction);
+            if (transModel == null)
+            {
+                return TransactionResult.NotFound;
+            }
+
+            if (!transModel.Active)
+            {
+                return TransactionResult.Closed;
+            }
+
+            if (transModel.ExpiryDateTime <= DateTime.Now)
+            {
+                // Took too long to run transaction, so now we have to rollback :-(
+                this.RollbackTransaction(this.Id);
+                return TransactionResult.Expired;
+            }
+
+            var commitDateTime = DateTime.Now;
+
+            // Updated newly added messages
+            this.storage.CommitAddedMessages(this.Id, storageTransaction);
+
+            // Update newly completed messages
+            this.storage.CommitPulledMessages(this.Id, storageTransaction, commitDateTime);
+
+            // Update Transaction record
+            this.storage.CommitMessageTransaction(this.Id, storageTransaction, commitDateTime);
+
+            storageTransaction.Commit();
+            return TransactionResult.Success;
+            */
+        }
+
+        public ValueTask RollBackTransaction(long transId)
+        {
+            throw new NotImplementedException();
+            /*
+var storageTrans = this.storage.BeginStorageTransaction();
+var closeDateTime = DateTime.Now;
+
+// Close the transaction
+this.storage.CloseTransaction(transId, storageTrans, closeDateTime);
+
+// Removed messages added during the transaction
+this.storage.DeleteMessagesByTransId(transId, storageTrans);
+
+// Check if open messages are at the retry threshold, if so , mark as closed
+this.storage.CloseRetriedMessages(transId, storageTrans, closeDateTime);
+
+// Check if open messages are past the expiry date, if so mark as such
+this.storage.ExpireOlderMessages(transId, storageTrans, closeDateTime, closeDateTime);
+
+// All other records, increment retry count, mark record as active and ready to be pulled again
+this.storage.UpdateRetriesOnRollbackedMessages(transId, storageTrans);
+
+storageTrans.Commit();
+*/
+
+        }
+        /*
 
         /// <inheritdoc/>
         public IStorageTransaction BeginStorageTransaction()
@@ -303,7 +363,7 @@ namespace NWorkQueue.Sqlite
                 // "PRAGMA CACHE_SIZE = 500;" +
                 "Create table IF NOT EXISTS Transactions" +
                 "(Id INTEGER PRIMARY KEY," +
-                " Active INTEGER NOT NULL," +
+                " State INTEGER NOT NULL," +
                 " StartDateTime DATETIME NOT NULL," +
                 " ExpiryDateTime DATETIME NOT NULL, " +
                 " EndDateTime DATETIME);" +

@@ -141,19 +141,50 @@ namespace NWorkQueue.Server.Common
         /// <summary>
         /// Starts a transaction used my add message and pull message.
         /// </summary>
-        /// <param name="expiryTimeInMin">Override default expiration time.</param>
+        /// <param name="expiryTimeInMinutes">Override default expiration time.</param>
         /// <returns>Transaction ID.</returns>
-        public async ValueTask<long> StartTrasaction(int expiryTimeInMin = 0)
+        public async ValueTask<long> StartTrasaction(int expiryTimeInMinutes = 0)
         {
-            return await this.storage.StartTransaction(expiryTimeInMin);
+            // TODO: This 10 needs to be pulled from a config file
+            var expiryTime = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
+            var curDateTime = DateTime.Now;
+
+            return await this.storage.StartTransaction(curDateTime, curDateTime.AddMinutes(10));
         }
 
         /// <summary>
-        /// Commits Transaction, updating all message in transaction.
+        /// Extends the transaction by x number of minutes (from the current datetime).
         /// </summary>
-        /// <param name="transactionId">Transaction Id to commit.</param>
+        /// <param name="transId">The transaction to extend.</param>
+        /// <param name="expiryTimeInMinutes">How long to extend the transaction by.</param>
         /// <returns>ValueTask.</returns>
-        public async ValueTask CommitTrasaction(long transactionId)
+        public async ValueTask ExtendTransaction(long transId, int expiryTimeInMinutes = 0)
+        {
+            // TODO: This 10 needs to be pulled from a config file
+            var expiryTime = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
+
+            // Check transaction is exists and is active
+            var trans = await this.storage.GetTransactionById(transId);
+            if (trans == null)
+            {
+                throw new Exception($"Transaction not found, id: {transId}");
+            }
+
+            if (trans.State != TransactionState.Active)
+            {
+                throw new Exception($"Transaction {transId} not active: {trans.State.ToString()}");
+            }
+
+            // Update Transaction
+            await this.storage.ExtendTransaction(transId, DateTime.Now.AddMinutes(expiryTime));
+        }
+
+        /// <summary>
+        /// Commits Transaction, updating all messages in transaction.
+        /// </summary>
+        /// <param name="transId">Transaction Id to commit.</param>
+        /// <returns>ValueTask.</returns>
+        public async ValueTask CommitTransaction(long transId)
         {
             // Validate Trans 1) exists, 2) Is active, 3) Is  not expired
             // Start DB Trans ---
@@ -161,6 +192,7 @@ namespace NWorkQueue.Server.Common
             // Change status of pulled messages
             // Mark Transaction complete
             // Commit DB Trans ---
+            //await this.storage.
             throw new NotImplementedException();
 
             //return await this.storage.CommitTransaction(transactionId);
@@ -171,7 +203,7 @@ namespace NWorkQueue.Server.Common
         /// </summary>
         /// <param name="transactionId">The transaction ID of the transaction to rollback.</param>
         /// <returns>ValueTask.</returns>
-        public async ValueTask RollbackTrasaction(long transactionId)
+        public async ValueTask RollbackTransaction(long transactionId)
         {
             throw new NotImplementedException();
             //return await this.storage.RollbackTransaction(transactionId);
