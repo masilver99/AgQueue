@@ -28,7 +28,7 @@ namespace NWorkQueue.Integration.Tests
                 //config.ResponseCompressionLevel = System.IO.Compression.CompressionLevel.Optimal;
             });
 
-            services.AddSingleton<IStorage>(new StorageSqlLite(@"Data Source=SqlLiteTesting.db;"));
+            services.AddSingleton<IStorage>(new StorageSqlite(@"Data Source=SqliteTesting.db;"));
             services.AddSingleton(typeof(InternalApi));
         }
 

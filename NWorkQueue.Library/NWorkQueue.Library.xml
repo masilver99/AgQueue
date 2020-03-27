@@ -4,6 +4,18 @@
         <name>NWorkQueue.Server.Common</name>
     </assembly>
     <members>
+        <member name="T:NWorkQueue.Server.Common.Extensions.ObjectExtensions">
+            <summary>
+            Extensions methods for use on Objects
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.Extensions.ObjectExtensions.ThrowIfNull(System.Object,System.String)">
+            <summary>
+            Throws ArgumentNullException if object is null.
+            </summary>
+            <param name="obj">Object to perform null check on.</param>
+            <param name="name">Param name to include in exception message.</param>
+        </member>
         <member name="T:NWorkQueue.Server.Common.InternalApi">
             <summary>
             Starting point for accessing all queue related APIS
@@ -18,6 +30,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:NWorkQueue.Server.Common.InternalApi"/> class.
             </summary>
+            <param name="storage">The storage implementation to use for storage of queues and messages.</param>
         </member>
         <member name="M:NWorkQueue.Server.Common.InternalApi.CreateQueue(System.String)">
             <summary>
@@ -52,10 +65,11 @@
             Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue.
             </summary>
             <param name="queueId">Queue id.</param>
+            <returns>ValueTask.</returns>
         </member>
         <member name="M:NWorkQueue.Server.Common.InternalApi.Dispose">
             <summary>
-            Disposes of storage resources
+            Disposes of storage resources.
             </summary>
         </member>
         <member name="M:NWorkQueue.Server.Common.InternalApi.InitializeStorage(System.Boolean)">
@@ -69,26 +83,36 @@
             <summary>
             Starts a transaction used my add message and pull message.
             </summary>
-            <param name="expiryTimeInMin">Override default expiration time.</param>
+            <param name="expiryTimeInMinutes">Override default expiration time.</param>
             <returns>Transaction ID.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.InternalApi.CommitTrasaction(System.Int64)">
+        <member name="M:NWorkQueue.Server.Common.InternalApi.ExtendTransaction(System.Int64,System.Int32)">
             <summary>
-            Commits Transaction, updating all message in transaction.
+            Extends the transaction by x number of minutes (from the current datetime).
             </summary>
-            <param name="transactionId">Transaction Id to commit.</param>
+            <param name="transId">The transaction to extend.</param>
+            <param name="expiryTimeInMinutes">How long to extend the transaction by.</param>
             <returns>ValueTask.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.InternalApi.RollbackTrasaction(System.Int64)">
+        <member name="M:NWorkQueue.Server.Common.InternalApi.CommitTransaction(System.Int64)">
+            <summary>
+            Commits Transaction, updating all messages in transaction.
+            </summary>
+            <param name="transId">Transaction Id to commit.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.RollbackTransaction(System.Int64)">
             <summary>
             Rollsback a transaction, undoing any changes to messages in the transaction.
             </summary>
-            <param name="transactionId">The transaction ID of the transaction to rollback.</param>
+            <param name="transId">The transaction ID of the transaction to rollback.</param>
             <returns>ValueTask.</returns>
         </member>
         <member name="T:NWorkQueue.Server.Common.IStorage">
             <summary>
             The interface for storing and retrieving queue information from a storage mechinism, usually a database.
+            When implementing IStorage, use the StorageSqlite as an example.  There should be no business logic in
+            classes that implement IStorage.
             </summary>
         </member>
         <member name="M:NWorkQueue.Server.Common.IStorage.InitializeStorage(System.Boolean)">
@@ -96,12 +120,14 @@
             Called when Queue process starts.  Connections to the storage should be made here, etc.
             </summary>
             <param name="deleteExistingData">Should all existing queues and messages be deleted.</param>
+            <returns>ValueTask.</returns>
         </member>
         <member name="M:NWorkQueue.Server.Common.IStorage.AddQueue(System.String)">
             <summary>
             Create a new Queue in storage.
             </summary>
             <param name="name">Queue name.</param>
+            <returns>ValueTask.</returns>
         </member>
         <member name="M:NWorkQueue.Server.Common.IStorage.DeleteQueue(System.Int64)">
             <summary>
@@ -109,6 +135,13 @@
             </summary>
             <param name="id">Queue Id of the queue to delete.</param>
             <returns>ValueTask.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.GetTransactionById(System.Int64)">
+            <summary>
+            Returns a Transaction object or null value if not found.
+            </summary>
+            <param name="transId">The Id of the transaction to lookup.</param>
+            <returns>Transaction object or null if not found.</returns>
         </member>
         <member name="M:NWorkQueue.Server.Common.IStorage.GetQueueInfoByName(System.String)">
             <summary>
@@ -130,12 +163,39 @@
             <param name="queueId">ID of the queue to lookup.</param>
             <returns>QueueInfo containing ID and Name of queue.  Null if not found.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.StartTransaction(System.Int32)">
+        <member name="M:NWorkQueue.Server.Common.IStorage.StartTransaction(System.DateTime,System.DateTime)">
             <summary>
             Starts a transaction for use when adding or pulling messages.
             </summary>
-            <param name="expiryTimeInMinutes">How long before a Transaction is rolled back automatically.</param>
+            <param name="startDateTime">When the transaction started.</param>
+            <param name="expiryDateTime">When the transaction will end.</param>
             <returns>Returns transaction ID.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.ExtendTransaction(System.Int64,System.DateTime)">
+            <summary>
+            Extends the transaction's expiration datetime.
+            </summary>
+            <param name="transId">The id of the transaction to update.</param>
+            <param name="expiryDateTime">The new expiration datetime.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateTransactionState(System.Int64,NWorkQueue.Common.TransactionState,System.Nullable{System.DateTime})">
+            <summary>
+            Update the transaction's state and end datetime.
+            </summary>
+            <param name="transId">The id of the transaction to update.</param>
+            <param name="state">The new state of the transaction.</param>
+            <param name="endDateTime">Datetime the transaction was closed (or null if not closed).</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.BeginStorageTransaction">
+            <summary>
+            Starts a storage (database) transaction, not a queue transaction.
+            </summary>
+            <remarks>
+            Not all Storage classes will have internal transactions, so this can return a dummy class that performs no actions.
+            </remarks>
+            <returns>Returns a class represented by IStorageTransaction which can commit or rollbacl the transaction.</returns>
         </member>
         <member name="T:NWorkQueue.Server.Common.IStorageTransaction">
             <summary>
@@ -273,50 +333,6 @@
             <summary>
             The request does not have valid authentication credentials for the operation.
             </summary>
-        </member>
-        <member name="T:NWorkQueue.Server.Common.Transaction">
-            <summary>
-            Represents a Queue Transaction.  Most message functions require a transaction
-            </summary>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Transaction.#ctor(NWorkQueue.Server.Common.IStorage)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NWorkQueue.Server.Common.Transaction"/> class.
-            </summary>
-            <param name="storage">An IStorage interface</param>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Transaction.Start">
-            <summary>
-            Start Queue Transaction.
-            </summary>
-            <returns>Queue Transaction id of the new transaction</returns>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Transaction.UpdateTransaction(System.Int64)">
-            <summary>
-            Updates the specified transaction, reseting it's timeout
-            </summary>
-            <param name="transId">Queue Transaction id</param>
-            <returns>Enum detailing if update was successul</returns>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Transaction.GetMessageCount(System.Int64)">
-            <summary>
-            Returns the message count of messages in a specific transaction. Results are unknown for closed committed or rolledback transactions.
-            </summary>
-            <param name="transId">Transaction id</param>
-            <returns>Message count</returns>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Transaction.Commit">
-            <summary>
-            Commits the Queue Transaction
-            </summary>
-            <param name="transId">Queue transaction id</param>
-            <returns>Was the commit successful</returns>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Transaction.RollbackTransaction(System.Int64)">
-            <summary>
-            Rollsback the Queue transaction and resets the messages states or doesn't add messages
-            </summary>
-            <param name="transId">Queue transaction id</param>
         </member>
     </members>
 </doc>

@@ -60,7 +60,7 @@ namespace NWorkQueue.Integration.Tests
             var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "Test" });
             Assert.AreEqual(1, createResponse.QueueId);
 
-            var queueInfo = await client.QueueInfoByIdAsync(new QueueInfoByIdRequest { QueueId = 1 });
+            var queueInfo = await client.GetQueueInfoByIdAsync(new GetQueueInfoByIdRequest { QueueId = 1 });
             Assert.AreEqual("Test", queueInfo.QueueName);
             Assert.IsTrue(queueInfo.RecordFound);
         }
@@ -74,12 +74,12 @@ namespace NWorkQueue.Integration.Tests
             var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DeleteById" });
             Assert.AreEqual(1, createResponse.QueueId);
             var request = new DeleteQueueByNameRequest { QueueName = "DeleteById" };
-            var queueInfoBefore = await client.QueueInfoByIdAsync(new QueueInfoByIdRequest { QueueId = 1 });
+            var queueInfoBefore = await client.GetQueueInfoByIdAsync(new GetQueueInfoByIdRequest { QueueId = 1 });
             Assert.AreEqual("DeleteById", queueInfoBefore.QueueName);
             Assert.AreEqual(1, queueInfoBefore.QueueId);
             await client.DeleteQueueByNameAsync(request);
 
-            var queueInfoAfter = await client.QueueInfoByIdAsync(new QueueInfoByIdRequest { QueueId = 1 });
+            var queueInfoAfter = await client.GetQueueInfoByIdAsync(new GetQueueInfoByIdRequest { QueueId = 1 });
             Assert.IsFalse(queueInfoAfter.RecordFound);
         }
 
@@ -94,7 +94,7 @@ namespace NWorkQueue.Integration.Tests
 
             await client.DeleteQueueByNameAsync(request);
 
-            var queueInfoAfter = await client.QueueInfoByNameAsync(new QueueInfoByNameRequest { QueueName = "DeleteByName" });
+            var queueInfoAfter = await client.GetQueueInfoByNameAsync(new GetQueueInfoByNameRequest { QueueName = "DeleteByName" });
             Assert.IsFalse(queueInfoAfter.RecordFound);
         }
 
@@ -107,7 +107,7 @@ namespace NWorkQueue.Integration.Tests
             var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "Test" });
             Assert.AreEqual(1, createResponse.QueueId);
 
-            var queueInfo = await client.QueueInfoByIdAsync(new QueueInfoByIdRequest { QueueId = 1 });
+            var queueInfo = await client.GetQueueInfoByIdAsync(new GetQueueInfoByIdRequest { QueueId = 1 });
             Assert.AreEqual("Test", queueInfo.QueueName);
             Assert.IsTrue(queueInfo.RecordFound);
         }

@@ -24,7 +24,7 @@ namespace NWorkQueue.GrpcServer
             {
                 options.Interceptors.Add<ExceptionInterceptor>();
             });
-            services.AddSingleton<IStorage>(new StorageSqlLite(@"Data Source=SqlLite.db;"));
+            services.AddSingleton<IStorage>(new StorageSqlite(@"Data Source=Sqlite.db;"));
             services.AddSingleton(typeof(InternalApi));
         }
 

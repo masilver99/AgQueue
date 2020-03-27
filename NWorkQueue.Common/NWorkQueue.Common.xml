@@ -49,131 +49,136 @@
             Gets the message state ID
             </summary>
         </member>
-        <member name="T:NWorkQueue.Common.Models.MessageModel">
+        <member name="T:NWorkQueue.Common.Models.Message">
             <summary>
             Represents a Queue Message.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.Id">
+        <member name="P:NWorkQueue.Common.Models.Message.Id">
             <summary>
             Gets generated unique message id.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.QueueId">
+        <member name="P:NWorkQueue.Common.Models.Message.QueueId">
             <summary>
             Gets the id of the queue.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.TransactionId">
+        <member name="P:NWorkQueue.Common.Models.Message.TransactionId">
             <summary>
             Gets the id of the queue transaction.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.TransactionAction">
+        <member name="P:NWorkQueue.Common.Models.Message.TransactionAction">
             <summary>
             Gets the transaction action. i.e. was this message added or pulled in the transaction.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.AddDateTime">
+        <member name="P:NWorkQueue.Common.Models.Message.AddDateTime">
             <summary>
             Gets the datetime the message was added.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.CloseDateTime">
+        <member name="P:NWorkQueue.Common.Models.Message.CloseDateTime">
             <summary>
             Gets the datetime the message was closed, i.e. processed or cancelled or expired.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.Priority">
+        <member name="P:NWorkQueue.Common.Models.Message.Priority">
             <summary>
             Gets the priority of the message.  Lower is higher priority.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.MaxRetries">
+        <member name="P:NWorkQueue.Common.Models.Message.MaxRetries">
             <summary>
             Gets number of attempts to have message processed, i.e. commited.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.Retries">
+        <member name="P:NWorkQueue.Common.Models.Message.Retries">
             <summary>
             Gets the number of rollbacks or timeouts before the message expires.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.ExpiryDate">
+        <member name="P:NWorkQueue.Common.Models.Message.ExpiryDate">
             <summary>
             Gets DateTime the message will expire.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.CorrelationId">
+        <member name="P:NWorkQueue.Common.Models.Message.CorrelationId">
             <summary>
             Gets the interger correlation id, used by calling application.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.Group">
+        <member name="P:NWorkQueue.Common.Models.Message.Group">
             <summary>
             Gets string group name.  Used by external application for grouping purposes.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.MessageModel.Data">
+        <member name="P:NWorkQueue.Common.Models.Message.Data">
             <summary>
             Gets actual message data.
             </summary>
         </member>
-        <member name="T:NWorkQueue.Common.Models.QueueModel">
+        <member name="T:NWorkQueue.Common.Models.Queue">
             <summary>
             Represents a Queue.
             </summary>
         </member>
-        <member name="M:NWorkQueue.Common.Models.QueueModel.#ctor(System.Int64,System.String)">
+        <member name="M:NWorkQueue.Common.Models.Queue.#ctor(System.Int64,System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:NWorkQueue.Common.Models.QueueModel"/> class.
+            Initializes a new instance of the <see cref="!:QueueModel"/> class.
             </summary>
             <param name="id">queue Id.</param>
             <param name="name">queue name.</param>
         </member>
-        <member name="P:NWorkQueue.Common.Models.QueueModel.Id">
+        <member name="P:NWorkQueue.Common.Models.Queue.Id">
             <summary>
             Gets the unique queue id.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.QueueModel.Name">
+        <member name="P:NWorkQueue.Common.Models.Queue.Name">
             <summary>
             Gets the name of the queue.
             </summary>
         </member>
-        <member name="T:NWorkQueue.Common.Models.TransactionModel">
+        <member name="T:NWorkQueue.Common.Models.Transaction">
             <summary>
             Represents a Queue Transaction
             </summary>
         </member>
-        <member name="M:NWorkQueue.Common.Models.TransactionModel.#ctor(System.Int64,System.Boolean,System.DateTime,System.DateTime)">
+        <member name="M:NWorkQueue.Common.Models.Transaction.#ctor(System.Int64,NWorkQueue.Common.TransactionState,System.DateTime,System.DateTime,System.Nullable{System.DateTime})">
             <summary>
-            Initializes a new instance of the <see cref="T:NWorkQueue.Common.Models.TransactionModel"/> class.
+            Initializes a new instance of the <see cref="T:NWorkQueue.Common.Models.Transaction"/> class.
             </summary>
             <param name="id">primary key</param>
-            <param name="active">Is transaction active</param>
+            <param name="state">Is transaction active</param>
             <param name="createDateTime">Datetime transaction was created</param>
             <param name="expiryDateTime">Datetime transaction will expire</param>
+            <param name="endDateTime">Datetime the transaction was closed</param>
         </member>
-        <member name="P:NWorkQueue.Common.Models.TransactionModel.Id">
+        <member name="P:NWorkQueue.Common.Models.Transaction.Id">
             <summary>
-            Gets the unique ID for a transaction
+            Gets the unique ID for a transaction.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.TransactionModel.Active">
+        <member name="P:NWorkQueue.Common.Models.Transaction.State">
             <summary>
-            Gets a value indicating whether gets the transaction's active state
-            Is the transaction active?  e.g. has it been committed or rolled back
+            Gets a value indicating the state of the transaction.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.TransactionModel.CreateDateTime">
+        <member name="P:NWorkQueue.Common.Models.Transaction.CreateDateTime">
             <summary>
-            Gets the date and time the transaction was creted
+            Gets the date and time the transaction was created.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.TransactionModel.ExpiryDateTime">
+        <member name="P:NWorkQueue.Common.Models.Transaction.ExpiryDateTime">
             <summary>
-            Gets the date and time the transaction will expire. e.g. after this datetime, the transaction will automatically rollback
+            Gets the date and time the transaction will expire. e.g. after this datetime, the transaction will automatically rollback.
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.Transaction.EndDateTime">
+            <summary>
+            Gets the date and time the transaction was closed, null if not closed.
             </summary>
         </member>
         <member name="T:NWorkQueue.Common.TransactionAction">
@@ -225,6 +230,36 @@
         <member name="F:NWorkQueue.Common.TransactionResult.NotFound">
             <summary>
             Transaction could not be found. Perhaps this should be an exception
+            </summary>
+        </member>
+        <member name="T:NWorkQueue.Common.TransactionState">
+            <summary>
+            The current state of a transaction.
+            </summary>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionState.Unknown">
+            <summary>
+            This should never occur.  It means there is a serious bug.
+            </summary>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionState.Active">
+            <summary>
+            Transaction is active.
+            </summary>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionState.Commited">
+            <summary>
+            Transaction has been committed by user.
+            </summary>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionState.RolledBack">
+            <summary>
+            Transaction was rolled back by user.
+            </summary>
+        </member>
+        <member name="F:NWorkQueue.Common.TransactionState.Expired">
+            <summary>
+            Transaction was automatically expired due to timeout.
             </summary>
         </member>
     </members>

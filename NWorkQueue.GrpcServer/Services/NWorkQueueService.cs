@@ -54,26 +54,26 @@ namespace NWorkQueue.GrpcServer
             return new DeleteQueueByNameResponse();
         }
 
-        public override async Task<QueueInfoResponse> QueueInfoById(QueueInfoByIdRequest request, ServerCallContext context)
+        public override async Task<GetQueueInfoResponse> GetQueueInfoById(GetQueueInfoByIdRequest request, ServerCallContext context)
         {
             var queueInfo = await this.internalApi.GetQueueInfoById(request.QueueId);
             if (queueInfo == null)
             {
-                return new QueueInfoResponse { RecordFound = false };
+                return new GetQueueInfoResponse { RecordFound = false };
             }
 
-            return new QueueInfoResponse { RecordFound = true, QueueId = queueInfo.Id, QueueName = queueInfo.Name };
+            return new GetQueueInfoResponse { RecordFound = true, QueueId = queueInfo.Id, QueueName = queueInfo.Name };
         }
 
-        public override async Task<QueueInfoResponse> QueueInfoByName(QueueInfoByNameRequest request, ServerCallContext context)
+        public override async Task<GetQueueInfoResponse> GetQueueInfoByName(GetQueueInfoByNameRequest request, ServerCallContext context)
         {
             var queueInfo = await this.internalApi.GetQueueInfoByName(request.QueueName);
             if (queueInfo == null)
             {
-                return new QueueInfoResponse { RecordFound = false };
+                return new GetQueueInfoResponse { RecordFound = false };
             }
 
-            return new QueueInfoResponse { RecordFound = true, QueueId = queueInfo.Id, QueueName = queueInfo.Name };
+            return new GetQueueInfoResponse { RecordFound = true, QueueId = queueInfo.Id, QueueName = queueInfo.Name };
         }
 
         public override async Task<StartTransactionResponse> StartTransaction(StartTransactionRequest request, ServerCallContext context)
@@ -88,6 +88,7 @@ namespace NWorkQueue.GrpcServer
             return new CommitTransactionResponse();
         }
 
+        /// <inheritdoc/>
         public override async Task<RollbackTransactionResponse> RollbackTranaction(RollbackTransactionRequest request, ServerCallContext context)
         {
             await this.internalApi.RollbackTransaction(request.TransId);

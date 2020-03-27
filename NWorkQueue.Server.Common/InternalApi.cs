@@ -36,6 +36,7 @@ namespace NWorkQueue.Server.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="InternalApi"/> class.
         /// </summary>
+        /// <param name="storage">The storage implementation to use for storage of queues and messages.</param>
         public InternalApi(IStorage storage)
         {
             // Setup Storage
@@ -108,6 +109,7 @@ namespace NWorkQueue.Server.Common
         /// Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue.
         /// </summary>
         /// <param name="queueId">Queue id.</param>
+        /// <returns>ValueTask.</returns>
         public async ValueTask DeleteQueue(long queueId)
         {
             var queueInfo = await this.GetQueueInfoById(queueId);
@@ -121,11 +123,11 @@ namespace NWorkQueue.Server.Common
         }
 
         /// <summary>
-        /// Disposes of storage resources
+        /// Disposes of storage resources.
         /// </summary>
         public void Dispose()
         {
-            // Need to add OnDsiapose action in case some storage services require disposal
+            // TODO: Need to add OnDsiapose action in case some storage services require disposal
         }
 
         /// <summary>
@@ -164,6 +166,14 @@ namespace NWorkQueue.Server.Common
             var expiryTime = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
 
             // Check transaction is exists and is active
+            await this.ConfirmTransactionExistsAndIsActive(transId);
+
+            // Update Transaction
+            await this.storage.ExtendTransaction(transId, DateTime.Now.AddMinutes(expiryTime));
+        }
+
+        private async ValueTask ConfirmTransactionExistsAndIsActive(long transId)
+        {
             var trans = await this.storage.GetTransactionById(transId);
             if (trans == null)
             {
@@ -174,9 +184,6 @@ namespace NWorkQueue.Server.Common
             {
                 throw new Exception($"Transaction {transId} not active: {trans.State.ToString()}");
             }
-
-            // Update Transaction
-            await this.storage.ExtendTransaction(transId, DateTime.Now.AddMinutes(expiryTime));
         }
 
         /// <summary>
@@ -186,27 +193,61 @@ namespace NWorkQueue.Server.Common
         /// <returns>ValueTask.</returns>
         public async ValueTask CommitTransaction(long transId)
         {
-            // Validate Trans 1) exists, 2) Is active, 3) Is  not expired
-            // Start DB Trans ---
-            // Change status of added messages
-            // Change status of pulled messages
-            // Mark Transaction complete
-            // Commit DB Trans ---
-            //await this.storage.
-            throw new NotImplementedException();
+            // Check transaction is exists and is active
+            await this.ConfirmTransactionExistsAndIsActive(transId);
 
-            //return await this.storage.CommitTransaction(transactionId);
+            // Perform transaction housekeeping.  Is it expired?
+
+            var storageTrans = this.storage.BeginStorageTransaction();
+
+            try
+            {
+                // Change status of added messages
+                // Change status of pulled messages
+
+                // Mark Transaction complete
+                await this.storage.UpdateTransactionState(transId, TransactionState.Commited, DateTime.Now);
+
+                // Commit DB Trans ---
+                storageTrans.Commit();
+            }
+            catch
+            {
+                storageTrans.Rollback();
+                throw;
+            }
         }
 
         /// <summary>
         /// Rollsback a transaction, undoing any changes to messages in the transaction.
         /// </summary>
-        /// <param name="transactionId">The transaction ID of the transaction to rollback.</param>
+        /// <param name="transId">The transaction ID of the transaction to rollback.</param>
         /// <returns>ValueTask.</returns>
-        public async ValueTask RollbackTransaction(long transactionId)
+        public async ValueTask RollbackTransaction(long transId)
         {
-            throw new NotImplementedException();
-            //return await this.storage.RollbackTransaction(transactionId);
+            // Check transaction is exists and is active
+            await this.ConfirmTransactionExistsAndIsActive(transId);
+
+            // Perform transaction housekeeping.  Is it expired?
+
+            var storageTrans = this.storage.BeginStorageTransaction();
+
+            try
+            {
+                // Change status of added messages
+                // Change status of pulled messages
+
+                // Mark Transaction complete
+                await this.storage.UpdateTransactionState(transId, TransactionState.RolledBack, DateTime.Now);
+
+                // Commit DB Trans ---
+                storageTrans.Commit();
+            }
+            catch
+            {
+                storageTrans.Rollback();
+                throw;
+            }
         }
     }
 }

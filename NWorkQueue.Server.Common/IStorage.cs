@@ -4,6 +4,7 @@
 
 using System;
 using System.Threading.Tasks;
+using NWorkQueue.Common;
 using NWorkQueue.Common.Models;
 using NWorkQueue.Server.Common.Models;
 
@@ -11,7 +12,7 @@ namespace NWorkQueue.Server.Common
 {
     /// <summary>
     /// The interface for storing and retrieving queue information from a storage mechinism, usually a database.
-    /// When implementing IStorage, use the StorageSqlLite as an example.  There should be no business logic in
+    /// When implementing IStorage, use the StorageSqlite as an example.  There should be no business logic in
     /// classes that implement IStorage.
     /// </summary>
     public interface IStorage
@@ -20,37 +21,9 @@ namespace NWorkQueue.Server.Common
         /// Called when Queue process starts.  Connections to the storage should be made here, etc.
         /// </summary>
         /// <param name="deleteExistingData">Should all existing queues and messages be deleted.</param>
+        /// <returns>ValueTask.</returns>
         ValueTask InitializeStorage(bool deleteExistingData);
-
-        /// <summary>
-        /// Get the id of the last transaction created, assuming the last ID is the largest.
-        /// </summary>
-        /// <returns>Returns the  Transaction Id.</returns>
         /*
-        long GetMaxTransactionId();
-
-        /// <summary>
-        /// Get the id of the last message created, assuming the last ID is the largest.
-        /// </summary>
-        /// <returns>Returns the max message Id.</returns>
-        
-        /*
-        long GetMaxMessageId();
-
-        /// <summary>
-        /// Get the id of the last queue created, assuming the last ID is the largest.
-        /// </summary>
-        /// <returns>Returns the max queue Id.</returns>
-        long GetMaxQueueId();
-
-        /// <summary>
-        /// Retrieves Queue transaction data based on the transaction id.
-        /// </summary>
-        /// <param name="transId">Id of the tranaction to lookup.</param>
-        /// <param name="storageTrans">Optional Storage transaction to perform this within.</param>
-        /// <returns>Transaction Model.</returns>
-        TransactionModel GetTransactionById(long transId, IStorageTransaction? storageTrans = null);
-
         /// <summary>
         /// Mark the Queue Transaction as closed.
         /// </summary>
@@ -117,6 +90,7 @@ namespace NWorkQueue.Server.Common
         /// Create a new Queue in storage.
         /// </summary>
         /// <param name="name">Queue name.</param>
+        /// <returns>ValueTask.</returns>
         ValueTask<long> AddQueue(string name);
 
         /// <summary>
@@ -196,13 +170,22 @@ long GetMessageCount(long queueId);
         ValueTask ExtendTransaction(long transId, DateTime expiryDateTime);
 
         /// <summary>
+        /// Update the transaction's state and end datetime.
+        /// </summary>
+        /// <param name="transId">The id of the transaction to update.</param>
+        /// <param name="state">The new state of the transaction.</param>
+        /// <param name="endDateTime">Datetime the transaction was closed (or null if not closed).</param>
+        /// <returns>ValueTask.</returns>
+        ValueTask UpdateTransactionState(long transId, TransactionState state, DateTime? endDateTime = null);
+
+        /// <summary>
         /// Starts a storage (database) transaction, not a queue transaction.
         /// </summary>
         /// <remarks>
         /// Not all Storage classes will have internal transactions, so this can return a dummy class that performs no actions.
         /// </remarks>
         /// <returns>Returns a class represented by IStorageTransaction which can commit or rollbacl the transaction.</returns>
-        //IStorageTransaction BeginStorageTransaction();
+        IStorageTransaction BeginStorageTransaction();
 
         /*
         /// <summary>

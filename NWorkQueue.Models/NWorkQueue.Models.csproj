@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="**/*.proto" OutputDir="%(RelativePath)" CompileOutputs="false"  />
+    <Protobuf Include="**/*.proto" OutputDir="%(RelativePath)" CompileOutputs="false" />
   </ItemGroup>
 
 </Project>

@@ -4,42 +4,71 @@
         <name>NWorkQueue.Sqlite</name>
     </assembly>
     <members>
-        <member name="T:NWorkQueue.Sqlite.StorageSqlLite">
+        <member name="T:NWorkQueue.Sqlite.DbTransaction">
+            <summary>
+            Wrapper around SQLite transaction.  Used by storage classes
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.DbTransaction.#ctor(Microsoft.Data.Sqlite.SqliteConnection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NWorkQueue.Sqlite.DbTransaction"/> class.
+            </summary>
+            <param name="connection">SQLite connection</param>
+        </member>
+        <member name="P:NWorkQueue.Sqlite.DbTransaction.SqliteTransaction">
+            <summary>
+            Gets the internal SQLite transaction.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.DbTransaction.Commit">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.DbTransaction.Rollback">
+            <inheritdoc/>
+        </member>
+        <member name="T:NWorkQueue.Sqlite.StorageSqlite">
             <summary>
             Implements the IStorage interface for storing and retriving queue date to SQLite.
             </summary>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.InitializeStorage(System.Boolean)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.InitializeStorage(System.Boolean)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetMaxTransactionId">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.StartTransaction(System.DateTime,System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.StartTransaction(System.Int32)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.ExtendTransaction(System.Int64,System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.AddQueue(System.String)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetTransactionById(System.Int64)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.DeleteQueue(System.Int64)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateTransactionState(System.Int64,NWorkQueue.Common.TransactionState,System.Nullable{System.DateTime})">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetQueueInfoByName(System.String)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.AddQueue(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.GetQueueInfoById(System.Int64)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.DeleteQueue(System.Int64)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlLite.Execute``1(System.Func{Microsoft.Data.Sqlite.SqliteConnection,System.Threading.Tasks.ValueTask{``0}},Microsoft.Data.Sqlite.SqliteConnection)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetQueueInfoByName(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetQueueInfoById(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.BeginStorageTransaction">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.Execute``1(System.Func{Microsoft.Data.Sqlite.SqliteConnection,System.Threading.Tasks.ValueTask{``0}},Microsoft.Data.Sqlite.SqliteConnection)">
             <summary>
             Executes an anonymous method wrapped with robust logging, command line options loading, and error handling
             </summary>
-            <typeparam name="TOptions">Options class to load from command line</typeparam>
-            <param name="programName">name of the executing program</param>
-            <param name="args">Command line arguments</param>
-            <param name="action">The anonymous method to execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.
-            The method must be async.</param>
-            <returns>returns an async Task</returns>
+            <typeparam name="T">Options class to load from command line.</typeparam>
+            <param name="action">The anonymous method execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.</param>
+            <param name="connection">Sqlite connection.</param>
+            <returns>Returns generic object T.</returns>
         </member>
     </members>
 </doc>

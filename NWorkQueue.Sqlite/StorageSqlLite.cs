@@ -9,21 +9,21 @@ using Dapper;
 using Microsoft.Data.Sqlite;
 using NWorkQueue.Common;
 using NWorkQueue.Common.Models;
-using NWorkQueue.Server.Common.Models;
 using NWorkQueue.Server.Common;
+using NWorkQueue.Server.Common.Models;
 
 namespace NWorkQueue.Sqlite
 {
     /// <summary>
     /// Implements the IStorage interface for storing and retriving queue date to SQLite.
     /// </summary>
-    public class StorageSqlLite : IStorage
+    public class StorageSqlite : IStorage
     {
         //private SqliteConnection connection;
         private string connectionString;
 
         // IStorage methods below
-        public StorageSqlLite(string connectionString)
+        public StorageSqlite(string connectionString)
         {
             this.connectionString = connectionString;
         }
@@ -82,6 +82,22 @@ namespace NWorkQueue.Sqlite
                 return await connection.QuerySingleOrDefaultAsync<Transaction?>(sql, new { Id = transId });
             });
         }
+
+        /// <inheritdoc/>
+        public async ValueTask UpdateTransactionState(long transId, TransactionState state, DateTime? endDateTime = null)
+        {
+            await this.Execute(async (connection) =>
+            {
+                const string sql = "UPDATE Transactions SET EndDateTime = @EndDateTime, State = @State WHERE ID = @Id;";
+                await connection.ExecuteAsync(sql, new
+                {
+                    Id = transId,
+                    State = state,
+                    EndDateTime = endDateTime,
+                });
+            });
+        }
+
 
         public async ValueTask CommitTransaction(long transId)
         {
@@ -151,13 +167,6 @@ storageTrans.Commit();
 
         }
         /*
-
-        /// <inheritdoc/>
-        public IStorageTransaction BeginStorageTransaction()
-        {
-            return new DbTransaction(this.connection);
-        }
-
         /// <inheritdoc/>
         public void CloseTransaction(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
         {
@@ -345,6 +354,74 @@ storageTrans.Commit();
         #endregion
         */
 
+        /// <inheritdoc/>
+        public IStorageTransaction BeginStorageTransaction()
+        {
+            var connection = new SqliteConnection(this.connectionString);
+            return new DbTransaction(connection);
+        }
+
+        /// <summary>
+        /// Executes an anonymous method wrapped with robust logging, command line options loading, and error handling
+        /// </summary>
+        /// <typeparam name="T">Options class to load from command line.</typeparam>
+        /// <param name="action">The anonymous method execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.</param>
+        /// <param name="connection">Sqlite connection.</param>
+        /// <returns>Returns generic object T.</returns>
+        public async ValueTask<T> Execute<T>(Func<SqliteConnection, ValueTask<T>> action, SqliteConnection? connection = null)
+        {
+            // using (var logger = Utilities.BuildLogger(programName, EnvironmentConfig.AspNetCoreEnvironment, EnvironmentConfig.SeqServerUrl))
+            // logger.Information("Starting {ProgramName}", programName);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            // AppDomain.CurrentDomain.UnhandledException += Utilities.CurrentDomain_UnhandledException;
+
+            SqliteConnection? liveConnection = null;
+
+            try
+            {
+                if (connection == null)
+                {
+                    liveConnection = new SqliteConnection(this.connectionString);
+                }
+                else
+                {
+                    liveConnection = connection;
+                }
+
+                T returnValue = await action(liveConnection);
+                stopwatch.Stop();
+                return returnValue;
+                // logger.Information("{ProgramName} completed in {ElapsedTime}ms", programName, stopwatch.ElapsedMilliseconds);
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+                //logger.Fatal(exc, "A fatal exception prevented this application from running to completion.");
+            }
+            finally
+            {
+                // If connection wasn't passed in, we must dispose of the resource manually
+                if (connection == null)
+                {
+                    liveConnection?.Dispose();
+                }
+                //Log.CloseAndFlush();
+            }
+        }
+
+        public async ValueTask Execute(Func<SqliteConnection, ValueTask> action, SqliteConnection? connection = null)
+        {
+            await this.Execute<object?>(
+                async (newConnection) =>
+                {
+                    await action(newConnection);
+                    return null;
+                }, connection);
+        }
+
+
         private async ValueTask CreateTables(SqliteConnection connection)
         {
 #pragma warning disable SA1515
@@ -406,67 +483,5 @@ storageTrans.Commit();
             await connection.ExecuteAsync(sql);
         }
 
-        /// <summary>
-        /// Executes an anonymous method wrapped with robust logging, command line options loading, and error handling
-        /// </summary>
-        /// <typeparam name="TOptions">Options class to load from command line</typeparam>
-        /// <param name="programName">name of the executing program</param>
-        /// <param name="args">Command line arguments</param>
-        /// <param name="action">The anonymous method to execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.
-        /// The method must be async.</param>
-        /// <returns>returns an async Task</returns>
-        public async ValueTask<T> Execute<T>(Func<SqliteConnection, ValueTask<T>> action, SqliteConnection? connection = null)
-        {
-            // using (var logger = Utilities.BuildLogger(programName, EnvironmentConfig.AspNetCoreEnvironment, EnvironmentConfig.SeqServerUrl))
-            // logger.Information("Starting {ProgramName}", programName);
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            // AppDomain.CurrentDomain.UnhandledException += Utilities.CurrentDomain_UnhandledException;
-
-            SqliteConnection? liveConnection = null;
-
-            try
-            {
-                if (connection == null)
-                {
-                    liveConnection = new SqliteConnection(this.connectionString);
-                }
-                else
-                {
-                    liveConnection = connection;
-                }
-
-                T returnValue = await action(liveConnection);
-                stopwatch.Stop();
-                return returnValue;
-                // logger.Information("{ProgramName} completed in {ElapsedTime}ms", programName, stopwatch.ElapsedMilliseconds);
-            }
-            catch (Exception exc)
-            {
-                throw exc;
-                //logger.Fatal(exc, "A fatal exception prevented this application from running to completion.");
-            }
-            finally
-            {
-                // If connection wasn't passed in, we must dispose of the resource manually
-                if (connection == null)
-                {
-                    liveConnection?.Dispose();
-                }
-                //Log.CloseAndFlush();
-            }
-        }
-
-        public async ValueTask Execute(Func<SqliteConnection, ValueTask> action, SqliteConnection? connection = null)
-        {
-            await this.Execute<object?>(
-                async (newConnection) =>
-                {
-                    await action(newConnection);
-                    return null;
-                }, connection);
-        }
-        //Environment.Exit(returnStatus);
     }
 }

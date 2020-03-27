@@ -9,7 +9,7 @@ using grpc = global::Grpc.Core;
 
 namespace NWorkQueue.Models {
   /// <summary>
-  /// The service definition.
+  /// The service definition.  All should start with a verb.
   /// </summary>
   public static partial class QueueApi
   {
@@ -23,15 +23,21 @@ namespace NWorkQueue.Models {
     static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByIdResponse> __Marshaller_greet_DeleteQueueByIdResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByIdResponse.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByNameRequest> __Marshaller_greet_DeleteQueueByNameRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByNameRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByNameResponse> __Marshaller_greet_DeleteQueueByNameResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByNameResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.QueueInfoByIdRequest> __Marshaller_greet_QueueInfoByIdRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.QueueInfoByIdRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.QueueInfoResponse> __Marshaller_greet_QueueInfoResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.QueueInfoResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.QueueInfoByNameRequest> __Marshaller_greet_QueueInfoByNameRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.QueueInfoByNameRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.GetQueueInfoByIdRequest> __Marshaller_greet_GetQueueInfoByIdRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.GetQueueInfoByIdRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.GetQueueInfoResponse> __Marshaller_greet_GetQueueInfoResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.GetQueueInfoResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.GetQueueInfoByNameRequest> __Marshaller_greet_GetQueueInfoByNameRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.GetQueueInfoByNameRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::NWorkQueue.Models.StartTransactionRequest> __Marshaller_greet_StartTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.StartTransactionRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::NWorkQueue.Models.StartTransactionResponse> __Marshaller_greet_StartTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.StartTransactionResponse.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::NWorkQueue.Models.CommitTransactionRequest> __Marshaller_greet_CommitTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.CommitTransactionRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::NWorkQueue.Models.CommitTransactionResponse> __Marshaller_greet_CommitTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.CommitTransactionResponse.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::NWorkQueue.Models.RollbackTransactionRequest> __Marshaller_greet_RollbackTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.RollbackTransactionRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::NWorkQueue.Models.RollbackTransactionResponse> __Marshaller_greet_RollbackTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.RollbackTransactionResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.QueueMessageRequest> __Marshaller_greet_QueueMessageRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.QueueMessageRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.QueueMessageResponse> __Marshaller_greet_QueueMessageResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.QueueMessageResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.PullMessageRequest> __Marshaller_greet_PullMessageRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.PullMessageRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.PullMessageResponse> __Marshaller_greet_PullMessageResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.PullMessageResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.PeekMessageRequest> __Marshaller_greet_PeekMessageRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.PeekMessageRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.PeekMessageResponse> __Marshaller_greet_PeekMessageResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.PeekMessageResponse.Parser.ParseFrom);
 
     static readonly grpc::Method<global::NWorkQueue.Models.CreateQueueRequest, global::NWorkQueue.Models.CreateQueueResponse> __Method_CreateQueue = new grpc::Method<global::NWorkQueue.Models.CreateQueueRequest, global::NWorkQueue.Models.CreateQueueResponse>(
         grpc::MethodType.Unary,
@@ -61,19 +67,19 @@ namespace NWorkQueue.Models {
         __Marshaller_greet_DeleteQueueByNameRequest,
         __Marshaller_greet_DeleteQueueByNameResponse);
 
-    static readonly grpc::Method<global::NWorkQueue.Models.QueueInfoByIdRequest, global::NWorkQueue.Models.QueueInfoResponse> __Method_QueueInfoById = new grpc::Method<global::NWorkQueue.Models.QueueInfoByIdRequest, global::NWorkQueue.Models.QueueInfoResponse>(
+    static readonly grpc::Method<global::NWorkQueue.Models.GetQueueInfoByIdRequest, global::NWorkQueue.Models.GetQueueInfoResponse> __Method_GetQueueInfoById = new grpc::Method<global::NWorkQueue.Models.GetQueueInfoByIdRequest, global::NWorkQueue.Models.GetQueueInfoResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
-        "QueueInfoById",
-        __Marshaller_greet_QueueInfoByIdRequest,
-        __Marshaller_greet_QueueInfoResponse);
+        "GetQueueInfoById",
+        __Marshaller_greet_GetQueueInfoByIdRequest,
+        __Marshaller_greet_GetQueueInfoResponse);
 
-    static readonly grpc::Method<global::NWorkQueue.Models.QueueInfoByNameRequest, global::NWorkQueue.Models.QueueInfoResponse> __Method_QueueInfoByName = new grpc::Method<global::NWorkQueue.Models.QueueInfoByNameRequest, global::NWorkQueue.Models.QueueInfoResponse>(
+    static readonly grpc::Method<global::NWorkQueue.Models.GetQueueInfoByNameRequest, global::NWorkQueue.Models.GetQueueInfoResponse> __Method_GetQueueInfoByName = new grpc::Method<global::NWorkQueue.Models.GetQueueInfoByNameRequest, global::NWorkQueue.Models.GetQueueInfoResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
-        "QueueInfoByName",
-        __Marshaller_greet_QueueInfoByNameRequest,
-        __Marshaller_greet_QueueInfoResponse);
+        "GetQueueInfoByName",
+        __Marshaller_greet_GetQueueInfoByNameRequest,
+        __Marshaller_greet_GetQueueInfoResponse);
 
     static readonly grpc::Method<global::NWorkQueue.Models.StartTransactionRequest, global::NWorkQueue.Models.StartTransactionResponse> __Method_StartTransaction = new grpc::Method<global::NWorkQueue.Models.StartTransactionRequest, global::NWorkQueue.Models.StartTransactionResponse>(
         grpc::MethodType.Unary,
@@ -95,6 +101,27 @@ namespace NWorkQueue.Models {
         "RollbackTranaction",
         __Marshaller_greet_RollbackTransactionRequest,
         __Marshaller_greet_RollbackTransactionResponse);
+
+    static readonly grpc::Method<global::NWorkQueue.Models.QueueMessageRequest, global::NWorkQueue.Models.QueueMessageResponse> __Method_QueueMessage = new grpc::Method<global::NWorkQueue.Models.QueueMessageRequest, global::NWorkQueue.Models.QueueMessageResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "QueueMessage",
+        __Marshaller_greet_QueueMessageRequest,
+        __Marshaller_greet_QueueMessageResponse);
+
+    static readonly grpc::Method<global::NWorkQueue.Models.PullMessageRequest, global::NWorkQueue.Models.PullMessageResponse> __Method_PullMessages = new grpc::Method<global::NWorkQueue.Models.PullMessageRequest, global::NWorkQueue.Models.PullMessageResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "PullMessages",
+        __Marshaller_greet_PullMessageRequest,
+        __Marshaller_greet_PullMessageResponse);
+
+    static readonly grpc::Method<global::NWorkQueue.Models.PeekMessageRequest, global::NWorkQueue.Models.PeekMessageResponse> __Method_PeekMessages = new grpc::Method<global::NWorkQueue.Models.PeekMessageRequest, global::NWorkQueue.Models.PeekMessageResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "PeekMessages",
+        __Marshaller_greet_PeekMessageRequest,
+        __Marshaller_greet_PeekMessageResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -126,12 +153,12 @@ namespace NWorkQueue.Models {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.QueueInfoResponse> QueueInfoById(global::NWorkQueue.Models.QueueInfoByIdRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.GetQueueInfoResponse> GetQueueInfoById(global::NWorkQueue.Models.GetQueueInfoByIdRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.QueueInfoResponse> QueueInfoByName(global::NWorkQueue.Models.QueueInfoByNameRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.GetQueueInfoResponse> GetQueueInfoByName(global::NWorkQueue.Models.GetQueueInfoByNameRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -146,16 +173,28 @@ namespace NWorkQueue.Models {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
+      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.RollbackTransactionResponse> RollbackTranaction(global::NWorkQueue.Models.RollbackTransactionRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.QueueMessageResponse> QueueMessage(global::NWorkQueue.Models.QueueMessageRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.PullMessageResponse> PullMessages(global::NWorkQueue.Models.PullMessageRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
       /// <summary>
-      ///rpc QueueMessage
-      ///rpc PullMessage
-      ///rpc PeelMessage
       ///rpc Subscribe
       /// </summary>
       /// <param name="request">The request received from the client.</param>
       /// <param name="context">The context of the server-side call handler being invoked.</param>
       /// <returns>The response to send back to the client (wrapped by a task).</returns>
-      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.RollbackTransactionResponse> RollbackTranaction(global::NWorkQueue.Models.RollbackTransactionRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::NWorkQueue.Models.PeekMessageResponse> PeekMessages(global::NWorkQueue.Models.PeekMessageRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -249,37 +288,37 @@ namespace NWorkQueue.Models {
       {
         return CallInvoker.AsyncUnaryCall(__Method_DeleteQueueByName, null, options, request);
       }
-      public virtual global::NWorkQueue.Models.QueueInfoResponse QueueInfoById(global::NWorkQueue.Models.QueueInfoByIdRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::NWorkQueue.Models.GetQueueInfoResponse GetQueueInfoById(global::NWorkQueue.Models.GetQueueInfoByIdRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return QueueInfoById(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return GetQueueInfoById(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::NWorkQueue.Models.QueueInfoResponse QueueInfoById(global::NWorkQueue.Models.QueueInfoByIdRequest request, grpc::CallOptions options)
+      public virtual global::NWorkQueue.Models.GetQueueInfoResponse GetQueueInfoById(global::NWorkQueue.Models.GetQueueInfoByIdRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.BlockingUnaryCall(__Method_QueueInfoById, null, options, request);
+        return CallInvoker.BlockingUnaryCall(__Method_GetQueueInfoById, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.QueueInfoResponse> QueueInfoByIdAsync(global::NWorkQueue.Models.QueueInfoByIdRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.GetQueueInfoResponse> GetQueueInfoByIdAsync(global::NWorkQueue.Models.GetQueueInfoByIdRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return QueueInfoByIdAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return GetQueueInfoByIdAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.QueueInfoResponse> QueueInfoByIdAsync(global::NWorkQueue.Models.QueueInfoByIdRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.GetQueueInfoResponse> GetQueueInfoByIdAsync(global::NWorkQueue.Models.GetQueueInfoByIdRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.AsyncUnaryCall(__Method_QueueInfoById, null, options, request);
+        return CallInvoker.AsyncUnaryCall(__Method_GetQueueInfoById, null, options, request);
       }
-      public virtual global::NWorkQueue.Models.QueueInfoResponse QueueInfoByName(global::NWorkQueue.Models.QueueInfoByNameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::NWorkQueue.Models.GetQueueInfoResponse GetQueueInfoByName(global::NWorkQueue.Models.GetQueueInfoByNameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return QueueInfoByName(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return GetQueueInfoByName(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::NWorkQueue.Models.QueueInfoResponse QueueInfoByName(global::NWorkQueue.Models.QueueInfoByNameRequest request, grpc::CallOptions options)
+      public virtual global::NWorkQueue.Models.GetQueueInfoResponse GetQueueInfoByName(global::NWorkQueue.Models.GetQueueInfoByNameRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.BlockingUnaryCall(__Method_QueueInfoByName, null, options, request);
+        return CallInvoker.BlockingUnaryCall(__Method_GetQueueInfoByName, null, options, request);
       }
-      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.QueueInfoResponse> QueueInfoByNameAsync(global::NWorkQueue.Models.QueueInfoByNameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.GetQueueInfoResponse> GetQueueInfoByNameAsync(global::NWorkQueue.Models.GetQueueInfoByNameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return QueueInfoByNameAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return GetQueueInfoByNameAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.QueueInfoResponse> QueueInfoByNameAsync(global::NWorkQueue.Models.QueueInfoByNameRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.GetQueueInfoResponse> GetQueueInfoByNameAsync(global::NWorkQueue.Models.GetQueueInfoByNameRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.AsyncUnaryCall(__Method_QueueInfoByName, null, options, request);
+        return CallInvoker.AsyncUnaryCall(__Method_GetQueueInfoByName, null, options, request);
       }
       public virtual global::NWorkQueue.Models.StartTransactionResponse StartTransaction(global::NWorkQueue.Models.StartTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
@@ -313,38 +352,77 @@ namespace NWorkQueue.Models {
       {
         return CallInvoker.AsyncUnaryCall(__Method_CommitTransaction, null, options, request);
       }
-      /// <summary>
-      ///rpc QueueMessage
-      ///rpc PullMessage
-      ///rpc PeelMessage
-      ///rpc Subscribe
-      /// </summary>
-      /// <param name="request">The request to send to the server.</param>
-      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
-      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
-      /// <param name="cancellationToken">An optional token for canceling the call.</param>
-      /// <returns>The response received from the server.</returns>
       public virtual global::NWorkQueue.Models.RollbackTransactionResponse RollbackTranaction(global::NWorkQueue.Models.RollbackTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return RollbackTranaction(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
+      public virtual global::NWorkQueue.Models.RollbackTransactionResponse RollbackTranaction(global::NWorkQueue.Models.RollbackTransactionRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_RollbackTranaction, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.RollbackTransactionResponse> RollbackTranactionAsync(global::NWorkQueue.Models.RollbackTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return RollbackTranactionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.RollbackTransactionResponse> RollbackTranactionAsync(global::NWorkQueue.Models.RollbackTransactionRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_RollbackTranaction, null, options, request);
+      }
+      public virtual global::NWorkQueue.Models.QueueMessageResponse QueueMessage(global::NWorkQueue.Models.QueueMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return QueueMessage(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::NWorkQueue.Models.QueueMessageResponse QueueMessage(global::NWorkQueue.Models.QueueMessageRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_QueueMessage, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.QueueMessageResponse> QueueMessageAsync(global::NWorkQueue.Models.QueueMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return QueueMessageAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.QueueMessageResponse> QueueMessageAsync(global::NWorkQueue.Models.QueueMessageRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_QueueMessage, null, options, request);
+      }
+      public virtual global::NWorkQueue.Models.PullMessageResponse PullMessages(global::NWorkQueue.Models.PullMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return PullMessages(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::NWorkQueue.Models.PullMessageResponse PullMessages(global::NWorkQueue.Models.PullMessageRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_PullMessages, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.PullMessageResponse> PullMessagesAsync(global::NWorkQueue.Models.PullMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return PullMessagesAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.PullMessageResponse> PullMessagesAsync(global::NWorkQueue.Models.PullMessageRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_PullMessages, null, options, request);
+      }
       /// <summary>
-      ///rpc QueueMessage
-      ///rpc PullMessage
-      ///rpc PeelMessage
+      ///rpc Subscribe
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::NWorkQueue.Models.PeekMessageResponse PeekMessages(global::NWorkQueue.Models.PeekMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return PeekMessages(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
       ///rpc Subscribe
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
       /// <returns>The response received from the server.</returns>
-      public virtual global::NWorkQueue.Models.RollbackTransactionResponse RollbackTranaction(global::NWorkQueue.Models.RollbackTransactionRequest request, grpc::CallOptions options)
+      public virtual global::NWorkQueue.Models.PeekMessageResponse PeekMessages(global::NWorkQueue.Models.PeekMessageRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.BlockingUnaryCall(__Method_RollbackTranaction, null, options, request);
+        return CallInvoker.BlockingUnaryCall(__Method_PeekMessages, null, options, request);
       }
       /// <summary>
-      ///rpc QueueMessage
-      ///rpc PullMessage
-      ///rpc PeelMessage
       ///rpc Subscribe
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
@@ -352,22 +430,19 @@ namespace NWorkQueue.Models {
       /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
       /// <param name="cancellationToken">An optional token for canceling the call.</param>
       /// <returns>The call object.</returns>
-      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.RollbackTransactionResponse> RollbackTranactionAsync(global::NWorkQueue.Models.RollbackTransactionRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.PeekMessageResponse> PeekMessagesAsync(global::NWorkQueue.Models.PeekMessageRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
-        return RollbackTranactionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+        return PeekMessagesAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       /// <summary>
-      ///rpc QueueMessage
-      ///rpc PullMessage
-      ///rpc PeelMessage
       ///rpc Subscribe
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
       /// <returns>The call object.</returns>
-      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.RollbackTransactionResponse> RollbackTranactionAsync(global::NWorkQueue.Models.RollbackTransactionRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::NWorkQueue.Models.PeekMessageResponse> PeekMessagesAsync(global::NWorkQueue.Models.PeekMessageRequest request, grpc::CallOptions options)
       {
-        return CallInvoker.AsyncUnaryCall(__Method_RollbackTranaction, null, options, request);
+        return CallInvoker.AsyncUnaryCall(__Method_PeekMessages, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       protected override QueueApiClient NewInstance(ClientBaseConfiguration configuration)
@@ -385,11 +460,14 @@ namespace NWorkQueue.Models {
           .AddMethod(__Method_InitializeStorage, serviceImpl.InitializeStorage)
           .AddMethod(__Method_DeleteQueueById, serviceImpl.DeleteQueueById)
           .AddMethod(__Method_DeleteQueueByName, serviceImpl.DeleteQueueByName)
-          .AddMethod(__Method_QueueInfoById, serviceImpl.QueueInfoById)
-          .AddMethod(__Method_QueueInfoByName, serviceImpl.QueueInfoByName)
+          .AddMethod(__Method_GetQueueInfoById, serviceImpl.GetQueueInfoById)
+          .AddMethod(__Method_GetQueueInfoByName, serviceImpl.GetQueueInfoByName)
           .AddMethod(__Method_StartTransaction, serviceImpl.StartTransaction)
           .AddMethod(__Method_CommitTransaction, serviceImpl.CommitTransaction)
-          .AddMethod(__Method_RollbackTranaction, serviceImpl.RollbackTranaction).Build();
+          .AddMethod(__Method_RollbackTranaction, serviceImpl.RollbackTranaction)
+          .AddMethod(__Method_QueueMessage, serviceImpl.QueueMessage)
+          .AddMethod(__Method_PullMessages, serviceImpl.PullMessages)
+          .AddMethod(__Method_PeekMessages, serviceImpl.PeekMessages).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
@@ -402,11 +480,14 @@ namespace NWorkQueue.Models {
       serviceBinder.AddMethod(__Method_InitializeStorage, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.InitializeStorageRequest, global::NWorkQueue.Models.InitializeStorageResponse>(serviceImpl.InitializeStorage));
       serviceBinder.AddMethod(__Method_DeleteQueueById, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.DeleteQueueByIdRequest, global::NWorkQueue.Models.DeleteQueueByIdResponse>(serviceImpl.DeleteQueueById));
       serviceBinder.AddMethod(__Method_DeleteQueueByName, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.DeleteQueueByNameRequest, global::NWorkQueue.Models.DeleteQueueByNameResponse>(serviceImpl.DeleteQueueByName));
-      serviceBinder.AddMethod(__Method_QueueInfoById, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.QueueInfoByIdRequest, global::NWorkQueue.Models.QueueInfoResponse>(serviceImpl.QueueInfoById));
-      serviceBinder.AddMethod(__Method_QueueInfoByName, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.QueueInfoByNameRequest, global::NWorkQueue.Models.QueueInfoResponse>(serviceImpl.QueueInfoByName));
+      serviceBinder.AddMethod(__Method_GetQueueInfoById, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.GetQueueInfoByIdRequest, global::NWorkQueue.Models.GetQueueInfoResponse>(serviceImpl.GetQueueInfoById));
+      serviceBinder.AddMethod(__Method_GetQueueInfoByName, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.GetQueueInfoByNameRequest, global::NWorkQueue.Models.GetQueueInfoResponse>(serviceImpl.GetQueueInfoByName));
       serviceBinder.AddMethod(__Method_StartTransaction, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.StartTransactionRequest, global::NWorkQueue.Models.StartTransactionResponse>(serviceImpl.StartTransaction));
       serviceBinder.AddMethod(__Method_CommitTransaction, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.CommitTransactionRequest, global::NWorkQueue.Models.CommitTransactionResponse>(serviceImpl.CommitTransaction));
       serviceBinder.AddMethod(__Method_RollbackTranaction, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.RollbackTransactionRequest, global::NWorkQueue.Models.RollbackTransactionResponse>(serviceImpl.RollbackTranaction));
+      serviceBinder.AddMethod(__Method_QueueMessage, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.QueueMessageRequest, global::NWorkQueue.Models.QueueMessageResponse>(serviceImpl.QueueMessage));
+      serviceBinder.AddMethod(__Method_PullMessages, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.PullMessageRequest, global::NWorkQueue.Models.PullMessageResponse>(serviceImpl.PullMessages));
+      serviceBinder.AddMethod(__Method_PeekMessages, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NWorkQueue.Models.PeekMessageRequest, global::NWorkQueue.Models.PeekMessageResponse>(serviceImpl.PeekMessages));
     }
 
   }

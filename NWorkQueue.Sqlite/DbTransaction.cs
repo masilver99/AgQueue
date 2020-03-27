@@ -2,11 +2,11 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 using Microsoft.Data.Sqlite;
-using NWorkQueue.Common;
+using NWorkQueue.Server.Common;
 
 namespace NWorkQueue.Sqlite
 {
-/*    /// <summary>
+    /// <summary>
     /// Wrapper around SQLite transaction.  Used by storage classes
     /// </summary>
     internal class DbTransaction : IStorageTransaction
@@ -21,7 +21,7 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <summary>
-        /// Gets the internal SQLite transaction
+        /// Gets the internal SQLite transaction.
         /// </summary>
         internal SqliteTransaction SqliteTransaction { get; }
 
@@ -37,5 +37,5 @@ namespace NWorkQueue.Sqlite
             this.SqliteTransaction.Rollback();
         }
     }
-*/
+
 }
