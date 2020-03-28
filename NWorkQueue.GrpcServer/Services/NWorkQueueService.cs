@@ -94,5 +94,20 @@ namespace NWorkQueue.GrpcServer
             await this.internalApi.RollbackTransaction(request.TransId);
             return new RollbackTransactionResponse();
         }
+
+        public override async Task<QueueMessageResponse> QueueMessage(QueueMessageRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override async Task<PullMessageResponse> PullMessages(PullMessageRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override async Task<PeekMessageResponse> PeekMessages(PeekMessageRequest request, ServerCallContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

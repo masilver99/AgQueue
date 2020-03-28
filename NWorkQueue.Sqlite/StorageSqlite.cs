@@ -207,7 +207,7 @@ namespace NWorkQueue.Sqlite
             */
 
         /// <inheritdoc/>
-        public async ValueTask<long> AddMessage(long transId, IStorageTransaction? storageTrans, long queueId, byte[] payload, DateTime addDateTime, string metaData, int priority, int maxRetries, DateTime expiryDateTime, int correlation, string groupName)
+        public async ValueTask<long> AddMessage(long transId, IStorageTransaction storageTran, long queueId, byte[] payload, DateTime addDateTime, string metaData, int priority, int maxRetries, DateTime expiryDateTime, int correlation, string groupName)
         {
             const string sql = "INSERT INTO Messages (QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Payload, CorrelationId, GroupName, Metadata) VALUES " +
                       "(@QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Payload, @CorrelationId, @GroupName, @Metadata);" +
@@ -231,10 +231,11 @@ namespace NWorkQueue.Sqlite
                     Metadata = metaData
                 };
 
-                return await connection.ExecuteScalarAsync<long>(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: param);
+                return await connection.ExecuteScalarAsync<long>(sql, transaction: storageTran.SqliteTransaction(), param: param);
             });
         }
 
+        /*
         /// <inheritdoc/>
         void IStorage.DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans)
         {

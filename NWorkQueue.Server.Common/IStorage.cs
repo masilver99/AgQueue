@@ -107,24 +107,24 @@ namespace NWorkQueue.Server.Common
         /// <returns>Transaction object or null if not found.</returns>
         ValueTask<Transaction?> GetTransactionById(long transId);
 
-        /*
-/// <summary>
-/// Add a message to the storage.
-/// </summary>
-/// <param name="transId">Queue Transaction ID.</param>
-/// <param name="storageTrans">Storage transaction.</param>
-/// <param name="nextId">The ID to be used at the primary id, i.e. the message id.</param>
-/// <param name="queueId">ID of the storage queue.</param>
-/// <param name="compressedMessage">Message data, compressed.</param>
-/// <param name="addDateTime">Datetime the message was added.</param>
-/// <param name="metaData">String metadata on message data.</param>
-/// <param name="priority">Message priority.</param>
-/// <param name="maxRetries">How many retries before expires.</param>
-/// <param name="expiryDateTime">Datetime the message will expire.</param>
-/// <param name="correlation">Correlation ID.</param>
-/// <param name="groupName">Group name.</param>
-void AddMessage(long transId, IStorageTransaction? storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "");
+        /// <summary>
+        /// Add a message to the storage.
+        /// </summary>
+        /// <param name="transId">Queue Transaction ID.</param>
+        /// <param name="storageTran">Storage transaction.</param>
+        /// <param name="queueId">ID of the storage queue.</param>
+        /// <param name="payload">Message data.</param>
+        /// <param name="addDateTime">Datetime the message was added.</param>
+        /// <param name="metaData">String metadata on message data.</param>
+        /// <param name="priority">Message priority.</param>
+        /// <param name="maxRetries">How many retries before expires.</param>
+        /// <param name="expiryDateTime">Datetime the message will expire.</param>
+        /// <param name="correlation">Correlation ID.</param>
+        /// <param name="groupName">Group name.</param>
+        /// <returns>Message ID.</returns>
+        ValueTask<long> AddMessage(long transId, IStorageTransaction storageTran, long queueId, byte[] payload, DateTime addDateTime, string metaData, int priority, int maxRetries, DateTime expiryDateTime, int correlation, string groupName)
 
+            /*
 /// <summary>
 /// Returns message total message count for a queue.
 /// </summary>
