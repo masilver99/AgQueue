@@ -114,7 +114,7 @@
             Gets string group name.  Used by external application for grouping purposes.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.Models.Message.Data">
+        <member name="P:NWorkQueue.Common.Models.Message.Payload">
             <summary>
             Gets actual message data.
             </summary>

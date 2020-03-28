@@ -98,107 +98,6 @@ namespace NWorkQueue.Sqlite
             });
         }
 
-
-        public async ValueTask CommitTransaction(long transId)
-        {
-            throw new NotImplementedException();
-            /*
-            var storageTransaction = this.storage.BeginStorageTransaction();
-
-            // Check if transaction has expired
-            var transModel = this.storage.GetTransactionById(this.Id, storageTransaction);
-            if (transModel == null)
-            {
-                return TransactionResult.NotFound;
-            }
-
-            if (!transModel.Active)
-            {
-                return TransactionResult.Closed;
-            }
-
-            if (transModel.ExpiryDateTime <= DateTime.Now)
-            {
-                // Took too long to run transaction, so now we have to rollback :-(
-                this.RollbackTransaction(this.Id);
-                return TransactionResult.Expired;
-            }
-
-            var commitDateTime = DateTime.Now;
-
-            // Updated newly added messages
-            this.storage.CommitAddedMessages(this.Id, storageTransaction);
-
-            // Update newly completed messages
-            this.storage.CommitPulledMessages(this.Id, storageTransaction, commitDateTime);
-
-            // Update Transaction record
-            this.storage.CommitMessageTransaction(this.Id, storageTransaction, commitDateTime);
-
-            storageTransaction.Commit();
-            return TransactionResult.Success;
-            */
-        }
-
-        public ValueTask RollBackTransaction(long transId)
-        {
-            throw new NotImplementedException();
-            /*
-var storageTrans = this.storage.BeginStorageTransaction();
-var closeDateTime = DateTime.Now;
-
-// Close the transaction
-this.storage.CloseTransaction(transId, storageTrans, closeDateTime);
-
-// Removed messages added during the transaction
-this.storage.DeleteMessagesByTransId(transId, storageTrans);
-
-// Check if open messages are at the retry threshold, if so , mark as closed
-this.storage.CloseRetriedMessages(transId, storageTrans, closeDateTime);
-
-// Check if open messages are past the expiry date, if so mark as such
-this.storage.ExpireOlderMessages(transId, storageTrans, closeDateTime, closeDateTime);
-
-// All other records, increment retry count, mark record as active and ready to be pulled again
-this.storage.UpdateRetriesOnRollbackedMessages(transId, storageTrans);
-
-storageTrans.Commit();
-*/
-
-        }
-        /*
-        /// <inheritdoc/>
-        public void CloseTransaction(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
-        {
-            const string sql = "Update Transactions SET EndDateTime = @EndDateTime where Id = @tranId";
-            this.connection.Execute(sql, new { transId, EndDateTime = closeDateTime }, (storageTrans as DbTransaction)?.SqliteTransaction);
-        }
-
-        /// <inheritdoc/>
-        public void CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
-        {
-            const string sql = "UPDATE Transactions SET Active = 0, EndDateTime = @EndDateTime WHERE Id = @TranId;";
-            this.connection.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: new { TranId = transId, EndDateTime = commitDateTime });
-        }
-
-        #endregion
-
-        #region Queue methods
-        
-        /// <inheritdoc/>
-        public long GetMaxQueueId()
-        {
-            const string sql = "SELECT Max(ID) FROM Queues;";
-            var id = this.connection.ExecuteScalar<long?>(sql);
-            if (id.HasValue)
-            {
-                return id.Value;
-            }
-
-            return 0;
-        }
-        */
-
         /// <inheritdoc/>
         public async ValueTask<long> AddQueue(string name)
         {
@@ -242,19 +141,6 @@ storageTrans.Commit();
         /*
         
         #region Message methods
-
-        /// <inheritdoc/>
-        public long GetMaxMessageId()
-        {
-            const string sql = "SELECT Max(ID) FROM Messages;";
-            var id = this.connection.ExecuteScalar<int?>(sql);
-            if (id.HasValue)
-            {
-                return id.Value + 1;
-            }
-
-            return 0;
-        }
 
         /// <inheritdoc/>
         public void DeleteMessagesByTransId(long transId, IStorageTransaction storageTrans)
@@ -318,30 +204,35 @@ storageTrans.Commit();
             const string sql = "SELECT count(*) FROM Messages m WHERE m.QueueId = @QueueId AND m.State = @State;";
             return this.connection.ExecuteScalar<long>(sql, new { QueueId = queueId, State = MessageState.Active.Value });
         }
+            */
 
         /// <inheritdoc/>
-        public void AddMessage(long transId, IStorageTransaction? storageTrans, long nextId, long queueId, byte[] compressedMessage, DateTime addDateTime, string metaData = "", int priority = 0, int maxRetries = 3, DateTime? expiryDateTime = null, int correlation = 0, string groupName = "")
+        public async ValueTask<long> AddMessage(long transId, IStorageTransaction? storageTrans, long queueId, byte[] payload, DateTime addDateTime, string metaData, int priority, int maxRetries, DateTime expiryDateTime, int correlation, string groupName)
         {
-            const string sql = "INSERT INTO Messages (Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Data, CorrelationId, GroupName, Metadata) VALUES " +
-                      "(@Id, @QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Data, @CorrelationId, @GroupName, @Metadata);";
-            var param = new
-            {
-                Id = nextId,
-                QueueId = queueId,
-                TransactionId = transId,
-                TransactionAction = TransactionAction.Add.Value,
-                State = MessageState.InTransaction.Value,
-                AddDateTime = addDateTime,
-                Priority = priority,
-                MaxRetries = maxRetries,
-                ExpiryDate = expiryDateTime ?? DateTime.MaxValue,
-                Data = compressedMessage,
-                CorrelationId = correlation,
-                GroupName = groupName,
-                Metadata = metaData
-            };
+            const string sql = "INSERT INTO Messages (QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Payload, CorrelationId, GroupName, Metadata) VALUES " +
+                      "(@QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Payload, @CorrelationId, @GroupName, @Metadata);" +
+                      "SELECT last_insert_rowid();";
 
-            this.connection.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: param);
+            return await this.Execute<long>(async (connection) =>
+            {
+                var param = new
+                {
+                    QueueId = queueId,
+                    TransactionId = transId,
+                    TransactionAction = TransactionAction.Add.Value,
+                    State = MessageState.InTransaction.Value,
+                    AddDateTime = addDateTime,
+                    Priority = priority,
+                    MaxRetries = maxRetries,
+                    ExpiryDate = expiryDateTime,
+                    Payload = payload,
+                    CorrelationId = correlation,
+                    GroupName = groupName,
+                    Metadata = metaData
+                };
+
+                return await connection.ExecuteScalarAsync<long>(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: param);
+            });
         }
 
         /// <inheritdoc/>
@@ -452,8 +343,8 @@ storageTrans.Commit();
                 "Create TABLE IF NOT EXISTS Messages " +
                 "(Id INTEGER PRIMARY KEY," +
                 " QueueId INTEGER NOT NULL, " +
-                " TransactionId INTEGER," +
-                " TransactionAction INTEGER," +
+                " TransactionId INTEGER, " +
+                " TransactionAction INTEGER, " +
                 " State INTEGER NOT NULL, " +
                 " AddDateTime DATETIME NOT NULL," +
                 " CloseDateTime DATETIME, " +
@@ -464,10 +355,18 @@ storageTrans.Commit();
                 " CorrelationId INTEGER, " +
                 " GroupName TEXT, " +
                 " Metadata TEXT, " +
-                " Data BLOB," +
+                " Payload BLOB," +
                 " FOREIGN KEY(QueueId) REFERENCES Queues(Id), " +
                 " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
-
+                /*
+                "Create TABLE IF NOT EXISTS MessageTransactions " +
+                "(TransactionId INTEGER, " +
+                " MessageId INTEGER, " +
+                " TransactionStatus INTEGER, " +
+                " PRIMARY KEY(TransactionId, MessageId), " +
+                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id), " +
+                " FOREIGN KEY(MessageId) REFERENCES Messages(Id));";
+                */
             await connection.ExecuteAsync(sql);
 #pragma warning restore SA1515
         }

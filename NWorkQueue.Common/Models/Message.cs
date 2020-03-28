@@ -71,11 +71,11 @@ namespace NWorkQueue.Common.Models
         /// <summary>
         /// Gets string group name.  Used by external application for grouping purposes.
         /// </summary>
-        public string Group { get; }
+        public string? Group { get; }
 
         /// <summary>
         /// Gets actual message data.
         /// </summary>
-        public byte[] Data { get; }
+        public byte[]? Payload { get; }
     }
 }

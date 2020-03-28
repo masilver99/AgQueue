@@ -212,17 +212,6 @@
             Rollsback the transaction, usually this reprents a database transaction
             </summary>
         </member>
-        <member name="T:NWorkQueue.Server.Common.Message">
-            <summary>
-            APIS's for accessing and manging queue messages.
-            </summary>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Message.#ctor(NWorkQueue.Server.Common.IStorage)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NWorkQueue.Server.Common.Message"/> class.
-            </summary>
-            <param name="storage">Storage library.</param>
-        </member>
         <member name="T:NWorkQueue.Server.Common.ResultCode">
             <summary>
             Result codes from internal API calls.  This currently map directly to gRPC status codes, but

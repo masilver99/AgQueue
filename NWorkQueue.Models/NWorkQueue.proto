@@ -93,29 +93,33 @@ message RollbackTransactionResponse {
 }
 
 message QueueMessageRequest {
-  /// <param name="queueId">The queue id to add the message to.</param>
+  // Queue Transaction id.  All messages must be added in a transaction.
+  int64 TransId = 1;
+  Message message = 2;
+}
+
+message Message {
+  // The queue id to add the message to.
   int64 QueueId = 1;
-  /// <param name="transId">Queue Transaction id.  All messages must be added in a transaction.</param>
-  int64 TransId = 2;
-  /// <param name="message">Message object to be serialized.</param>
-  bytes Message = 3;
-  /// <param name="metaData">String of optional data describing the message.</param>
-  string MetaData = 4;
-  /// <param name="priority">Message priority.  Lower the number, the higher the priority.</param>
-  int32 Priority = 5;
-  /// <param name="maxRetries">How many failures before the message will be expired.</param>
-  int32 MaxRetries = 6;
-  /// <param name="rawExpiryDateTime">Datetime that the message will expire if it's not already been processed.</param>
-  google.protobuf.Timestamp RawExpiryDateTime = 7;
-  /// <param name="correlation">Optional correlation id.  ID's are defined by the calling application.</param>
-  int32 Correlation = 8;
-  /// <param name="groupName" >Optional group string.  Defined by calling application.</param>
-  string GroupName = 9;
+  // Message object to be serialized.
+  bytes Message = 2;
+  // String of optional data describing the message.
+  string MetaData = 3;
+  // Message priority.  Lower the number, the higher the priority.
+  int32 Priority = 4;
+  // tries">How many failures before the message will be expired.
+  int32 MaxRetries = 5;
+  // Datetime that the message will expire if it's not already been processed.
+  google.protobuf.Timestamp RawExpiryDateTime = 6;
+  // Optional correlation id. ID's are defined by the calling application.
+  int32 Correlation = 7;
+  // Optional group string. Defined by calling application.
+  string GroupName = 8;
 }
 
 message QueueMessageResponse {
   int64 TransId = 1;
-  int64 MessageId = 2
+  int64 MessageId = 2;
 }
 
 message PullMessageRequest {
