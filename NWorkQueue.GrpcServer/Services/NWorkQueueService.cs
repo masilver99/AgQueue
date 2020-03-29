@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using NWorkQueue.Server.Common.Extensions;
 using NWorkQueue.Server.Common;
 using NWorkQueue.Models;
+using NWorkQueue.Common;
 
 namespace NWorkQueue.GrpcServer
 {
@@ -97,7 +98,9 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<QueueMessageResponse> QueueMessage(QueueMessageRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            return await this.internalApi.QueueMessage(
+                request.TransId, 
+                request.Message.QueueId);
         }
 
         public override async Task<PullMessageResponse> PullMessages(PullMessageRequest request, ServerCallContext context)

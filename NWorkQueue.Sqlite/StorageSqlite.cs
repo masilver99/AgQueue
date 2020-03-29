@@ -207,7 +207,7 @@ namespace NWorkQueue.Sqlite
             */
 
         /// <inheritdoc/>
-        public async ValueTask<long> AddMessage(long transId, IStorageTransaction storageTran, long queueId, byte[] payload, DateTime addDateTime, string metaData, int priority, int maxRetries, DateTime expiryDateTime, int correlation, string groupName)
+        public async ValueTask<long> AddMessage(long transId, IStorageTransaction storageTran, long queueId, byte[] payload, DateTime addDateTime, string metaData, int priority, int maxRetries, DateTime? expiryDateTime, int correlation, string groupName)
         {
             const string sql = "INSERT INTO Messages (QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Payload, CorrelationId, GroupName, Metadata) VALUES " +
                       "(@QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Payload, @CorrelationId, @GroupName, @Metadata);" +
@@ -352,7 +352,7 @@ namespace NWorkQueue.Sqlite
                 " Priority INTEGER NOT NULL, " +
                 " MaxRetries INTEGER NOT NULL, " +
                 " Retries INTEGER NOT NULL, " +
-                " ExpiryDateTime DateTime NOT NULL, " +
+                " ExpiryDateTime DateTime NULL, " + // Null means it won't expire.
                 " CorrelationId INTEGER, " +
                 " GroupName TEXT, " +
                 " Metadata TEXT, " +

@@ -122,7 +122,7 @@ namespace NWorkQueue.Server.Common
         /// <param name="correlation">Correlation ID.</param>
         /// <param name="groupName">Group name.</param>
         /// <returns>Message ID.</returns>
-        ValueTask<long> AddMessage(long transId, IStorageTransaction storageTran, long queueId, byte[] payload, DateTime addDateTime, string metaData, int priority, int maxRetries, DateTime expiryDateTime, int correlation, string groupName)
+        ValueTask<long> AddMessage(long transId, IStorageTransaction storageTran, long queueId, byte[] payload, DateTime addDateTime, string metaData, int priority, int maxRetries, DateTime? expiryDateTime, int correlation, string groupName);
 
             /*
 /// <summary>

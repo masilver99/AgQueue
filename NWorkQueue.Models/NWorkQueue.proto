@@ -95,7 +95,7 @@ message RollbackTransactionResponse {
 message QueueMessageRequest {
   // Queue Transaction id.  All messages must be added in a transaction.
   int64 TransId = 1;
-  Message message = 2;
+  Message Message = 2;
 }
 
 message Message {
@@ -109,8 +109,8 @@ message Message {
   int32 Priority = 4;
   // tries">How many failures before the message will be expired.
   int32 MaxRetries = 5;
-  // Datetime that the message will expire if it's not already been processed.
-  google.protobuf.Timestamp RawExpiryDateTime = 6;
+  // Message will expire after this many minutes if not already processed or in a transaction. Zero indicates no expiration.
+  int32 ExpiryInMinutes = 6;
   // Optional correlation id. ID's are defined by the calling application.
   int32 Correlation = 7;
   // Optional group string. Defined by calling application.

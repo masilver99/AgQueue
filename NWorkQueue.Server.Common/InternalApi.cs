@@ -225,10 +225,10 @@ namespace NWorkQueue.Server.Common
         /// <returns>ValueTask.</returns>
         public async ValueTask RollbackTransaction(long transId)
         {
+            // Perform house cleaning (expire expired trans and messages)
+
             // Check transaction is exists and is active
             await this.ConfirmTransactionExistsAndIsActive(transId);
-
-            // Perform transaction housekeeping.  Is it expired?
 
             var storageTrans = this.storage.BeginStorageTransaction();
 
@@ -236,6 +236,7 @@ namespace NWorkQueue.Server.Common
             {
                 // Change status of added messages
                 // Change status of pulled messages
+                    // increment retry count and abort message past retry count
 
                 // Mark Transaction complete
                 await this.storage.UpdateTransactionState(transId, TransactionState.RolledBack, DateTime.Now);
@@ -248,6 +249,44 @@ namespace NWorkQueue.Server.Common
                 storageTrans.Rollback();
                 throw;
             }
+        }
+
+        public async ValueTask<long> QueueMessage(long transId, long queueId)
+        {
+            var startDateTime = DateTime.Now;
+
+            // Perform house cleaning (expire expired trans and messages)
+            await this.PerformHouseCleaning(startDateTime);
+
+            // Check transaction exists and is active
+            await this.ConfirmTransactionExistsAndIsActive(transId);
+
+            // Does queue exist
+            var queueInfo = this.storage.GetQueueInfoById(queueId);
+            if (queueInfo == null)
+            {
+                throw new WorkQueueException($"Queue {queueId} not found.");
+            }
+
+            return await this.storage.AddMessage(transId,);
+        }
+
+        /// <summary>
+        /// Expires transactions, message and checks message counts, maybe.
+        /// </summary>
+        /// <param name="currentTime">The current time is passed in so it is consistent with the time used in the calling procedure.</param>
+        /// <returns>ValueTask</returns>
+        private async ValueTask PerformHouseCleaning(DateTime currentTime)
+        {
+            // Check is any active transactions have expired
+                // Start db transaction
+                // Mark trans as closed due to expiry
+                // Delete any added messages (may want to mark as orphaned, instead of deleting)
+                // Removed trans info from pulled messages
+                // Commit db transaction
+            // Check for any active but expired Messages (NOT IN A TRANSACTION) (Messages in an active transaction won't expired (they are safe until the transaction commits or rollbacks))
+                // Mark them as expired
+            // Check for active messages at or past the retry count
         }
     }
 }

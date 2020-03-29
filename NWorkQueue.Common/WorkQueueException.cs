@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace NWorkQueue.Common
+{
+    /// <summary>
+    /// Exception thrown for unique WorkQueue exceptions.
+    /// </summary>
+    public class WorkQueueException : Exception
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorkQueueException"/> class.
+        /// </summary>
+        /// <param name="message">Error message.</param>
+        public WorkQueueException(string? message)
+            : base(message)
+        {
+        }
+    }
+}
