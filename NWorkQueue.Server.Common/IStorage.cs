@@ -111,7 +111,6 @@ namespace NWorkQueue.Server.Common
         /// Add a message to the storage.
         /// </summary>
         /// <param name="transId">Queue Transaction ID.</param>
-        /// <param name="storageTran">Storage transaction.</param>
         /// <param name="queueId">ID of the storage queue.</param>
         /// <param name="payload">Message data.</param>
         /// <param name="addDateTime">Datetime the message was added.</param>
@@ -121,17 +120,22 @@ namespace NWorkQueue.Server.Common
         /// <param name="expiryDateTime">Datetime the message will expire.</param>
         /// <param name="correlation">Correlation ID.</param>
         /// <param name="groupName">Group name.</param>
+        /// <param name="transactionAction">Always will be "add".</param>
+        /// <param name="messageState">"Always will be in transaction.</param>
         /// <returns>Message ID.</returns>
-        ValueTask<long> AddMessage(long transId, IStorageTransaction storageTran, long queueId, byte[] payload, DateTime addDateTime, string metaData, int priority, int maxRetries, DateTime? expiryDateTime, int correlation, string groupName);
-
-            /*
-/// <summary>
-/// Returns message total message count for a queue.
-/// </summary>
-/// <param name="queueId">ID of the message queue.</param>
-/// <returns>Returns the count.</returns>
-long GetMessageCount(long queueId);
-*/
+        ValueTask<long> AddMessage(
+            long transId,
+            long queueId,
+            byte[] payload,
+            DateTime addDateTime,
+            string metaData,
+            int priority,
+            int maxRetries,
+            DateTime? expiryDateTime,
+            int correlation,
+            string groupName,
+            int transactionAction,
+            int messageState);
 
         /// <summary>
         /// Returns the id and name of the Queue.  If no queue is found, returns null.
@@ -160,6 +164,8 @@ long GetMessageCount(long queueId);
         /// <param name="expiryDateTime">When the transaction will end.</param>
         /// <returns>Returns transaction ID.</returns>
         ValueTask<long> StartTransaction(DateTime startDateTime, DateTime expiryDateTime);
+
+        ValueTask<int> UpdateMessages(IStorageTransaction storageTrans, long transId, int transactionAction, int oldMessageState, int newMessageState);
 
         /// <summary>
         /// Extends the transaction's expiration datetime.

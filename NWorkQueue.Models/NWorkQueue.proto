@@ -83,6 +83,8 @@ message CommitTransactionRequest {
 }
 
 message CommitTransactionResponse {
+  int32 MessagesAdded = 1;
+  int32 MessagesPulled = 2;
 }
 
 message RollbackTransactionRequest {
@@ -115,6 +117,8 @@ message Message {
   int32 Correlation = 7;
   // Optional group string. Defined by calling application.
   string GroupName = 8;
+  // Message Payload (optional)
+  bytes Payload = 9;
 }
 
 message QueueMessageResponse {

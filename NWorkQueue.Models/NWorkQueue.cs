@@ -39,42 +39,44 @@ namespace NWorkQueue.Models {
             "ZXRlUXVldWVCeU5hbWVSZXNwb25zZSIuChdTdGFydFRyYW5zYWN0aW9uUmVx",
             "dWVzdBITCgtFeHBpcmVJbk1pbhgBIAEoBSIrChhTdGFydFRyYW5zYWN0aW9u",
             "UmVzcG9uc2USDwoHVHJhbnNJZBgBIAEoAyIrChhDb21taXRUcmFuc2FjdGlv",
-            "blJlcXVlc3QSDwoHVHJhbnNJZBgBIAEoAyIbChlDb21taXRUcmFuc2FjdGlv",
-            "blJlc3BvbnNlIi0KGlJvbGxiYWNrVHJhbnNhY3Rpb25SZXF1ZXN0Eg8KB1Ry",
-            "YW5zSWQYASABKAMiHQobUm9sbGJhY2tUcmFuc2FjdGlvblJlc3BvbnNlIkcK",
-            "E1F1ZXVlTWVzc2FnZVJlcXVlc3QSDwoHVHJhbnNJZBgBIAEoAxIfCgdNZXNz",
-            "YWdlGAIgASgLMg4uZ3JlZXQuTWVzc2FnZSKkAQoHTWVzc2FnZRIPCgdRdWV1",
-            "ZUlkGAEgASgDEg8KB01lc3NhZ2UYAiABKAwSEAoITWV0YURhdGEYAyABKAkS",
-            "EAoIUHJpb3JpdHkYBCABKAUSEgoKTWF4UmV0cmllcxgFIAEoBRIXCg9FeHBp",
-            "cnlJbk1pbnV0ZXMYBiABKAUSEwoLQ29ycmVsYXRpb24YByABKAUSEQoJR3Jv",
-            "dXBOYW1lGAggASgJIjoKFFF1ZXVlTWVzc2FnZVJlc3BvbnNlEg8KB1RyYW5z",
-            "SWQYASABKAMSEQoJTWVzc2FnZUlkGAIgASgDIjYKElB1bGxNZXNzYWdlUmVx",
-            "dWVzdBIPCgdRdWV1ZUlkGAEgASgDEg8KB1RyYW5zSWQYAiABKAMiJgoTUHVs",
-            "bE1lc3NhZ2VSZXNwb25zZRIPCgdUcmFuc0lkGAIgASgDIiUKElBlZWtNZXNz",
-            "YWdlUmVxdWVzdBIPCgdRdWV1ZUlkGAEgASgDIhUKE1BlZWtNZXNzYWdlUmVz",
-            "cG9uc2Uy2QcKCFF1ZXVlQXBpEkQKC0NyZWF0ZVF1ZXVlEhkuZ3JlZXQuQ3Jl",
-            "YXRlUXVldWVSZXF1ZXN0GhouZ3JlZXQuQ3JlYXRlUXVldWVSZXNwb25zZRJW",
-            "ChFJbml0aWFsaXplU3RvcmFnZRIfLmdyZWV0LkluaXRpYWxpemVTdG9yYWdl",
-            "UmVxdWVzdBogLmdyZWV0LkluaXRpYWxpemVTdG9yYWdlUmVzcG9uc2USUAoP",
-            "RGVsZXRlUXVldWVCeUlkEh0uZ3JlZXQuRGVsZXRlUXVldWVCeUlkUmVxdWVz",
-            "dBoeLmdyZWV0LkRlbGV0ZVF1ZXVlQnlJZFJlc3BvbnNlElYKEURlbGV0ZVF1",
-            "ZXVlQnlOYW1lEh8uZ3JlZXQuRGVsZXRlUXVldWVCeU5hbWVSZXF1ZXN0GiAu",
-            "Z3JlZXQuRGVsZXRlUXVldWVCeU5hbWVSZXNwb25zZRJPChBHZXRRdWV1ZUlu",
-            "Zm9CeUlkEh4uZ3JlZXQuR2V0UXVldWVJbmZvQnlJZFJlcXVlc3QaGy5ncmVl",
-            "dC5HZXRRdWV1ZUluZm9SZXNwb25zZRJTChJHZXRRdWV1ZUluZm9CeU5hbWUS",
-            "IC5ncmVldC5HZXRRdWV1ZUluZm9CeU5hbWVSZXF1ZXN0GhsuZ3JlZXQuR2V0",
-            "UXVldWVJbmZvUmVzcG9uc2USUwoQU3RhcnRUcmFuc2FjdGlvbhIeLmdyZWV0",
-            "LlN0YXJ0VHJhbnNhY3Rpb25SZXF1ZXN0Gh8uZ3JlZXQuU3RhcnRUcmFuc2Fj",
-            "dGlvblJlc3BvbnNlElYKEUNvbW1pdFRyYW5zYWN0aW9uEh8uZ3JlZXQuQ29t",
-            "bWl0VHJhbnNhY3Rpb25SZXF1ZXN0GiAuZ3JlZXQuQ29tbWl0VHJhbnNhY3Rp",
-            "b25SZXNwb25zZRJbChJSb2xsYmFja1RyYW5hY3Rpb24SIS5ncmVldC5Sb2xs",
-            "YmFja1RyYW5zYWN0aW9uUmVxdWVzdBoiLmdyZWV0LlJvbGxiYWNrVHJhbnNh",
-            "Y3Rpb25SZXNwb25zZRJHCgxRdWV1ZU1lc3NhZ2USGi5ncmVldC5RdWV1ZU1l",
-            "c3NhZ2VSZXF1ZXN0GhsuZ3JlZXQuUXVldWVNZXNzYWdlUmVzcG9uc2USRQoM",
-            "UHVsbE1lc3NhZ2VzEhkuZ3JlZXQuUHVsbE1lc3NhZ2VSZXF1ZXN0GhouZ3Jl",
-            "ZXQuUHVsbE1lc3NhZ2VSZXNwb25zZRJFCgxQZWVrTWVzc2FnZXMSGS5ncmVl",
-            "dC5QZWVrTWVzc2FnZVJlcXVlc3QaGi5ncmVldC5QZWVrTWVzc2FnZVJlc3Bv",
-            "bnNlQhSqAhFOV29ya1F1ZXVlLk1vZGVsc2IGcHJvdG8z"));
+            "blJlcXVlc3QSDwoHVHJhbnNJZBgBIAEoAyJKChlDb21taXRUcmFuc2FjdGlv",
+            "blJlc3BvbnNlEhUKDU1lc3NhZ2VzQWRkZWQYASABKAUSFgoOTWVzc2FnZXNQ",
+            "dWxsZWQYAiABKAUiLQoaUm9sbGJhY2tUcmFuc2FjdGlvblJlcXVlc3QSDwoH",
+            "VHJhbnNJZBgBIAEoAyIdChtSb2xsYmFja1RyYW5zYWN0aW9uUmVzcG9uc2Ui",
+            "RwoTUXVldWVNZXNzYWdlUmVxdWVzdBIPCgdUcmFuc0lkGAEgASgDEh8KB01l",
+            "c3NhZ2UYAiABKAsyDi5ncmVldC5NZXNzYWdlIrUBCgdNZXNzYWdlEg8KB1F1",
+            "ZXVlSWQYASABKAMSDwoHTWVzc2FnZRgCIAEoDBIQCghNZXRhRGF0YRgDIAEo",
+            "CRIQCghQcmlvcml0eRgEIAEoBRISCgpNYXhSZXRyaWVzGAUgASgFEhcKD0V4",
+            "cGlyeUluTWludXRlcxgGIAEoBRITCgtDb3JyZWxhdGlvbhgHIAEoBRIRCglH",
+            "cm91cE5hbWUYCCABKAkSDwoHUGF5bG9hZBgJIAEoDCI6ChRRdWV1ZU1lc3Nh",
+            "Z2VSZXNwb25zZRIPCgdUcmFuc0lkGAEgASgDEhEKCU1lc3NhZ2VJZBgCIAEo",
+            "AyI2ChJQdWxsTWVzc2FnZVJlcXVlc3QSDwoHUXVldWVJZBgBIAEoAxIPCgdU",
+            "cmFuc0lkGAIgASgDIiYKE1B1bGxNZXNzYWdlUmVzcG9uc2USDwoHVHJhbnNJ",
+            "ZBgCIAEoAyIlChJQZWVrTWVzc2FnZVJlcXVlc3QSDwoHUXVldWVJZBgBIAEo",
+            "AyIVChNQZWVrTWVzc2FnZVJlc3BvbnNlMtkHCghRdWV1ZUFwaRJECgtDcmVh",
+            "dGVRdWV1ZRIZLmdyZWV0LkNyZWF0ZVF1ZXVlUmVxdWVzdBoaLmdyZWV0LkNy",
+            "ZWF0ZVF1ZXVlUmVzcG9uc2USVgoRSW5pdGlhbGl6ZVN0b3JhZ2USHy5ncmVl",
+            "dC5Jbml0aWFsaXplU3RvcmFnZVJlcXVlc3QaIC5ncmVldC5Jbml0aWFsaXpl",
+            "U3RvcmFnZVJlc3BvbnNlElAKD0RlbGV0ZVF1ZXVlQnlJZBIdLmdyZWV0LkRl",
+            "bGV0ZVF1ZXVlQnlJZFJlcXVlc3QaHi5ncmVldC5EZWxldGVRdWV1ZUJ5SWRS",
+            "ZXNwb25zZRJWChFEZWxldGVRdWV1ZUJ5TmFtZRIfLmdyZWV0LkRlbGV0ZVF1",
+            "ZXVlQnlOYW1lUmVxdWVzdBogLmdyZWV0LkRlbGV0ZVF1ZXVlQnlOYW1lUmVz",
+            "cG9uc2USTwoQR2V0UXVldWVJbmZvQnlJZBIeLmdyZWV0LkdldFF1ZXVlSW5m",
+            "b0J5SWRSZXF1ZXN0GhsuZ3JlZXQuR2V0UXVldWVJbmZvUmVzcG9uc2USUwoS",
+            "R2V0UXVldWVJbmZvQnlOYW1lEiAuZ3JlZXQuR2V0UXVldWVJbmZvQnlOYW1l",
+            "UmVxdWVzdBobLmdyZWV0LkdldFF1ZXVlSW5mb1Jlc3BvbnNlElMKEFN0YXJ0",
+            "VHJhbnNhY3Rpb24SHi5ncmVldC5TdGFydFRyYW5zYWN0aW9uUmVxdWVzdBof",
+            "LmdyZWV0LlN0YXJ0VHJhbnNhY3Rpb25SZXNwb25zZRJWChFDb21taXRUcmFu",
+            "c2FjdGlvbhIfLmdyZWV0LkNvbW1pdFRyYW5zYWN0aW9uUmVxdWVzdBogLmdy",
+            "ZWV0LkNvbW1pdFRyYW5zYWN0aW9uUmVzcG9uc2USWwoSUm9sbGJhY2tUcmFu",
+            "YWN0aW9uEiEuZ3JlZXQuUm9sbGJhY2tUcmFuc2FjdGlvblJlcXVlc3QaIi5n",
+            "cmVldC5Sb2xsYmFja1RyYW5zYWN0aW9uUmVzcG9uc2USRwoMUXVldWVNZXNz",
+            "YWdlEhouZ3JlZXQuUXVldWVNZXNzYWdlUmVxdWVzdBobLmdyZWV0LlF1ZXVl",
+            "TWVzc2FnZVJlc3BvbnNlEkUKDFB1bGxNZXNzYWdlcxIZLmdyZWV0LlB1bGxN",
+            "ZXNzYWdlUmVxdWVzdBoaLmdyZWV0LlB1bGxNZXNzYWdlUmVzcG9uc2USRQoM",
+            "UGVla01lc3NhZ2VzEhkuZ3JlZXQuUGVla01lc3NhZ2VSZXF1ZXN0GhouZ3Jl",
+            "ZXQuUGVla01lc3NhZ2VSZXNwb25zZUIUqgIRTldvcmtRdWV1ZS5Nb2RlbHNi",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -92,11 +94,11 @@ namespace NWorkQueue.Models {
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.StartTransactionRequest), global::NWorkQueue.Models.StartTransactionRequest.Parser, new[]{ "ExpireInMin" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.StartTransactionResponse), global::NWorkQueue.Models.StartTransactionResponse.Parser, new[]{ "TransId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.CommitTransactionRequest), global::NWorkQueue.Models.CommitTransactionRequest.Parser, new[]{ "TransId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.CommitTransactionResponse), global::NWorkQueue.Models.CommitTransactionResponse.Parser, null, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.CommitTransactionResponse), global::NWorkQueue.Models.CommitTransactionResponse.Parser, new[]{ "MessagesAdded", "MessagesPulled" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.RollbackTransactionRequest), global::NWorkQueue.Models.RollbackTransactionRequest.Parser, new[]{ "TransId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.RollbackTransactionResponse), global::NWorkQueue.Models.RollbackTransactionResponse.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueMessageRequest), global::NWorkQueue.Models.QueueMessageRequest.Parser, new[]{ "TransId", "Message" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.Message), global::NWorkQueue.Models.Message.Parser, new[]{ "QueueId", "Message_", "MetaData", "Priority", "MaxRetries", "ExpiryInMinutes", "Correlation", "GroupName" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.Message), global::NWorkQueue.Models.Message.Parser, new[]{ "QueueId", "Message_", "MetaData", "Priority", "MaxRetries", "ExpiryInMinutes", "Correlation", "GroupName", "Payload" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueMessageResponse), global::NWorkQueue.Models.QueueMessageResponse.Parser, new[]{ "TransId", "MessageId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PullMessageRequest), global::NWorkQueue.Models.PullMessageRequest.Parser, new[]{ "QueueId", "TransId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PullMessageResponse), global::NWorkQueue.Models.PullMessageResponse.Parser, new[]{ "TransId" }, null, null, null, null),
@@ -1948,12 +1950,36 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public CommitTransactionResponse(CommitTransactionResponse other) : this() {
+      messagesAdded_ = other.messagesAdded_;
+      messagesPulled_ = other.messagesPulled_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public CommitTransactionResponse Clone() {
       return new CommitTransactionResponse(this);
+    }
+
+    /// <summary>Field number for the "MessagesAdded" field.</summary>
+    public const int MessagesAddedFieldNumber = 1;
+    private int messagesAdded_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int MessagesAdded {
+      get { return messagesAdded_; }
+      set {
+        messagesAdded_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "MessagesPulled" field.</summary>
+    public const int MessagesPulledFieldNumber = 2;
+    private int messagesPulled_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int MessagesPulled {
+      get { return messagesPulled_; }
+      set {
+        messagesPulled_ = value;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1969,12 +1995,16 @@ namespace NWorkQueue.Models {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (MessagesAdded != other.MessagesAdded) return false;
+      if (MessagesPulled != other.MessagesPulled) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
+      if (MessagesAdded != 0) hash ^= MessagesAdded.GetHashCode();
+      if (MessagesPulled != 0) hash ^= MessagesPulled.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1988,6 +2018,14 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+      if (MessagesAdded != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(MessagesAdded);
+      }
+      if (MessagesPulled != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(MessagesPulled);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1996,6 +2034,12 @@ namespace NWorkQueue.Models {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
+      if (MessagesAdded != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MessagesAdded);
+      }
+      if (MessagesPulled != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MessagesPulled);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -2006,6 +2050,12 @@ namespace NWorkQueue.Models {
     public void MergeFrom(CommitTransactionResponse other) {
       if (other == null) {
         return;
+      }
+      if (other.MessagesAdded != 0) {
+        MessagesAdded = other.MessagesAdded;
+      }
+      if (other.MessagesPulled != 0) {
+        MessagesPulled = other.MessagesPulled;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2018,6 +2068,14 @@ namespace NWorkQueue.Models {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
+          case 8: {
+            MessagesAdded = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            MessagesPulled = input.ReadInt32();
+            break;
+          }
         }
       }
     }
@@ -2453,6 +2511,7 @@ namespace NWorkQueue.Models {
       expiryInMinutes_ = other.expiryInMinutes_;
       correlation_ = other.correlation_;
       groupName_ = other.groupName_;
+      payload_ = other.payload_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2573,6 +2632,20 @@ namespace NWorkQueue.Models {
       }
     }
 
+    /// <summary>Field number for the "Payload" field.</summary>
+    public const int PayloadFieldNumber = 9;
+    private pb::ByteString payload_ = pb::ByteString.Empty;
+    /// <summary>
+    /// Message Payload (optional)
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pb::ByteString Payload {
+      get { return payload_; }
+      set {
+        payload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as Message);
@@ -2594,6 +2667,7 @@ namespace NWorkQueue.Models {
       if (ExpiryInMinutes != other.ExpiryInMinutes) return false;
       if (Correlation != other.Correlation) return false;
       if (GroupName != other.GroupName) return false;
+      if (Payload != other.Payload) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2608,6 +2682,7 @@ namespace NWorkQueue.Models {
       if (ExpiryInMinutes != 0) hash ^= ExpiryInMinutes.GetHashCode();
       if (Correlation != 0) hash ^= Correlation.GetHashCode();
       if (GroupName.Length != 0) hash ^= GroupName.GetHashCode();
+      if (Payload.Length != 0) hash ^= Payload.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2653,6 +2728,10 @@ namespace NWorkQueue.Models {
         output.WriteRawTag(66);
         output.WriteString(GroupName);
       }
+      if (Payload.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteBytes(Payload);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2684,6 +2763,9 @@ namespace NWorkQueue.Models {
       }
       if (GroupName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(GroupName);
+      }
+      if (Payload.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(Payload);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2719,6 +2801,9 @@ namespace NWorkQueue.Models {
       }
       if (other.GroupName.Length != 0) {
         GroupName = other.GroupName;
+      }
+      if (other.Payload.Length != 0) {
+        Payload = other.Payload;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2761,6 +2846,10 @@ namespace NWorkQueue.Models {
           }
           case 66: {
             GroupName = input.ReadString();
+            break;
+          }
+          case 74: {
+            Payload = input.ReadBytes();
             break;
           }
         }

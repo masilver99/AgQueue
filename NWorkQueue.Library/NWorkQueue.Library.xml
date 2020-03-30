@@ -108,6 +108,28 @@
             <param name="transId">The transaction ID of the transaction to rollback.</param>
             <returns>ValueTask.</returns>
         </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.QueueMessage(System.Int64,System.Int64,System.Byte[],System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Adds a message to the specified queue.
+            </summary>
+            <param name="transId">The transaction to add the message in.</param>
+            <param name="queueId">The queue the message will be placed in.</param>
+            <param name="payload">The message payload.</param>
+            <param name="metaData">Message metadata.</param>
+            <param name="priority">The message priority.  Higher numbers will have higher priority.</param>
+            <param name="maxRetries">How many times should the message pull fail before being retired.</param>
+            <param name="expiryInMinutes">How long in minutes before the message will expire before it's pulled.  0 = no expiration.</param>
+            <param name="correlation">Correlation number.</param>
+            <param name="groupName">Group name applied to message.</param>
+            <returns>Return the message id.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.PerformHouseCleaning(System.DateTime)">
+            <summary>
+            Expires transactions, message and checks message counts, maybe.
+            </summary>
+            <param name="currentTime">The current time is passed in so it is consistent with the time used in the calling procedure.</param>
+            <returns>ValueTask</returns>
+        </member>
         <member name="T:NWorkQueue.Server.Common.IStorage">
             <summary>
             The interface for storing and retrieving queue information from a storage mechinism, usually a database.
@@ -142,6 +164,24 @@
             </summary>
             <param name="transId">The Id of the transaction to lookup.</param>
             <returns>Transaction object or null if not found.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            Add a message to the storage.
+            </summary>
+            <param name="transId">Queue Transaction ID.</param>
+            <param name="queueId">ID of the storage queue.</param>
+            <param name="payload">Message data.</param>
+            <param name="addDateTime">Datetime the message was added.</param>
+            <param name="metaData">String metadata on message data.</param>
+            <param name="priority">Message priority.</param>
+            <param name="maxRetries">How many retries before expires.</param>
+            <param name="expiryDateTime">Datetime the message will expire.</param>
+            <param name="correlation">Correlation ID.</param>
+            <param name="groupName">Group name.</param>
+            <param name="transactionAction">Always will be "add".</param>
+            <param name="messageState">"Always will be in transaction.</param>
+            <returns>Message ID.</returns>
         </member>
         <member name="M:NWorkQueue.Server.Common.IStorage.GetQueueInfoByName(System.String)">
             <summary>

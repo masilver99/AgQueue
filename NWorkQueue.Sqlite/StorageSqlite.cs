@@ -19,7 +19,6 @@ namespace NWorkQueue.Sqlite
     /// </summary>
     public class StorageSqlite : IStorage
     {
-        //private SqliteConnection connection;
         private string connectionString;
 
         // IStorage methods below
@@ -207,7 +206,19 @@ namespace NWorkQueue.Sqlite
             */
 
         /// <inheritdoc/>
-        public async ValueTask<long> AddMessage(long transId, IStorageTransaction storageTran, long queueId, byte[] payload, DateTime addDateTime, string metaData, int priority, int maxRetries, DateTime? expiryDateTime, int correlation, string groupName)
+        public async ValueTask<long> AddMessage(
+            long transId,
+            long queueId,
+            byte[] payload,
+            DateTime addDateTime,
+            string metaData,
+            int priority,
+            int maxRetries,
+            DateTime? expiryDateTime,
+            int correlation,
+            string groupName,
+            int transactionAction,
+            int messageState)
         {
             const string sql = "INSERT INTO Messages (QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDate, Payload, CorrelationId, GroupName, Metadata) VALUES " +
                       "(@QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDate, @Payload, @CorrelationId, @GroupName, @Metadata);" +
@@ -219,8 +230,8 @@ namespace NWorkQueue.Sqlite
                 {
                     QueueId = queueId,
                     TransactionId = transId,
-                    TransactionAction = TransactionAction.Add.Value,
-                    State = MessageState.InTransaction.Value,
+                    TransactionAction = transactionAction,
+                    State = messageState,
                     AddDateTime = addDateTime,
                     Priority = priority,
                     MaxRetries = maxRetries,
@@ -231,7 +242,7 @@ namespace NWorkQueue.Sqlite
                     Metadata = metaData
                 };
 
-                return await connection.ExecuteScalarAsync<long>(sql, transaction: storageTran.SqliteTransaction(), param: param);
+                return await connection.ExecuteScalarAsync<long>(sql, param: param);
             });
         }
 
@@ -383,5 +394,19 @@ namespace NWorkQueue.Sqlite
             await connection.ExecuteAsync(sql);
         }
 
+        public async ValueTask<int> UpdateMessages(IStorageTransaction storageTrans, long transId, int transactionAction, int oldMessageState, int newMessageState)
+        {
+            const string sql = "Update Messages set TransactionId = null, TransactionAction = null,  " +
+                    "State = @NewMessageState, CloseDateTime DATETIME, " +
+                    "where transactionId = @TransId AND TransactionAction = @TransactionAction AND State = @OldMessageState;";
+
+            return await this.Execute<int>(async (connection) =>
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
+                    param: new { transId, transactionAction, oldMessageState, newMessageState });
+            });
+       }
     }
 }

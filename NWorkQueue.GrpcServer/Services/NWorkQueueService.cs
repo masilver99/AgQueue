@@ -85,8 +85,8 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<CommitTransactionResponse> CommitTransaction(CommitTransactionRequest request, ServerCallContext context)
         {
-            await this.internalApi.CommitTransaction(request.TransId);
-            return new CommitTransactionResponse();
+            var count = await this.internalApi.CommitTransaction(request.TransId);
+            return new CommitTransactionResponse { MessagesAdded = count.AddCount, MessagesPulled = count.PullCount };
         }
 
         /// <inheritdoc/>
@@ -98,9 +98,17 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<QueueMessageResponse> QueueMessage(QueueMessageRequest request, ServerCallContext context)
         {
-            return await this.internalApi.QueueMessage(
+            var messageId = await this.internalApi.QueueMessage(
                 request.TransId, 
-                request.Message.QueueId);
+                request.Message.QueueId,
+                request.Message.Payload.ToByteArray(),
+                request.Message.MetaData,
+                request.Message.Priority,
+                request.Message.MaxRetries,
+                request.Message.ExpiryInMinutes,
+                request.Message.Correlation,
+                request.Message.GroupName);
+            return new QueueMessageResponse { MessageId = messageId, TransId = request.TransId };
         }
 
         public override async Task<PullMessageResponse> PullMessages(PullMessageRequest request, ServerCallContext context)

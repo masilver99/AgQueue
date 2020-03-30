@@ -262,5 +262,16 @@
             Transaction was automatically expired due to timeout.
             </summary>
         </member>
+        <member name="T:NWorkQueue.Common.WorkQueueException">
+            <summary>
+            Exception thrown for unique WorkQueue exceptions.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Common.WorkQueueException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NWorkQueue.Common.WorkQueueException"/> class.
+            </summary>
+            <param name="message">Error message.</param>
+        </member>
     </members>
 </doc>

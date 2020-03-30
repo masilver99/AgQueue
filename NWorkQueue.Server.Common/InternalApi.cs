@@ -191,25 +191,33 @@ namespace NWorkQueue.Server.Common
         /// </summary>
         /// <param name="transId">Transaction Id to commit.</param>
         /// <returns>ValueTask.</returns>
-        public async ValueTask CommitTransaction(long transId)
+        public async ValueTask<(int AddCount, int PullCount)> CommitTransaction(long transId)
         {
+            var startDateTime = DateTime.Now;
+
+            // Perform house cleaning (expire expired trans and messages)
+            await this.PerformHouseCleaning(startDateTime);
+
             // Check transaction is exists and is active
             await this.ConfirmTransactionExistsAndIsActive(transId);
-
-            // Perform transaction housekeeping.  Is it expired?
 
             var storageTrans = this.storage.BeginStorageTransaction();
 
             try
             {
                 // Change status of added messages
+                var addCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Add.Value, MessageState.InTransaction.Value, MessageState.Active.Value);
+
                 // Change status of pulled messages
+                var pullCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Pull.Value, MessageState.InTransaction.Value, MessageState.Processed.Value);
 
                 // Mark Transaction complete
-                await this.storage.UpdateTransactionState(transId, TransactionState.Commited, DateTime.Now);
+                await this.storage.UpdateTransactionState(transId, TransactionState.Commited, startDateTime);
 
                 // Commit DB Trans ---
                 storageTrans.Commit();
+
+                return (addCount, pullCount);
             }
             catch
             {
@@ -251,7 +259,29 @@ namespace NWorkQueue.Server.Common
             }
         }
 
-        public async ValueTask<long> QueueMessage(long transId, long queueId)
+        /// <summary>
+        /// Adds a message to the specified queue.
+        /// </summary>
+        /// <param name="transId">The transaction to add the message in.</param>
+        /// <param name="queueId">The queue the message will be placed in.</param>
+        /// <param name="payload">The message payload.</param>
+        /// <param name="metaData">Message metadata.</param>
+        /// <param name="priority">The message priority.  Higher numbers will have higher priority.</param>
+        /// <param name="maxRetries">How many times should the message pull fail before being retired.</param>
+        /// <param name="expiryInMinutes">How long in minutes before the message will expire before it's pulled.  0 = no expiration.</param>
+        /// <param name="correlation">Correlation number.</param>
+        /// <param name="groupName">Group name applied to message.</param>
+        /// <returns>Return the message id.</returns>
+        public async ValueTask<long> QueueMessage(
+            long transId,
+            long queueId,
+            byte[] payload,
+            string metaData,
+            int priority,
+            int maxRetries,
+            int expiryInMinutes,
+            int correlation,
+            string groupName)
         {
             var startDateTime = DateTime.Now;
 
@@ -268,7 +298,19 @@ namespace NWorkQueue.Server.Common
                 throw new WorkQueueException($"Queue {queueId} not found.");
             }
 
-            return await this.storage.AddMessage(transId,);
+            return await this.storage.AddMessage(
+                transId,
+                queueId,
+                payload,
+                startDateTime,
+                metaData,
+                priority,
+                maxRetries,
+                expiryInMinutes < 1 ? (DateTime?)null : startDateTime.AddMinutes(expiryInMinutes),
+                correlation,
+                groupName,
+                TransactionAction.Add.Value,
+                MessageState.InTransaction.Value);
         }
 
         /// <summary>

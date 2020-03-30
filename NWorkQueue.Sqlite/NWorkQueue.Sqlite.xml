@@ -58,6 +58,9 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetQueueInfoById(System.Int64)">
             <inheritdoc/>
         </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.BeginStorageTransaction">
             <inheritdoc/>
         </member>
