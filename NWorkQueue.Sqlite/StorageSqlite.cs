@@ -19,9 +19,12 @@ namespace NWorkQueue.Sqlite
     /// </summary>
     public class StorageSqlite : IStorage
     {
-        private string connectionString;
+        private readonly string connectionString;
 
-        // IStorage methods below
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StorageSqlite"/> class.
+        /// </summary>
+        /// <param name="connectionString">The Sqlite connection string.</param>
         public StorageSqlite(string connectionString)
         {
             this.connectionString = connectionString;
@@ -83,17 +86,21 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask UpdateTransactionState(long transId, TransactionState state, DateTime? endDateTime = null)
+        public async ValueTask UpdateTransactionState(IStorageTransaction storageTrans, long transId, TransactionState state, string? endReason = null, DateTime? endDateTime = null)
         {
             await this.Execute(async (connection) =>
             {
-                const string sql = "UPDATE Transactions SET EndDateTime = @EndDateTime, State = @State WHERE ID = @Id;";
-                await connection.ExecuteAsync(sql, new
-                {
-                    Id = transId,
-                    State = state,
-                    EndDateTime = endDateTime,
-                });
+                const string sql = "UPDATE Transactions SET EndDateTime = @EndDateTime, State = @State, EndReason = @EndReason WHERE ID = @Id;";
+                await connection.ExecuteAsync(
+                    sql,
+                    new
+                    {
+                        Id = transId,
+                        State = state,
+                        EndDateTime = endDateTime,
+                        endReason
+                    },
+                    storageTrans.SqliteTransaction());
             });
         }
 
@@ -108,12 +115,12 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask DeleteQueue(long id/*, IStorageTransaction storageTrans*/)
+        public async ValueTask DeleteQueue(long id)
         {
             await this.Execute(async (connection) =>
             {
                 const string sql = "DELETE FROM Queues WHERE Id = @Id;";
-                await connection.ExecuteAsync(sql,/* transaction: (storageTrans as DbTransaction)?.SqliteTransaction,*/ param: new { Id = id });
+                await connection.ExecuteAsync(sql, param: new { Id = id });
             });
         }
 
@@ -138,15 +145,7 @@ namespace NWorkQueue.Sqlite
         }
 
         /*
-        
         #region Message methods
-
-        /// <inheritdoc/>
-        public void DeleteMessagesByTransId(long transId, IStorageTransaction storageTrans)
-        {
-            const string sql = "Delete FROM Messages WHERE TransactionId = @tranId and TransactionAction = @TranAction";
-            this.connection.Execute(sql, new { transId, TranAction = TransactionAction.Add.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
-        }
 
         /// <inheritdoc/>
         public void CloseRetriedMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
@@ -167,42 +166,6 @@ namespace NWorkQueue.Sqlite
         {
             const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, Retries = Retries + 1 WHERE TransactionId = @tranId and TransactionAction = @TranAction;";
             this.connection.Execute(sql, new { State = MessageState.Active, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
-        }
-
-        /// <inheritdoc/>
-        public void CommitAddedMessages(long transId, IStorageTransaction storageTrans)
-        {
-            const string sql =
-                "Update Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL where TransactionId = @TranId  and TransactionAction = @TranAction;";
-            this.connection.Execute(sql, transaction: (storageTrans as DbTransaction)?.SqliteTransaction, param: new { State = MessageState.Active.Value, TranId = transId, TranAction = TransactionAction.Add.Value });
-        }
-
-        /// <inheritdoc/>
-        public void CommitPulledMessages(long transId, IStorageTransaction storageTrans, DateTime commitDateTime)
-        {
-            const string sql =
-                "Update Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @CloseDateTime where TransactionId = @TranId  and TransactionAction = @TranAction;";
-
-            var param = new
-            {
-                State = MessageState.Processed.Value,
-                TranId = transId,
-                TranAction = TransactionAction.Pull.Value,
-                CloseDateTime = commitDateTime
-            };
-
-            this.connection.Execute(
-                sql,
-                transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
-                param: param);
-        }
-
-        /// <inheritdoc/>
-        public long GetMessageCount(long queueId)
-        {
-            const string sql = "SELECT count(*) FROM Messages m WHERE m.QueueId = @QueueId AND m.State = @State;";
-            return this.connection.ExecuteScalar<long>(sql, new { QueueId = queueId, State = MessageState.Active.Value });
-        }
             */
 
         /// <inheritdoc/>
@@ -264,14 +227,59 @@ namespace NWorkQueue.Sqlite
             return new DbTransaction(connection);
         }
 
+        /// <inheritdoc/>
+        public async ValueTask<int> UpdateMessages(IStorageTransaction storageTrans, long transId, int transactionAction, int oldMessageState, int newMessageState)
+        {
+            const string sql = "Update Messages set TransactionId = null, TransactionAction = null,  " +
+                    "State = @NewMessageState, CloseDateTime DATETIME, " +
+                    "where transactionId = @TransId AND TransactionAction = @TransactionAction AND State = @OldMessageState;";
+
+            return await this.Execute<int>(async (connection) =>
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
+                    param: new { transId, transactionAction, oldMessageState, newMessageState });
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<int> UpdateMessageRetryCount(IStorageTransaction storageTrans, long transId, int transactionAction, int messageState)
+        {
+            const string sql = "Update Messages set Retries = Retries + 1 " +
+                    "where transactionId = @TransId AND TransactionAction = @TransactionAction AND State = @MessageState;";
+
+            return await this.Execute<int>(async (connection) =>
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
+                    param: new { transId, transactionAction, messageState });
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<int> DeleteAddedMessages(IStorageTransaction storageTrans, long transId)
+        {
+            const string sql = "DELETE FROM Messages where transactionId = @TransId AND TransactionAction = @TransactionAction AND State = @MessageState;";
+
+            return await this.Execute<int>(async (connection) =>
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
+                    param: new { transId, TransactionAction = TransactionAction.Add.Value, MessageState = MessageState.InTransaction.Value });
+            });
+        }
+
         /// <summary>
-        /// Executes an anonymous method wrapped with robust logging, command line options loading, and error handling
+        /// Executes an anonymous method wrapped with robust logging, command line options loading, and error handling.
         /// </summary>
         /// <typeparam name="T">Options class to load from command line.</typeparam>
         /// <param name="action">The anonymous method execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.</param>
         /// <param name="connection">Sqlite connection.</param>
         /// <returns>Returns generic object T.</returns>
-        public async ValueTask<T> Execute<T>(Func<SqliteConnection, ValueTask<T>> action, SqliteConnection? connection = null)
+        private async ValueTask<T> Execute<T>(Func<SqliteConnection, ValueTask<T>> action, SqliteConnection? connection = null)
         {
             // using (var logger = Utilities.BuildLogger(programName, EnvironmentConfig.AspNetCoreEnvironment, EnvironmentConfig.SeqServerUrl))
             // logger.Information("Starting {ProgramName}", programName);
@@ -279,7 +287,6 @@ namespace NWorkQueue.Sqlite
             stopwatch.Start();
 
             // AppDomain.CurrentDomain.UnhandledException += Utilities.CurrentDomain_UnhandledException;
-
             SqliteConnection? liveConnection = null;
 
             try
@@ -301,7 +308,7 @@ namespace NWorkQueue.Sqlite
             catch (Exception exc)
             {
                 throw exc;
-                //logger.Fatal(exc, "A fatal exception prevented this application from running to completion.");
+                // logger.Fatal(exc, "A fatal exception prevented this application from running to completion.");
             }
             finally
             {
@@ -310,11 +317,12 @@ namespace NWorkQueue.Sqlite
                 {
                     liveConnection?.Dispose();
                 }
-                //Log.CloseAndFlush();
+
+                // Log.CloseAndFlush();
             }
         }
 
-        public async ValueTask Execute(Func<SqliteConnection, ValueTask> action, SqliteConnection? connection = null)
+        private async ValueTask Execute(Func<SqliteConnection, ValueTask> action, SqliteConnection? connection = null)
         {
             await this.Execute<object?>(
                 async (newConnection) =>
@@ -323,7 +331,6 @@ namespace NWorkQueue.Sqlite
                     return null;
                 }, connection);
         }
-
 
         private async ValueTask CreateTables(SqliteConnection connection)
         {
@@ -346,7 +353,8 @@ namespace NWorkQueue.Sqlite
                 " State INTEGER NOT NULL," +
                 " StartDateTime DATETIME NOT NULL," +
                 " ExpiryDateTime DATETIME NOT NULL, " +
-                " EndDateTime DATETIME);" +
+                " EndDateTime DATETIME," +
+                " EndReason TEXT);" +
 
                 "Create table IF NOT EXISTS Queues" +
                 "(Id INTEGER PRIMARY KEY," +
@@ -393,20 +401,5 @@ namespace NWorkQueue.Sqlite
                 "COMMIT;";
             await connection.ExecuteAsync(sql);
         }
-
-        public async ValueTask<int> UpdateMessages(IStorageTransaction storageTrans, long transId, int transactionAction, int oldMessageState, int newMessageState)
-        {
-            const string sql = "Update Messages set TransactionId = null, TransactionAction = null,  " +
-                    "State = @NewMessageState, CloseDateTime DATETIME, " +
-                    "where transactionId = @TransId AND TransactionAction = @TransactionAction AND State = @OldMessageState;";
-
-            return await this.Execute<int>(async (connection) =>
-            {
-                return await connection.ExecuteAsync(
-                    sql,
-                    transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
-                    param: new { transId, transactionAction, oldMessageState, newMessageState });
-            });
-       }
     }
 }

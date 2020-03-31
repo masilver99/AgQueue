@@ -1,4 +1,4 @@
-﻿// <copyright file="TransactionModel.cs" company="Michael Silver">
+﻿// <copyright file="Transaction.cs" company="Michael Silver">
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
@@ -7,18 +7,18 @@ namespace NWorkQueue.Common.Models
     using System;
 
     /// <summary>
-    /// Represents a Queue Transaction
+    /// Represents a Queue Transaction.
     /// </summary>
     public class Transaction
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Transaction"/> class.
         /// </summary>
-        /// <param name="id">primary key</param>
-        /// <param name="state">Is transaction active</param>
-        /// <param name="createDateTime">Datetime transaction was created</param>
-        /// <param name="expiryDateTime">Datetime transaction will expire</param>
-        /// <param name="endDateTime">Datetime the transaction was closed</param>
+        /// <param name="id">primary key.</param>
+        /// <param name="state">Is transaction active.</param>
+        /// <param name="createDateTime">Datetime transaction was created.</param>
+        /// <param name="expiryDateTime">Datetime transaction will expire.</param>
+        /// <param name="endDateTime">Datetime the transaction was closed.</param>
         public Transaction(long id, TransactionState state, DateTime createDateTime, DateTime expiryDateTime, DateTime? endDateTime)
         {
             this.Id = id;

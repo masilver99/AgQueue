@@ -1,4 +1,8 @@
-﻿using System;
+﻿// <copyright file="TransactionState.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 

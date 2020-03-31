@@ -25,14 +25,6 @@ namespace NWorkQueue.Server.Common
         ValueTask InitializeStorage(bool deleteExistingData);
         /*
         /// <summary>
-        /// Mark the Queue Transaction as closed.
-        /// </summary>
-        /// <param name="transId">Queue Transaction to mark as closed.</param>
-        /// <param name="storageTrans">The db transaction to assodicate with this update.</param>
-        /// <param name="closeDateTime">Datetime transaction was closed.</param>
-        void CloseTransaction(long transId, IStorageTransaction storageTrans, DateTime closeDateTime);
-
-        /// <summary>
         /// Delete all messages by their queue transaction id.
         /// </summary>
         /// <param name="transId">Id of the queue transaction.</param>
@@ -62,30 +54,7 @@ namespace NWorkQueue.Server.Common
         /// <param name="transId">Queue transaction id.</param>
         /// <param name="storageTrans">Storage Transaction.</param>
         void UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans);
-
-        /// <summary>
-        /// Commit added messages marking them as queued.
-        /// </summary>
-        /// <param name="transId">Queue transaction id.</param>
-        /// <param name="storageTrans">Storage Transaction.</param>
-        void CommitAddedMessages(long transId, IStorageTransaction storageTrans);
-
-        /// <summary>
-        /// Commit pulled messages marking them as complete.
-        /// </summary>
-        /// <param name="transId">Queue transaction id.</param>
-        /// <param name="storageTrans">Storage Transaction.</param>
-        /// <param name="commitDateTime">Datetime of the commit.</param>
-        void CommitPulledMessages(long transId, IStorageTransaction storageTrans, DateTime commitDateTime);
-
-        /// <summary>
-        /// Commit a queue transaction.
-        /// </summary>
-        /// <param name="transId">Queue transaction id.</param>
-        /// <param name="storageTrans">Storage Transaction.</param>
-        /// <param name="commitDateTime">Datetime of the commit.</param>
-        void CommitMessageTransaction(long transId, IStorageTransaction storageTrans, DateTime commitDateTime);
-        */
+*/
         /// <summary>
         /// Create a new Queue in storage.
         /// </summary>
@@ -165,7 +134,34 @@ namespace NWorkQueue.Server.Common
         /// <returns>Returns transaction ID.</returns>
         ValueTask<long> StartTransaction(DateTime startDateTime, DateTime expiryDateTime);
 
+        /// <summary>
+        /// Updates a set of messages.
+        /// </summary>
+        /// <param name="storageTrans">The storage transaction to make change within.</param>
+        /// <param name="transId">The transaction the messages are associated with.</param>
+        /// <param name="transactionAction">The TransactionAction to search for.</param>
+        /// <param name="oldMessageState">Current message state.</param>
+        /// <param name="newMessageState">Update the message state to this value.</param>
+        /// <returns>Returns the number of messages updated.</returns>
         ValueTask<int> UpdateMessages(IStorageTransaction storageTrans, long transId, int transactionAction, int oldMessageState, int newMessageState);
+
+        /// <summary>
+        /// Updates the message retry cuont based on transactionAction and MessageState.
+        /// </summary>
+        /// <param name="storageTrans">The storage transaction to run the query under.</param>
+        /// <param name="transId">The messages must be in this transaction.</param>
+        /// <param name="transactionAction">The transactionAction the message must be in.</param>
+        /// <param name="messageState">The messageState the message must be in. </param>
+        /// <returns>Number of messages updated.</returns>
+        ValueTask<int> UpdateMessageRetryCount(IStorageTransaction storageTrans, long transId, int transactionAction, int messageState);
+
+        /// <summary>
+        /// Delete messages that were added in the specified transtacion.
+        /// </summary>
+        /// <param name="storageTrans">The storage transaction to run the query in.</param>
+        /// <param name="transId">The transaction the messages must be in.</param>
+        /// <returns>Number of records deleted.</returns>
+        ValueTask<int> DeleteAddedMessages(IStorageTransaction storageTrans, long transId);
 
         /// <summary>
         /// Extends the transaction's expiration datetime.
@@ -178,11 +174,13 @@ namespace NWorkQueue.Server.Common
         /// <summary>
         /// Update the transaction's state and end datetime.
         /// </summary>
+        /// <param name="storageTrans">The storage transaction to make change within.</param>
         /// <param name="transId">The id of the transaction to update.</param>
         /// <param name="state">The new state of the transaction.</param>
+        /// <param name="endReason">Reason the transaction was ended.  Optional.</param>
         /// <param name="endDateTime">Datetime the transaction was closed (or null if not closed).</param>
         /// <returns>ValueTask.</returns>
-        ValueTask UpdateTransactionState(long transId, TransactionState state, DateTime? endDateTime = null);
+        ValueTask UpdateTransactionState(IStorageTransaction storageTrans, long transId, TransactionState state, string? endReason = null, DateTime? endDateTime = null);
 
         /// <summary>
         /// Starts a storage (database) transaction, not a queue transaction.

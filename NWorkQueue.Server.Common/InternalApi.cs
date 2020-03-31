@@ -24,13 +24,11 @@ namespace NWorkQueue.Server.Common
     /// This is mostly a factory for creating Queues and Transactions.
     /// </summary>
     /// <remarks>
-    /// Exceptions are not used unless there is an exceptional condition.  For example, if an items doesn't exist or a param is invalid, 
+    /// Exceptions are not used unless there is an exceptional condition.  For example, if an items doesn't exist or a param is invalid,
     /// this is handled without an exception.  This is mostly for speed and simplicity with the gRPC interface.
     /// </remarks>
     public class InternalApi : IDisposable
     {
-        private static readonly DateTime MaxDateTime = DateTime.MaxValue;
-
         private readonly IStorage storage;
 
         /// <summary>
@@ -65,7 +63,7 @@ namespace NWorkQueue.Server.Common
 
         /// <summary>
         /// Delete a queue and all messages in the queue.
-        /// Throws an exception if Queue doesn't exist
+        /// Throws an exception if Queue doesn't exist.
         /// </summary>
         /// <param name="queueName">Name of the queue to delete.</param>
         public async void DeleteQueue(string queueName)
@@ -148,10 +146,10 @@ namespace NWorkQueue.Server.Common
         public async ValueTask<long> StartTrasaction(int expiryTimeInMinutes = 0)
         {
             // TODO: This 10 needs to be pulled from a config file
-            var expiryTime = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
+            var expiryMinutes = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
             var curDateTime = DateTime.Now;
 
-            return await this.storage.StartTransaction(curDateTime, curDateTime.AddMinutes(10));
+            return await this.storage.StartTransaction(curDateTime, curDateTime.AddMinutes(expiryMinutes));
         }
 
         /// <summary>
@@ -163,27 +161,13 @@ namespace NWorkQueue.Server.Common
         public async ValueTask ExtendTransaction(long transId, int expiryTimeInMinutes = 0)
         {
             // TODO: This 10 needs to be pulled from a config file
-            var expiryTime = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
+            var expiryMinutes = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
 
             // Check transaction is exists and is active
             await this.ConfirmTransactionExistsAndIsActive(transId);
 
             // Update Transaction
-            await this.storage.ExtendTransaction(transId, DateTime.Now.AddMinutes(expiryTime));
-        }
-
-        private async ValueTask ConfirmTransactionExistsAndIsActive(long transId)
-        {
-            var trans = await this.storage.GetTransactionById(transId);
-            if (trans == null)
-            {
-                throw new Exception($"Transaction not found, id: {transId}");
-            }
-
-            if (trans.State != TransactionState.Active)
-            {
-                throw new Exception($"Transaction {transId} not active: {trans.State.ToString()}");
-            }
+            await this.storage.ExtendTransaction(transId, DateTime.Now.AddMinutes(expiryMinutes));
         }
 
         /// <summary>
@@ -212,7 +196,7 @@ namespace NWorkQueue.Server.Common
                 var pullCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Pull.Value, MessageState.InTransaction.Value, MessageState.Processed.Value);
 
                 // Mark Transaction complete
-                await this.storage.UpdateTransactionState(transId, TransactionState.Commited, startDateTime);
+                await this.storage.UpdateTransactionState(storageTrans, transId, TransactionState.Commited, "Committed", startDateTime);
 
                 // Commit DB Trans ---
                 storageTrans.Commit();
@@ -233,7 +217,10 @@ namespace NWorkQueue.Server.Common
         /// <returns>ValueTask.</returns>
         public async ValueTask RollbackTransaction(long transId)
         {
+            var startDateTime = DateTime.Now;
+
             // Perform house cleaning (expire expired trans and messages)
+            await this.PerformHouseCleaning(startDateTime);
 
             // Check transaction is exists and is active
             await this.ConfirmTransactionExistsAndIsActive(transId);
@@ -243,11 +230,15 @@ namespace NWorkQueue.Server.Common
             try
             {
                 // Change status of added messages
-                // Change status of pulled messages
-                    // increment retry count and abort message past retry count
+                var deletedCount = await this.storage.DeleteAddedMessages(storageTrans, transId);
+
+                // Update retry counts and change status of pulled messages
+                // Don't worry about retry count here, it will automactially get closed in house keeping.
+                var updateCount = await this.storage.UpdateMessageRetryCount(storageTrans, transId, TransactionAction.Pull.Value, MessageState.InTransaction.Value);
+                var pullCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Pull.Value, MessageState.InTransaction.Value, MessageState.Active.Value);
 
                 // Mark Transaction complete
-                await this.storage.UpdateTransactionState(transId, TransactionState.RolledBack, DateTime.Now);
+                await this.storage.UpdateTransactionState(storageTrans, transId, TransactionState.RolledBack, "User rollback", DateTime.Now);
 
                 // Commit DB Trans ---
                 storageTrans.Commit();
@@ -313,22 +304,42 @@ namespace NWorkQueue.Server.Common
                 MessageState.InTransaction.Value);
         }
 
+        private async ValueTask ConfirmTransactionExistsAndIsActive(long transId)
+        {
+            var trans = await this.storage.GetTransactionById(transId);
+            if (trans == null)
+            {
+                throw new Exception($"Transaction not found, id: {transId}");
+            }
+
+            if (trans.State != TransactionState.Active)
+            {
+                throw new Exception($"Transaction {transId} not active: {trans.State.ToString()}");
+            }
+        }
+
         /// <summary>
         /// Expires transactions, message and checks message counts, maybe.
         /// </summary>
         /// <param name="currentTime">The current time is passed in so it is consistent with the time used in the calling procedure.</param>
-        /// <returns>ValueTask</returns>
+        /// <returns>ValueTask.</returns>
         private async ValueTask PerformHouseCleaning(DateTime currentTime)
         {
+
             // Check is any active transactions have expired
-                // Start db transaction
+            // Start db transaction
+            var storageTrans = this.storage.BeginStorageTransaction();
+            //select 
                 // Mark trans as closed due to expiry
                 // Delete any added messages (may want to mark as orphaned, instead of deleting)
+                // Increment retry count on pulled messages.
                 // Removed trans info from pulled messages
                 // Commit db transaction
+
             // Check for any active but expired Messages (NOT IN A TRANSACTION) (Messages in an active transaction won't expired (they are safe until the transaction commits or rollbacks))
                 // Mark them as expired
             // Check for active messages at or past the retry count
+                // Mark as RetryExceeded
         }
     }
 }
