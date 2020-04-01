@@ -3,6 +3,8 @@ A simple, opinionated, transactional work queue
 
 ![.NET Core](https://github.com/masilver99/NWorkQueue/workflows/.NET%20Core/badge.svg?branch=master)
 
+NWorkQueue is a server process that can use almost any database as it's back end.  It essentially turns any supported database into a full fledged work queue.
+
 ## Purpose
 
 To reliably deliver messages to a requestor/subscriber.  Successful messages are only delivered to one REQ/SUB.  In case of failure, the message will be redelivered, after a delay, unless the retry count is exceeded.
@@ -29,9 +31,10 @@ A classic example of when to use a work queue is sending email from a website.  
 * Multiple Queues.  Create as many queues as needed.
 * Baked-in Retry.  Messages automatically reenter the queue after a Transaction rollback, BUT you can set a retry delay, eliminating need for a seperate retry queue and preventing poison messages.
 * Optional message metadata.  Allows storage of custom data relating to the message.  
-* FIFO or custom ordering based on json message metadata. Beware of orphaned messages!
+* FIFO or custom ordering based on json message metadata, correlation id, group name or tag value. Beware of orphaned messages!
 * Optional Message History.
 * Optional Correlation ID (integer) and/or Group string to assist with grouping of messages to pull.
+* Optional Tags.  Tags can be applied to any message.  A tag can also have a value, for example, year=2019.  There can be multiple tags on a message.  This is a more effeicient way of organizing and pulling messages than using the metadata.
 
 ## Additional Details
 
