@@ -180,7 +180,7 @@ namespace NWorkQueue.Server.Common
             var startDateTime = DateTime.Now;
 
             // Perform house cleaning (expire expired trans and messages)
-            await this.PerformHouseCleaning(startDateTime);
+            await this.PerformTransactionHouseCleaning(startDateTime);
 
             // Check transaction is exists and is active
             await this.ConfirmTransactionExistsAndIsActive(transId);
@@ -220,7 +220,7 @@ namespace NWorkQueue.Server.Common
             var startDateTime = DateTime.Now;
 
             // Perform house cleaning (expire expired trans and messages)
-            await this.PerformHouseCleaning(startDateTime);
+            await this.PerformTransactionHouseCleaning(startDateTime);
 
             // Check transaction is exists and is active
             await this.ConfirmTransactionExistsAndIsActive(transId);
@@ -277,7 +277,7 @@ namespace NWorkQueue.Server.Common
             var startDateTime = DateTime.Now;
 
             // Perform house cleaning (expire expired trans and messages)
-            await this.PerformHouseCleaning(startDateTime);
+            await this.PerformTransactionHouseCleaning(startDateTime);
 
             // Check transaction exists and is active
             await this.ConfirmTransactionExistsAndIsActive(transId);
@@ -323,22 +323,34 @@ namespace NWorkQueue.Server.Common
         /// </summary>
         /// <param name="currentTime">The current time is passed in so it is consistent with the time used in the calling procedure.</param>
         /// <returns>ValueTask.</returns>
-        private async ValueTask PerformHouseCleaning(DateTime currentTime)
+        private async ValueTask PerformTransactionHouseCleaning(DateTime currentTime)
         {
-
             // Check is any active transactions have expired
             // Start db transaction
             var storageTrans = this.storage.BeginStorageTransaction();
-            //select 
-                // Mark trans as closed due to expiry
-                // Delete any added messages (may want to mark as orphaned, instead of deleting)
-                // Increment retry count on pulled messages.
-                // Removed trans info from pulled messages
-                // Commit db transaction
 
+            // Delete any added messages (may want to mark as orphaned, instead of deleting)
+            await this.storage.DeleteAddedMessagesInExpiredTrans(storageTrans, currentTime);
+
+            // Increment retry count on pulled messages.
+            // Removed trans info from pulled messages
+            await this.storage.UpdateMessageRetriesInExpiredTrans(storageTrans, currentTime);
+
+            // Mark trans as closed due to expiry
+            await this.storage.ExpireTransactions(storageTrans, currentTime);
+
+            // Commit db transaction
+            storageTrans.Commit();
+        }
+
+        private async ValueTask PerformMessageHouseCleaning(DateTime currentDateTime)
+        { 
             // Check for any active but expired Messages (NOT IN A TRANSACTION) (Messages in an active transaction won't expired (they are safe until the transaction commits or rollbacks))
                 // Mark them as expired
+                "Update Messages set State = Expired, CloseDateTime = currentTime where TransactionId = null and State = Active and ExpiryDateTime >= currentTime;
             // Check for active messages at or past the retry count
+                "Update Messages set State = RetryExceeded, CloseDateTime = currentTime where TransactionId = null and State = Active and Retries >= MaxRetries;
+
                 // Mark as RetryExceeded
         }
     }

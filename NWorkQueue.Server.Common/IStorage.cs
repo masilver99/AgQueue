@@ -191,6 +191,30 @@ namespace NWorkQueue.Server.Common
         /// <returns>Returns a class represented by IStorageTransaction which can commit or rollbacl the transaction.</returns>
         IStorageTransaction BeginStorageTransaction();
 
+        /// <summary>
+        /// Deletes added messages in an expired transaction.
+        /// </summary>
+        /// <param name="storageTrans">Storage Transaction to run under.</param>
+        /// <param name="currentDateTime">DateTime to expire against.</param>
+        /// <returns>Returns the count of the deleted records.</returns>
+        ValueTask<int> DeleteAddedMessagesInExpiredTrans(IStorageTransaction storageTrans, DateTime currentDateTime);
+
+        /// <summary>
+        /// Updates the retry counts for messages in an expired transaction.
+        /// </summary>
+        /// <param name="storageTrans">Storage Transaction to run under.</param>
+        /// <param name="currentDateTime">DateTime to expire against.</param>
+        /// <returns>Number of records updated.</returns>
+        ValueTask<int> UpdateMessageRetriesInExpiredTrans(IStorageTransaction storageTrans, DateTime currentDateTime);
+
+        /// <summary>
+        /// Expires transactions whose expiry date time is past the currentDateTime.
+        /// </summary>
+        /// <param name="storagetrans">Storage Transaction to run under.</param>
+        /// <param name="currentDateTime">DateTime to expire against.</param>
+        /// <returns>Returns the number of transactions expired.</returns>
+        ValueTask<int> ExpireTransactions(IStorageTransaction storagetrans, DateTime currentDateTime);
+
         /*
         /// <summary>
         /// Does a Quque exist for the specified id.

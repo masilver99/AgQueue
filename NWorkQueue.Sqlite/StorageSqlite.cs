@@ -54,7 +54,7 @@ namespace NWorkQueue.Sqlite
                     const string sql = "INSERT INTO Transactions (State, StartDateTime, ExpiryDateTime) VALUES (@State, @StartDateTime, @ExpiryDateTime);SELECT last_insert_rowid();";
                     return await connection.ExecuteScalarAsync<long>(sql, new
                     {
-                        State = (int)TransactionState.Active,
+                        State = TransactionState.Active.Value,
                         StartDateTime = startDateTime,
                         ExpiryDateTime = expiryDateTime,
                     });
@@ -269,6 +269,71 @@ namespace NWorkQueue.Sqlite
                     sql,
                     transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
                     param: new { transId, TransactionAction = TransactionAction.Add.Value, MessageState = MessageState.InTransaction.Value });
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<int> DeleteAddedMessagesInExpiredTrans(IStorageTransaction storageTrans, DateTime currentDateTime)
+        {
+            const string sql =
+                "Delete from messages where TransactionAction = @TransactionAction, State = @MessageState AND " +
+                "TransactionId in (select ID from Transactions Where ExpiryDateTime <= @CurrentDateTime);";
+
+            return await this.Execute<int>(async (connection) =>
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
+                    param: new
+                    {
+                        TransactionAction = TransactionAction.Add.Value,
+                        MessageState = MessageState.InTransaction.Value,
+                        currentDateTime
+                    });
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<int> UpdateMessageRetriesInExpiredTrans(IStorageTransaction storageTrans, DateTime currentDateTime)
+        {
+            const string sql =
+                "Update messages set Retries = Retries + 1, Set TransactionAction = null and TransactionId = null " +
+                "where TransactionAction = @TransactionAction AND State = @MessageState AND " +
+                "TransactionId in (select ID from Transactions Where ExpiryDateTime <= @CurrentDateTime);";
+
+            return await this.Execute<int>(async (connection) =>
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
+                    param: new
+                    {
+                        TransactionAction = TransactionAction.Pull.Value,
+                        MessageState = MessageState.InTransaction.Value,
+                        currentDateTime
+                    });
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<int> ExpireTransactions(IStorageTransaction storageTrans, DateTime currentDateTime)
+        {
+            const string sql =
+                "Update Transactions SET State = @NewTransactionState, EndDateTime = @CurrentDateTime, EndReason = 'Expired' " +
+                "Where ExpiryDateTime <= @CurrentDateTime AND State = @OldTransactionState;";
+
+            return await this.Execute<int>(async (connection) =>
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    transaction: (storageTrans as DbTransaction)?.SqliteTransaction,
+                    param: new
+                    {
+                        NewTransactionState = TransactionState.Expired.Value,
+                        MessageState = MessageState.InTransaction.Value,
+                        currentDateTime,
+                        OldTransactionState = TransactionState.Active.Value
+                    });
             });
         }
 
