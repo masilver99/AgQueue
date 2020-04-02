@@ -113,7 +113,12 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<PullMessageResponse> PullMessages(PullMessageRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var messageId = await this.internalApi.PullMessage(
+                request.TransId,
+                request.QueueId,
+                request.MessageCountToRetrieve,
+                request.MinumumRequiredMessaages);
+            return new QueueMessageResponse { MessageId = messageId, TransId = request.TransId };
         }
 
         public override async Task<PeekMessageResponse> PeekMessages(PeekMessageRequest request, ServerCallContext context)

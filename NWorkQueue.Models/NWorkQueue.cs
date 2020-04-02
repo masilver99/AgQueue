@@ -50,33 +50,35 @@ namespace NWorkQueue.Models {
             "cGlyeUluTWludXRlcxgGIAEoBRITCgtDb3JyZWxhdGlvbhgHIAEoBRIRCglH",
             "cm91cE5hbWUYCCABKAkSDwoHUGF5bG9hZBgJIAEoDCI6ChRRdWV1ZU1lc3Nh",
             "Z2VSZXNwb25zZRIPCgdUcmFuc0lkGAEgASgDEhEKCU1lc3NhZ2VJZBgCIAEo",
-            "AyI2ChJQdWxsTWVzc2FnZVJlcXVlc3QSDwoHUXVldWVJZBgBIAEoAxIPCgdU",
-            "cmFuc0lkGAIgASgDIiYKE1B1bGxNZXNzYWdlUmVzcG9uc2USDwoHVHJhbnNJ",
-            "ZBgCIAEoAyIlChJQZWVrTWVzc2FnZVJlcXVlc3QSDwoHUXVldWVJZBgBIAEo",
-            "AyIVChNQZWVrTWVzc2FnZVJlc3BvbnNlMtkHCghRdWV1ZUFwaRJECgtDcmVh",
-            "dGVRdWV1ZRIZLmdyZWV0LkNyZWF0ZVF1ZXVlUmVxdWVzdBoaLmdyZWV0LkNy",
-            "ZWF0ZVF1ZXVlUmVzcG9uc2USVgoRSW5pdGlhbGl6ZVN0b3JhZ2USHy5ncmVl",
-            "dC5Jbml0aWFsaXplU3RvcmFnZVJlcXVlc3QaIC5ncmVldC5Jbml0aWFsaXpl",
-            "U3RvcmFnZVJlc3BvbnNlElAKD0RlbGV0ZVF1ZXVlQnlJZBIdLmdyZWV0LkRl",
-            "bGV0ZVF1ZXVlQnlJZFJlcXVlc3QaHi5ncmVldC5EZWxldGVRdWV1ZUJ5SWRS",
-            "ZXNwb25zZRJWChFEZWxldGVRdWV1ZUJ5TmFtZRIfLmdyZWV0LkRlbGV0ZVF1",
-            "ZXVlQnlOYW1lUmVxdWVzdBogLmdyZWV0LkRlbGV0ZVF1ZXVlQnlOYW1lUmVz",
-            "cG9uc2USTwoQR2V0UXVldWVJbmZvQnlJZBIeLmdyZWV0LkdldFF1ZXVlSW5m",
-            "b0J5SWRSZXF1ZXN0GhsuZ3JlZXQuR2V0UXVldWVJbmZvUmVzcG9uc2USUwoS",
-            "R2V0UXVldWVJbmZvQnlOYW1lEiAuZ3JlZXQuR2V0UXVldWVJbmZvQnlOYW1l",
-            "UmVxdWVzdBobLmdyZWV0LkdldFF1ZXVlSW5mb1Jlc3BvbnNlElMKEFN0YXJ0",
-            "VHJhbnNhY3Rpb24SHi5ncmVldC5TdGFydFRyYW5zYWN0aW9uUmVxdWVzdBof",
-            "LmdyZWV0LlN0YXJ0VHJhbnNhY3Rpb25SZXNwb25zZRJWChFDb21taXRUcmFu",
-            "c2FjdGlvbhIfLmdyZWV0LkNvbW1pdFRyYW5zYWN0aW9uUmVxdWVzdBogLmdy",
-            "ZWV0LkNvbW1pdFRyYW5zYWN0aW9uUmVzcG9uc2USWwoSUm9sbGJhY2tUcmFu",
-            "YWN0aW9uEiEuZ3JlZXQuUm9sbGJhY2tUcmFuc2FjdGlvblJlcXVlc3QaIi5n",
-            "cmVldC5Sb2xsYmFja1RyYW5zYWN0aW9uUmVzcG9uc2USRwoMUXVldWVNZXNz",
-            "YWdlEhouZ3JlZXQuUXVldWVNZXNzYWdlUmVxdWVzdBobLmdyZWV0LlF1ZXVl",
-            "TWVzc2FnZVJlc3BvbnNlEkUKDFB1bGxNZXNzYWdlcxIZLmdyZWV0LlB1bGxN",
-            "ZXNzYWdlUmVxdWVzdBoaLmdyZWV0LlB1bGxNZXNzYWdlUmVzcG9uc2USRQoM",
-            "UGVla01lc3NhZ2VzEhkuZ3JlZXQuUGVla01lc3NhZ2VSZXF1ZXN0GhouZ3Jl",
-            "ZXQuUGVla01lc3NhZ2VSZXNwb25zZUIUqgIRTldvcmtRdWV1ZS5Nb2RlbHNi",
-            "BnByb3RvMw=="));
+            "AyJ4ChJQdWxsTWVzc2FnZVJlcXVlc3QSDwoHUXVldWVJZBgBIAEoAxIPCgdU",
+            "cmFuc0lkGAIgASgDEh4KFk1lc3NhZ2VDb3VudFRvUmV0cmlldmUYAyABKAUS",
+            "IAoYTWludW11bVJlcXVpcmVkTWVzc2FhZ2VzGAQgASgFIkgKE1B1bGxNZXNz",
+            "YWdlUmVzcG9uc2USDwoHVHJhbnNJZBgBIAEoAxIgCghNZXNzYWdlcxgCIAMo",
+            "CzIOLmdyZWV0Lk1lc3NhZ2UiJQoSUGVla01lc3NhZ2VSZXF1ZXN0Eg8KB1F1",
+            "ZXVlSWQYASABKAMiFQoTUGVla01lc3NhZ2VSZXNwb25zZTLZBwoIUXVldWVB",
+            "cGkSRAoLQ3JlYXRlUXVldWUSGS5ncmVldC5DcmVhdGVRdWV1ZVJlcXVlc3Qa",
+            "Gi5ncmVldC5DcmVhdGVRdWV1ZVJlc3BvbnNlElYKEUluaXRpYWxpemVTdG9y",
+            "YWdlEh8uZ3JlZXQuSW5pdGlhbGl6ZVN0b3JhZ2VSZXF1ZXN0GiAuZ3JlZXQu",
+            "SW5pdGlhbGl6ZVN0b3JhZ2VSZXNwb25zZRJQCg9EZWxldGVRdWV1ZUJ5SWQS",
+            "HS5ncmVldC5EZWxldGVRdWV1ZUJ5SWRSZXF1ZXN0Gh4uZ3JlZXQuRGVsZXRl",
+            "UXVldWVCeUlkUmVzcG9uc2USVgoRRGVsZXRlUXVldWVCeU5hbWUSHy5ncmVl",
+            "dC5EZWxldGVRdWV1ZUJ5TmFtZVJlcXVlc3QaIC5ncmVldC5EZWxldGVRdWV1",
+            "ZUJ5TmFtZVJlc3BvbnNlEk8KEEdldFF1ZXVlSW5mb0J5SWQSHi5ncmVldC5H",
+            "ZXRRdWV1ZUluZm9CeUlkUmVxdWVzdBobLmdyZWV0LkdldFF1ZXVlSW5mb1Jl",
+            "c3BvbnNlElMKEkdldFF1ZXVlSW5mb0J5TmFtZRIgLmdyZWV0LkdldFF1ZXVl",
+            "SW5mb0J5TmFtZVJlcXVlc3QaGy5ncmVldC5HZXRRdWV1ZUluZm9SZXNwb25z",
+            "ZRJTChBTdGFydFRyYW5zYWN0aW9uEh4uZ3JlZXQuU3RhcnRUcmFuc2FjdGlv",
+            "blJlcXVlc3QaHy5ncmVldC5TdGFydFRyYW5zYWN0aW9uUmVzcG9uc2USVgoR",
+            "Q29tbWl0VHJhbnNhY3Rpb24SHy5ncmVldC5Db21taXRUcmFuc2FjdGlvblJl",
+            "cXVlc3QaIC5ncmVldC5Db21taXRUcmFuc2FjdGlvblJlc3BvbnNlElsKElJv",
+            "bGxiYWNrVHJhbmFjdGlvbhIhLmdyZWV0LlJvbGxiYWNrVHJhbnNhY3Rpb25S",
+            "ZXF1ZXN0GiIuZ3JlZXQuUm9sbGJhY2tUcmFuc2FjdGlvblJlc3BvbnNlEkcK",
+            "DFF1ZXVlTWVzc2FnZRIaLmdyZWV0LlF1ZXVlTWVzc2FnZVJlcXVlc3QaGy5n",
+            "cmVldC5RdWV1ZU1lc3NhZ2VSZXNwb25zZRJFCgxQdWxsTWVzc2FnZXMSGS5n",
+            "cmVldC5QdWxsTWVzc2FnZVJlcXVlc3QaGi5ncmVldC5QdWxsTWVzc2FnZVJl",
+            "c3BvbnNlEkUKDFBlZWtNZXNzYWdlcxIZLmdyZWV0LlBlZWtNZXNzYWdlUmVx",
+            "dWVzdBoaLmdyZWV0LlBlZWtNZXNzYWdlUmVzcG9uc2VCFKoCEU5Xb3JrUXVl",
+            "dWUuTW9kZWxzYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -100,8 +102,8 @@ namespace NWorkQueue.Models {
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueMessageRequest), global::NWorkQueue.Models.QueueMessageRequest.Parser, new[]{ "TransId", "Message" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.Message), global::NWorkQueue.Models.Message.Parser, new[]{ "QueueId", "Message_", "MetaData", "Priority", "MaxRetries", "ExpiryInMinutes", "Correlation", "GroupName", "Payload" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueMessageResponse), global::NWorkQueue.Models.QueueMessageResponse.Parser, new[]{ "TransId", "MessageId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PullMessageRequest), global::NWorkQueue.Models.PullMessageRequest.Parser, new[]{ "QueueId", "TransId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PullMessageResponse), global::NWorkQueue.Models.PullMessageResponse.Parser, new[]{ "TransId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PullMessageRequest), global::NWorkQueue.Models.PullMessageRequest.Parser, new[]{ "QueueId", "TransId", "MessageCountToRetrieve", "MinumumRequiredMessaages" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PullMessageResponse), global::NWorkQueue.Models.PullMessageResponse.Parser, new[]{ "TransId", "Messages" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PeekMessageRequest), global::NWorkQueue.Models.PeekMessageRequest.Parser, new[]{ "QueueId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PeekMessageResponse), global::NWorkQueue.Models.PeekMessageResponse.Parser, null, null, null, null, null)
           }));
@@ -3042,6 +3044,8 @@ namespace NWorkQueue.Models {
     public PullMessageRequest(PullMessageRequest other) : this() {
       queueId_ = other.queueId_;
       transId_ = other.transId_;
+      messageCountToRetrieve_ = other.messageCountToRetrieve_;
+      minumumRequiredMessaages_ = other.minumumRequiredMessaages_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3072,6 +3076,34 @@ namespace NWorkQueue.Models {
       }
     }
 
+    /// <summary>Field number for the "MessageCountToRetrieve" field.</summary>
+    public const int MessageCountToRetrieveFieldNumber = 3;
+    private int messageCountToRetrieve_;
+    /// <summary>
+    /// 0 = all messages
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int MessageCountToRetrieve {
+      get { return messageCountToRetrieve_; }
+      set {
+        messageCountToRetrieve_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "MinumumRequiredMessaages" field.</summary>
+    public const int MinumumRequiredMessaagesFieldNumber = 4;
+    private int minumumRequiredMessaages_;
+    /// <summary>
+    /// If this quantity isn't met, return no records
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int MinumumRequiredMessaages {
+      get { return minumumRequiredMessaages_; }
+      set {
+        minumumRequiredMessaages_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as PullMessageRequest);
@@ -3087,6 +3119,8 @@ namespace NWorkQueue.Models {
       }
       if (QueueId != other.QueueId) return false;
       if (TransId != other.TransId) return false;
+      if (MessageCountToRetrieve != other.MessageCountToRetrieve) return false;
+      if (MinumumRequiredMessaages != other.MinumumRequiredMessaages) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3095,6 +3129,8 @@ namespace NWorkQueue.Models {
       int hash = 1;
       if (QueueId != 0L) hash ^= QueueId.GetHashCode();
       if (TransId != 0L) hash ^= TransId.GetHashCode();
+      if (MessageCountToRetrieve != 0) hash ^= MessageCountToRetrieve.GetHashCode();
+      if (MinumumRequiredMessaages != 0) hash ^= MinumumRequiredMessaages.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3116,6 +3152,14 @@ namespace NWorkQueue.Models {
         output.WriteRawTag(16);
         output.WriteInt64(TransId);
       }
+      if (MessageCountToRetrieve != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(MessageCountToRetrieve);
+      }
+      if (MinumumRequiredMessaages != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(MinumumRequiredMessaages);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3129,6 +3173,12 @@ namespace NWorkQueue.Models {
       }
       if (TransId != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(TransId);
+      }
+      if (MessageCountToRetrieve != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MessageCountToRetrieve);
+      }
+      if (MinumumRequiredMessaages != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MinumumRequiredMessaages);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3147,6 +3197,12 @@ namespace NWorkQueue.Models {
       if (other.TransId != 0L) {
         TransId = other.TransId;
       }
+      if (other.MessageCountToRetrieve != 0) {
+        MessageCountToRetrieve = other.MessageCountToRetrieve;
+      }
+      if (other.MinumumRequiredMessaages != 0) {
+        MinumumRequiredMessaages = other.MinumumRequiredMessaages;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -3164,6 +3220,14 @@ namespace NWorkQueue.Models {
           }
           case 16: {
             TransId = input.ReadInt64();
+            break;
+          }
+          case 24: {
+            MessageCountToRetrieve = input.ReadInt32();
+            break;
+          }
+          case 32: {
+            MinumumRequiredMessaages = input.ReadInt32();
             break;
           }
         }
@@ -3198,6 +3262,7 @@ namespace NWorkQueue.Models {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public PullMessageResponse(PullMessageResponse other) : this() {
       transId_ = other.transId_;
+      messages_ = other.messages_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3207,7 +3272,7 @@ namespace NWorkQueue.Models {
     }
 
     /// <summary>Field number for the "TransId" field.</summary>
-    public const int TransIdFieldNumber = 2;
+    public const int TransIdFieldNumber = 1;
     private long transId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public long TransId {
@@ -3215,6 +3280,16 @@ namespace NWorkQueue.Models {
       set {
         transId_ = value;
       }
+    }
+
+    /// <summary>Field number for the "Messages" field.</summary>
+    public const int MessagesFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::NWorkQueue.Models.Message> _repeated_messages_codec
+        = pb::FieldCodec.ForMessage(18, global::NWorkQueue.Models.Message.Parser);
+    private readonly pbc::RepeatedField<global::NWorkQueue.Models.Message> messages_ = new pbc::RepeatedField<global::NWorkQueue.Models.Message>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::NWorkQueue.Models.Message> Messages {
+      get { return messages_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3231,6 +3306,7 @@ namespace NWorkQueue.Models {
         return true;
       }
       if (TransId != other.TransId) return false;
+      if(!messages_.Equals(other.messages_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3238,6 +3314,7 @@ namespace NWorkQueue.Models {
     public override int GetHashCode() {
       int hash = 1;
       if (TransId != 0L) hash ^= TransId.GetHashCode();
+      hash ^= messages_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3252,9 +3329,10 @@ namespace NWorkQueue.Models {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
       if (TransId != 0L) {
-        output.WriteRawTag(16);
+        output.WriteRawTag(8);
         output.WriteInt64(TransId);
       }
+      messages_.WriteTo(output, _repeated_messages_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3266,6 +3344,7 @@ namespace NWorkQueue.Models {
       if (TransId != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(TransId);
       }
+      size += messages_.CalculateSize(_repeated_messages_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -3280,6 +3359,7 @@ namespace NWorkQueue.Models {
       if (other.TransId != 0L) {
         TransId = other.TransId;
       }
+      messages_.Add(other.messages_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -3291,8 +3371,12 @@ namespace NWorkQueue.Models {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 16: {
+          case 8: {
             TransId = input.ReadInt64();
+            break;
+          }
+          case 18: {
+            messages_.AddEntriesFrom(input, _repeated_messages_codec);
             break;
           }
         }

@@ -129,10 +129,15 @@ message QueueMessageResponse {
 message PullMessageRequest {
   int64 QueueId = 1;
   int64 TransId = 2;
+  // 0 = all messages
+  int32 MessageCountToRetrieve = 3;
+  // If this quantity isn't met, return no records
+  int32 MinumumRequiredMessaages = 4;
 }
 
 message PullMessageResponse {
-  int64 TransId = 2;
+  int64 TransId = 1;
+  repeated Message Messages = 2;
 }
 
 message PeekMessageRequest {

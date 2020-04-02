@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using NWorkQueue.Common;
+using NWorkQueue.Common.Models;
 using NWorkQueue.Server.Common.Extensions;
 using NWorkQueue.Server.Common.Models;
 
@@ -304,6 +305,19 @@ namespace NWorkQueue.Server.Common
                 MessageState.InTransaction.Value);
         }
 
+        public async ValueTask<List<Message>> PullMessages(
+            long transId,
+            long queueId,
+            int messageCountToRetrieve,
+            int minumumRequiredMessaages)
+        {
+            // Check count is above min
+            // Pull Records, update them to be in transaction
+            return this.storage.PullMessage(
+                transId,
+                queueId);
+        }
+
         private async ValueTask ConfirmTransactionExistsAndIsActive(long transId)
         {
             var trans = await this.storage.GetTransactionById(transId);
@@ -344,12 +358,13 @@ namespace NWorkQueue.Server.Common
         }
 
         private async ValueTask PerformMessageHouseCleaning(DateTime currentDateTime)
-        { 
+        {
             // Check for any active but expired Messages (NOT IN A TRANSACTION) (Messages in an active transaction won't expired (they are safe until the transaction commits or rollbacks))
-                // Mark them as expired
-                "Update Messages set State = Expired, CloseDateTime = currentTime where TransactionId = null and State = Active and ExpiryDateTime >= currentTime;
+            // Mark them as expired
+            await this.storage.ExpireMessages(currentDateTime);
+
             // Check for active messages at or past the retry count
-                "Update Messages set State = RetryExceeded, CloseDateTime = currentTime where TransactionId = null and State = Active and Retries >= MaxRetries;
+            await this.storage.CloseRetryEceededMessages(currentDateTime);
 
                 // Mark as RetryExceeded
         }

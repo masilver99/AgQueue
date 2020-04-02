@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Dapper;
@@ -333,6 +334,70 @@ namespace NWorkQueue.Sqlite
                         MessageState = MessageState.InTransaction.Value,
                         currentDateTime,
                         OldTransactionState = TransactionState.Active.Value
+                    });
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<int> ExpireMessages(DateTime currentDateTime)
+        {
+            const string sql =
+                "Update Messages set State = @NewMessageState, CloseDateTime = @CurrentDateTime where TransactionId = null " +
+                "and State = @OldMessageState and ExpiryDateTime >= @CurrentDateTime";
+
+            return await this.Execute<int>(async (connection) =>
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    param: new
+                    {
+                        OldMessageState = MessageState.Active.Value,
+                        NewMessageState = MessageState.Expired.Value,
+                        currentDateTime
+                    });
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<int> CloseRetryEceededMessages(DateTime currentDateTime)
+        {
+            const string sql =
+                "Update Messages set State = @NewMessageState, CloseDateTime = @currentDateTime where TransactionId = null and State = @OldMessageState and Retries >= MaxRetries;";
+
+            return await this.Execute<int>(async (connection) =>
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    param: new
+                    {
+                        NewMessageState = MessageState.RetryExceeded.Value,
+                        OldMessageState = MessageState.Active.Value,
+                        currentDateTime
+                    });
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<Message> PullMessag(
+            long transId,
+            long queueId)
+        {
+            //Perhaps set a lock here based on queue, unlock once message is pulled and updated.
+            // Start a trans
+            // Get next message 
+            // Add message to transaction
+            // Commit
+            const string sql =
+                "Update Messages set State = @NewMessageState, CloseDateTime = @currentDateTime where TransactionId = null and State = @OldMessageState and Retries >= MaxRetries;";
+
+            return await this.Execute<int>(async (connection) =>
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    param: new
+                    {
+                        NewMessageState = MessageState.RetryExceeded.Value,
+                        OldMessageState = MessageState.Active.Value,
                     });
             });
         }

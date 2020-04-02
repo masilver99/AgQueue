@@ -11,7 +11,7 @@ namespace NWorkQueue.Common.Models
     /// <summary>
     /// Represents a Queue Message.
     /// </summary>
-    internal class Message
+    public class Message
     {
         /// <summary>
         /// Gets generated unique message id.

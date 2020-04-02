@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using NWorkQueue.Common;
 using NWorkQueue.Common.Models;
@@ -215,6 +216,12 @@ namespace NWorkQueue.Server.Common
         /// <returns>Returns the number of transactions expired.</returns>
         ValueTask<int> ExpireTransactions(IStorageTransaction storagetrans, DateTime currentDateTime);
 
+        ValueTask<int> ExpireMessages(DateTime currentDateTime);
+        
+        ValueTask<int> CloseRetryEceededMessages(DateTime currentDateTime);
+
+        ValueTask<Message> PullMessage(long transId, long queueId);
+
         /*
         /// <summary>
         /// Does a Quque exist for the specified id.
@@ -231,4 +238,4 @@ namespace NWorkQueue.Server.Common
         void DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans);
         */
     }
-}
+    }
