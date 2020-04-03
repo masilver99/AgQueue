@@ -217,7 +217,7 @@ namespace NWorkQueue.Server.Common
         ValueTask<int> ExpireTransactions(IStorageTransaction storagetrans, DateTime currentDateTime);
 
         ValueTask<int> ExpireMessages(DateTime currentDateTime);
-        
+
         ValueTask<int> CloseRetryEceededMessages(DateTime currentDateTime);
 
         ValueTask<Message> PullMessage(long transId, long queueId);
