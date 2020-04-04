@@ -3,8 +3,10 @@
 // </copyright>
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -22,7 +24,7 @@ namespace NWorkQueue.Sqlite
     {
         private readonly string connectionString;
 
-        private Dictionary<long, object> queueLocks = new Dictionary<long, object>();
+        private ConcurrentDictionary<long, SemaphoreSlim> queueLocks = new ConcurrentDictionary<long, SemaphoreSlim>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StorageSqlite"/> class.
@@ -389,54 +391,59 @@ namespace NWorkQueue.Sqlite
             // Get next message 
             // Add message to transaction
 
-            lock (this.GetQueueLock(queueId))
+            var semaphore = this.GetSemaphore(queueId);
+
+            return await this.ExecuteAsync<Message?>(async (connection) =>
             {
-                return this.Execute<Message?>((connection) =>
+                try
                 {
-                    var message = this.GetNextMessage(connection, transId, queueId);
+                    await semaphore.WaitAsync();
+                    var message = await this.GetNextMessage(connection, transId, queueId);
                     if (message == null)
                     {
                         return null;
                     }
 
-                    this.UpdateMessageWithTransaction(message.Id, transId);
+                    await this.UpdateMessageWithTransaction(message.Id, transId);
                     return message;
-                    
                 }
-            }
+                finally
+                {
+                    semaphore.Release();
+                }
+            });
         }
 
-        private Message GetNextMessage(long transId, long queueId)
+        private async ValueTask<Message?> GetNextMessage(SqliteConnection connection, long transId, long queueId)
         {
             const string sql =
                 "Update Messages set State = @NewMessageState, CloseDateTime = @currentDateTime where TransactionId = null and State = @OldMessageState and Retries >= MaxRetries;";
-
-            return await this.ExecuteAsync<int>(async (connection) =>
-            {
-                return await connection.ExecuteAsync(
-                    sql,
-                    param: new
-                    {
-                        NewMessageState = MessageState.RetryExceeded.Value,
-                        OldMessageState = MessageState.Active.Value,
-                    });
-            });
-
+            return await connection.QuerySingleOrDefaultAsync<Message?>(
+                sql,
+                param: new
+                {
+                    NewMessageState = MessageState.RetryExceeded.Value,
+                    OldMessageState = MessageState.Active.Value,
+                });
         }
 
-        private object GetQueueLock(long queueId)
+        private SemaphoreSlim GetSemaphore(long queueId)
         {
             // Will need to examine how this performs with a large amount of queues
             // it may consume a lot of memory.
-            object? lockObject;
-            if (this.queueLocks.TryGetValue(queueId, out lockObject))
+            SemaphoreSlim? semaphore;
+            if (this.queueLocks.TryGetValue(queueId, out semaphore))
             {
-                return lockObject;
+                return semaphore;
             }
 
-            lockObject = new object();
-            this.queueLocks.Add(queueId, lockObject);
-            return lockObject;
+            semaphore = new SemaphoreSlim(1, 1);
+            if (!this.queueLocks.TryAdd(queueId, semaphore))
+            {
+                throw new Exception("Unabled to add to new semaphore.");
+            }
+
+            return semaphore;
         }
 
         /// <summary>
