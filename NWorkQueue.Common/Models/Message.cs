@@ -31,7 +31,7 @@ namespace NWorkQueue.Common.Models
         /// <summary>
         /// Gets the transaction action. i.e. was this message added or pulled in the transaction.
         /// </summary>
-        public int TransactionAction { get; }
+        public TransactionAction? TransactionAction { get; }
 
         /// <summary>
         /// Gets the datetime the message was added.
@@ -61,7 +61,7 @@ namespace NWorkQueue.Common.Models
         /// <summary>
         /// Gets DateTime the message will expire.
         /// </summary>
-        public DateTime ExpiryDate { get; }
+        public DateTime ExpiryDateTime { get; }
 
         /// <summary>
         /// Gets the interger correlation id, used by calling application.
@@ -71,11 +71,15 @@ namespace NWorkQueue.Common.Models
         /// <summary>
         /// Gets string group name.  Used by external application for grouping purposes.
         /// </summary>
-        public string? Group { get; }
+        public string? GroupName { get; }
 
         /// <summary>
         /// Gets actual message data.
         /// </summary>
         public byte[]? Payload { get; }
+
+        public MessageState MessageState { get; } = MessageState.InTransaction;
+
+        public String Metadata { get; }
     }
 }

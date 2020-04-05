@@ -398,13 +398,15 @@ namespace NWorkQueue.Sqlite
                 try
                 {
                     await semaphore.WaitAsync();
+
+                    // We shouldn't need a db transaction here since it only happends within a semaphore lock,
                     var message = await this.GetNextMessage(connection, transId, queueId);
                     if (message == null)
                     {
                         return null;
                     }
 
-                    await this.UpdateMessageWithTransaction(message.Id, transId);
+                    await this.UpdateMessageWithTransaction(connection, message.Id, transId);
                     return message;
                 }
                 finally
@@ -417,14 +419,34 @@ namespace NWorkQueue.Sqlite
         private async ValueTask<Message?> GetNextMessage(SqliteConnection connection, long transId, long queueId)
         {
             const string sql =
-                "Update Messages set State = @NewMessageState, CloseDateTime = @currentDateTime where TransactionId = null and State = @OldMessageState and Retries >= MaxRetries;";
+                "SELECT Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, CloseDateTime, " +
+                "Priority, MaxRetries, Retries, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload" +
+                "FROM Messages WHERE State = @MessageState AND CloseDateTime = NULL AND TransactionId = NULL " +
+                "ORDER by Priority DESC, AddDateTime " +
+                "LIMIT 1 ";
             return await connection.QuerySingleOrDefaultAsync<Message?>(
                 sql,
                 param: new
                 {
-                    NewMessageState = MessageState.RetryExceeded.Value,
-                    OldMessageState = MessageState.Active.Value,
+                    MessageState = MessageState.Active.Value,
                 });
+        }
+
+        private async ValueTask UpdateMessageWithTransaction(SqliteConnection connection, long transId, long messageId)
+        {
+            const string sql =
+                "Update Messages set State = @NewMessageState, TransactionId = @TransactionId, TransactionAction = @TransactionAction " +
+                "WHERE MessageId = @MessageId;";
+            await connection.ExecuteAsync(
+                sql,
+                param: new
+                {
+                    NewMessageState = MessageState.InTransaction.Value,
+                    TransactionId = transId,
+                    messageId,
+                    TransactionAction = TransactionAction.Pull.Value
+                });
+
         }
 
         private SemaphoreSlim GetSemaphore(long queueId)
@@ -548,7 +570,7 @@ namespace NWorkQueue.Sqlite
 
         private async ValueTask Execute(Func<SqliteConnection, ValueTask> action, SqliteConnection? connection = null)
         {
-            await this.ExecuteASync<object?>(
+            await this.ExecuteAsync<object?>(
                 async (newConnection) =>
                 {
                     await action(newConnection);

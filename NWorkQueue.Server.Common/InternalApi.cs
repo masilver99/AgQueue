@@ -305,15 +305,13 @@ namespace NWorkQueue.Server.Common
                 MessageState.InTransaction.Value);
         }
 
-        public async ValueTask<List<Message>> PullMessages(
+        public async ValueTask<Message> PullMessage(
             long transId,
-            long queueId,
-            int messageCountToRetrieve,
-            int minumumRequiredMessaages)
+            long queueId)
         {
             // Check count is above min
             // Pull Records, update them to be in transaction
-            return this.storage.PullMessage(
+            return await this.storage.PullMessage(
                 transId,
                 queueId);
         }

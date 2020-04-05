@@ -8,6 +8,8 @@ using NWorkQueue.Server.Common.Extensions;
 using NWorkQueue.Server.Common;
 using NWorkQueue.Models;
 using NWorkQueue.Common;
+using Google.Protobuf.WellKnownTypes;
+using Google.Protobuf;
 
 namespace NWorkQueue.GrpcServer
 {
@@ -106,19 +108,36 @@ namespace NWorkQueue.GrpcServer
                 request.Message.Priority,
                 request.Message.MaxRetries,
                 request.Message.ExpiryInMinutes,
-                request.Message.Correlation,
+                request.Message.CorrelationId,
                 request.Message.GroupName);
             return new QueueMessageResponse { MessageId = messageId, TransId = request.TransId };
         }
 
         public override async Task<PullMessageResponse> PullMessages(PullMessageRequest request, ServerCallContext context)
         {
-            var messageId = await this.internalApi.PullMessage(
+            var message = await this.internalApi.PullMessage(
                 request.TransId,
-                request.QueueId,
-                request.MessageCountToRetrieve,
-                request.MinumumRequiredMessaages);
-            return new QueueMessageResponse { MessageId = messageId, TransId = request.TransId };
+                request.QueueId);
+
+            return new PullMessageResponse
+            {
+                Message = new MessageOut()
+                {
+                    CorrelationId = message.CorrelationId,
+                    ExpiryDateTime = Timestamp.FromDateTime(message.ExpiryDateTime),
+                    AddDateTime = Timestamp.FromDateTime(message.AddDateTime),
+                    CloseDateTime = Timestamp.FromDateTime(message.CloseDateTime),
+                    GroupName = message.GroupName,
+                    MaxRetries = message.MaxRetries,
+                    MessageState = (Models.MessageState)message.MessageState.Value,
+                    MetaData = message.Metadata,
+                    Payload = ByteString.CopyFrom(message.Payload),
+                    Priority = message.Priority,
+                    QueueId = message.QueueId,
+                    TransAction = (Models.TransactionAction)message.TransactionAction.Value,
+                    TransId = message.TransactionId
+                }
+            };
         }
 
         public override async Task<PeekMessageResponse> PeekMessages(PeekMessageRequest request, ServerCallContext context)

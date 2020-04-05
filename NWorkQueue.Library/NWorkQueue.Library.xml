@@ -22,7 +22,7 @@
             This is mostly a factory for creating Queues and Transactions.
             </summary>
             <remarks>
-            Exceptions are not used unless there is an exceptional condition.  For example, if an items doesn't exist or a param is invalid, 
+            Exceptions are not used unless there is an exceptional condition.  For example, if an items doesn't exist or a param is invalid,
             this is handled without an exception.  This is mostly for speed and simplicity with the gRPC interface.
             </remarks>
         </member>
@@ -42,7 +42,7 @@
         <member name="M:NWorkQueue.Server.Common.InternalApi.DeleteQueue(System.String)">
             <summary>
             Delete a queue and all messages in the queue.
-            Throws an exception if Queue doesn't exist
+            Throws an exception if Queue doesn't exist.
             </summary>
             <param name="queueName">Name of the queue to delete.</param>
         </member>
@@ -123,12 +123,12 @@
             <param name="groupName">Group name applied to message.</param>
             <returns>Return the message id.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.InternalApi.PerformHouseCleaning(System.DateTime)">
+        <member name="M:NWorkQueue.Server.Common.InternalApi.PerformTransactionHouseCleaning(System.DateTime)">
             <summary>
             Expires transactions, message and checks message counts, maybe.
             </summary>
             <param name="currentTime">The current time is passed in so it is consistent with the time used in the calling procedure.</param>
-            <returns>ValueTask</returns>
+            <returns>ValueTask.</returns>
         </member>
         <member name="T:NWorkQueue.Server.Common.IStorage">
             <summary>
@@ -211,6 +211,35 @@
             <param name="expiryDateTime">When the transaction will end.</param>
             <returns>Returns transaction ID.</returns>
         </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Updates a set of messages.
+            </summary>
+            <param name="storageTrans">The storage transaction to make change within.</param>
+            <param name="transId">The transaction the messages are associated with.</param>
+            <param name="transactionAction">The TransactionAction to search for.</param>
+            <param name="oldMessageState">Current message state.</param>
+            <param name="newMessageState">Update the message state to this value.</param>
+            <returns>Returns the number of messages updated.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,System.Int32)">
+            <summary>
+            Updates the message retry cuont based on transactionAction and MessageState.
+            </summary>
+            <param name="storageTrans">The storage transaction to run the query under.</param>
+            <param name="transId">The messages must be in this transaction.</param>
+            <param name="transactionAction">The transactionAction the message must be in.</param>
+            <param name="messageState">The messageState the message must be in. </param>
+            <returns>Number of messages updated.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.DeleteAddedMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64)">
+            <summary>
+            Delete messages that were added in the specified transtacion.
+            </summary>
+            <param name="storageTrans">The storage transaction to run the query in.</param>
+            <param name="transId">The transaction the messages must be in.</param>
+            <returns>Number of records deleted.</returns>
+        </member>
         <member name="M:NWorkQueue.Server.Common.IStorage.ExtendTransaction(System.Int64,System.DateTime)">
             <summary>
             Extends the transaction's expiration datetime.
@@ -219,12 +248,14 @@
             <param name="expiryDateTime">The new expiration datetime.</param>
             <returns>ValueTask.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateTransactionState(System.Int64,NWorkQueue.Common.TransactionState,System.Nullable{System.DateTime})">
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateTransactionState(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionState,System.String,System.Nullable{System.DateTime})">
             <summary>
             Update the transaction's state and end datetime.
             </summary>
+            <param name="storageTrans">The storage transaction to make change within.</param>
             <param name="transId">The id of the transaction to update.</param>
             <param name="state">The new state of the transaction.</param>
+            <param name="endReason">Reason the transaction was ended.  Optional.</param>
             <param name="endDateTime">Datetime the transaction was closed (or null if not closed).</param>
             <returns>ValueTask.</returns>
         </member>
@@ -236,6 +267,30 @@
             Not all Storage classes will have internal transactions, so this can return a dummy class that performs no actions.
             </remarks>
             <returns>Returns a class represented by IStorageTransaction which can commit or rollbacl the transaction.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.DeleteAddedMessagesInExpiredTrans(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <summary>
+            Deletes added messages in an expired transaction.
+            </summary>
+            <param name="storageTrans">Storage Transaction to run under.</param>
+            <param name="currentDateTime">DateTime to expire against.</param>
+            <returns>Returns the count of the deleted records.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessageRetriesInExpiredTrans(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <summary>
+            Updates the retry counts for messages in an expired transaction.
+            </summary>
+            <param name="storageTrans">Storage Transaction to run under.</param>
+            <param name="currentDateTime">DateTime to expire against.</param>
+            <returns>Number of records updated.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.ExpireTransactions(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <summary>
+            Expires transactions whose expiry date time is past the currentDateTime.
+            </summary>
+            <param name="storagetrans">Storage Transaction to run under.</param>
+            <param name="currentDateTime">DateTime to expire against.</param>
+            <returns>Returns the number of transactions expired.</returns>
         </member>
         <member name="T:NWorkQueue.Server.Common.IStorageTransaction">
             <summary>
