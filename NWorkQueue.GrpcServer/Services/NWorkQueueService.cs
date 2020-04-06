@@ -113,13 +113,13 @@ namespace NWorkQueue.GrpcServer
             return new QueueMessageResponse { MessageId = messageId, TransId = request.TransId };
         }
 
-        public override async Task<PullMessageResponse> PullMessages(PullMessageRequest request, ServerCallContext context)
+        public override async Task<DequeueMessageResponse> DequeueMessage(DequeueMessageRequest request, ServerCallContext context)
         {
-            var message = await this.internalApi.PullMessage(
+            var message = await this.internalApi.DequeueMessage(
                 request.TransId,
                 request.QueueId);
 
-            return new PullMessageResponse
+            return new DequeueMessageResponse
             {
                 Message = new MessageOut()
                 {
@@ -140,12 +140,12 @@ namespace NWorkQueue.GrpcServer
             };
         }
 
-        public override async Task<PeekMessageResponse> PeekMessages(PeekMessageRequest request, ServerCallContext context)
+        public override async Task<PeekMessageByQueueResponse> PeekMessageByQueue(PeekMessageByQueueRequest request, ServerCallContext context)
         {
-            var message = await this.internalApi.PeekMessage(
+            var message = await this.internalApi.PeekMessageByQueueId(
                 request.QueueId);
 
-            return new PeekMessageResponse
+            return new PeekMessageByQueueResponse
             {
                 Message = new MessageOut()
                 {

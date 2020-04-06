@@ -149,30 +149,6 @@ namespace NWorkQueue.Sqlite
             });
         }
 
-        /*
-        #region Message methods
-
-        /// <inheritdoc/>
-        public void CloseRetriedMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime)
-        {
-            const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @closeDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and Retries >= MaxRetries";
-            this.connection.Execute(sql, new { State = MessageState.RetryExceeded, transId, TranAction = TransactionAction.Pull.Value, closeDateTime }, (storageTrans as DbTransaction)?.SqliteTransaction);
-        }
-
-        /// <inheritdoc/>
-        public void ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime, DateTime expiryDateTime)
-        {
-            const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, CloseDateTime = @closeDateTime WHERE TransactionId = @tranId and TransactionAction = @TranAction and ExpiryDateTime <= @expiryDateTime";
-            this.connection.Execute(sql, new { State = MessageState.Expired, transId, TranAction = TransactionAction.Pull.Value, expiryDateTime, closeDateTime }, (storageTrans as DbTransaction)?.SqliteTransaction);
-        }
-
-        /// <inheritdoc/>
-        public void UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans)
-        {
-            const string sql = "UPDATE Messages SET State = @State, TransactionId = NULL, TransactionAction = NULL, Retries = Retries + 1 WHERE TransactionId = @tranId and TransactionAction = @TranAction;";
-            this.connection.Execute(sql, new { State = MessageState.Active, transId, TranAction = TransactionAction.Pull.Value }, (storageTrans as DbTransaction)?.SqliteTransaction);
-            */
-
         /// <inheritdoc/>
         public async ValueTask<long> AddMessage(
             long transId,
@@ -382,13 +358,13 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask<Message?> PullMessage(
+        public async ValueTask<Message?> DequeueMessage(
             long transId,
             long queueId)
         {
             // This routine is the bread and butter of the queue.  It must ensure only the next record is returned.
 
-            // Get next message 
+            // Get next message
             // Add message to transaction
 
             var semaphore = this.GetSemaphore(queueId);
@@ -416,11 +392,31 @@ namespace NWorkQueue.Sqlite
             });
         }
 
-        public async ValueTask<Message?> PeekMessage(long queueId)
+        /// <inheritdoc/>
+        public async ValueTask<Message?> PeekMessageByQueueId(long queueId)
         {
             return await this.ExecuteAsync<Message?>(async (connection) =>
             {
                 return await this.GetNextMessage(connection, queueId);
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<Message?> PeekMessageByMessageId(long messageId)
+        {
+            return await this.ExecuteAsync<Message?>(async (connection) =>
+            {
+                const string sql =
+                "SELECT Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, CloseDateTime, " +
+                "Priority, MaxRetries, Retries, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload" +
+                "FROM Messages WHERE Id = @MessageId;";
+
+                return await connection.QuerySingleOrDefaultAsync<Message?>(
+                    sql,
+                    param: new
+                    {
+                        messageId
+                    });
             });
         }
 
@@ -456,7 +452,6 @@ namespace NWorkQueue.Sqlite
                     messageId,
                     TransactionAction = TransactionAction.Pull.Value
                 });
-
         }
 
         private SemaphoreSlim GetSemaphore(long queueId)

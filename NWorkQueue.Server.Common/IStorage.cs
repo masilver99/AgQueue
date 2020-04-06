@@ -24,38 +24,7 @@ namespace NWorkQueue.Server.Common
         /// <param name="deleteExistingData">Should all existing queues and messages be deleted.</param>
         /// <returns>ValueTask.</returns>
         ValueTask InitializeStorage(bool deleteExistingData);
-        /*
-        /// <summary>
-        /// Delete all messages by their queue transaction id.
-        /// </summary>
-        /// <param name="transId">Id of the queue transaction.</param>
-        /// <param name="storageTrans">Storage Transaction.</param>
-        void DeleteMessagesByTransId(long transId, IStorageTransaction storageTrans);
 
-        /// <summary>
-        /// Close messages that have too many retries.
-        /// </summary>
-        /// <param name="transId">Queue transaction id.</param>
-        /// <param name="storageTrans">Storage Transaction.</param>
-        /// <param name="closeDateTime">Datetime the message should be marked as closed.</param>
-        void CloseRetriedMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime);
-
-        /// <summary>
-        /// Expire messages past their expiration date/time.
-        /// </summary>
-        /// <param name="transId">Queue transaction id.</param>
-        /// <param name="storageTrans">Storage Transaction.</param>
-        /// <param name="closeDateTime">Datetime the message should be marked as closed.</param>
-        /// <param name="expiryDateTime">Messages with expiry times before this will be marked closed.</param>
-        void ExpireOlderMessages(long transId, IStorageTransaction storageTrans, DateTime closeDateTime, DateTime expiryDateTime);
-
-        /// <summary>
-        /// Update retry counts on rolledback transaction.
-        /// </summary>
-        /// <param name="transId">Queue transaction id.</param>
-        /// <param name="storageTrans">Storage Transaction.</param>
-        void UpdateRetriesOnRollbackedMessages(long transId, IStorageTransaction storageTrans);
-*/
         /// <summary>
         /// Create a new Queue in storage.
         /// </summary>
@@ -220,24 +189,10 @@ namespace NWorkQueue.Server.Common
 
         ValueTask<int> CloseRetryEceededMessages(DateTime currentDateTime);
 
-        ValueTask<Message> PullMessage(long transId, long queueId);
+        ValueTask<Message?> DequeueMessage(long transId, long queueId);
 
-        ValueTask<Message> PeekMessage(long queueId);
+        ValueTask<Message?> PeekMessageByQueueId(long queueId);
 
-        /*
-        /// <summary>
-        /// Does a Quque exist for the specified id.
-        /// </summary>
-        /// <param name="id">Quque ID.</param>
-        /// <returns>true if quque exists.</returns>
-        bool DoesQueueExist(long id);
-
-        /// <summary>
-        /// Delete all messages in a specified queue.
-        /// </summary>
-        /// <param name="queueId">Queue id.</param>
-        /// <param name="storageTrans">Storage transaction.</param>
-        void DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans);
-        */
+        ValueTask<Message?> PeekMessageByMessageId(long messageId);
     }
 }

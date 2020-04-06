@@ -171,9 +171,9 @@ namespace NWorkQueue.Server.Common
             await this.storage.ExtendTransaction(transId, DateTime.Now.AddMinutes(expiryMinutes));
         }
 
-        public async ValueTask <Message?> PeekMessage(long queueId)
+        public async ValueTask <Message?> PeekMessageByQueueId(long queueId)
         {
-            return await this.storage.PeekMessage(
+            return await this.storage.PeekMessageByQueueId(
                 queueId);
         }
 
@@ -311,13 +311,13 @@ namespace NWorkQueue.Server.Common
                 MessageState.InTransaction.Value);
         }
 
-        public async ValueTask<Message> PullMessage(
+        public async ValueTask<Message> DequeueMessage(
             long transId,
             long queueId)
         {
             // Check count is above min
             // Pull Records, update them to be in transaction
-            return await this.storage.PullMessage(
+            return await this.storage.DequeueMessage(
                 transId,
                 queueId);
         }

@@ -18,9 +18,9 @@ service QueueApi {
   rpc CommitTransaction (CommitTransactionRequest) returns (CommitTransactionResponse);
   rpc RollbackTranaction (RollbackTransactionRequest) returns (RollbackTransactionResponse);
   rpc QueueMessage (QueueMessageRequest) returns (QueueMessageResponse);
-  rpc PullMessages (PullMessageRequest) returns (PullMessageResponse);
-  rpc PeekMessages (PeekMessageRequest) returns (PeekMessageResponse);
-  //rpc Subscribe
+  rpc DequeueMessage (DequeueMessageRequest) returns (DequeueMessageResponse);
+  rpc PeekMessageByQueue (PeekMessageByQueueRequest) returns (PeekMessageByQueueResponse);
+  rpc PeekMessageById (PeekMessageByIdRequest) returns (PeekMessageByIdResponse);
 }
 
 message GetQueueInfoResponse {
@@ -162,7 +162,7 @@ message QueueMessageResponse {
   int64 MessageId = 2;
 }
 
-message PullMessageRequest {
+message DequeueMessageRequest {
   int64 QueueId = 1;
   int64 TransId = 2;
   // 0 = all messages
@@ -171,33 +171,23 @@ message PullMessageRequest {
   //int32 MinumumRequiredMessaages = 4;
 }
 
-message PullMessageResponse {
+message DequeueMessageResponse {
   int64 TransId = 1;
   MessageOut Message = 2;
 }
 
-message PeekMessageRequest {
+message PeekMessageByQueueRequest {
   int64 QueueId = 1;
 }
 
-message PeekMessageResponse {
+message PeekMessageByQueueResponse {
   MessageOut Message = 1;
 }
 
-/*testing...
-message Transaction {
-    /// Gets the unique ID for a transaction.
-  int64 Id = 1;
+message PeekMessageByIdRequest {
+  int64 MessageId = 1;
+}
 
-    /// Gets a value indicating the state of the transaction.
-   int32 State = 2;
-
-    /// Gets the date and time the transaction was created.
-    google.protobuf.Timestamp CreateDateTime = 3;
-
-    /// Gets the date and time the transaction will expire. e.g. after this datetime, the transaction will automatically rollback.
-    google.protobuf.Timestamp ExpiryDateTime = 4;
-
-    /// Gets the date and time the transaction was closed, null if not closed.
-    google.protobuf.Timestamp EndDateTime = 5;
-}*/
+message PeekMessageByIdResponse {
+  MessageOut Message = 1;
+}
