@@ -3,7 +3,7 @@ using Grpc.Net.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using NWorkQueue.Common;
+using NWorkQueue.Common.Extensions;
 using NWorkQueue.Models;
 using System.Threading.Tasks;
 using Grpc.Net.ClientFactory;
@@ -48,6 +48,7 @@ namespace NWorkQueue.Integration.Tests
         [TestCleanup]
         public async Task TestCleanup()
         {
+            _webHost.ThrowIfNull();
             await _webHost.StopAsync();
         }
 

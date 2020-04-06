@@ -2,7 +2,7 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace NWorkQueue.Server.Common.Extensions
+namespace NWorkQueue.Common.Extensions
 {
     /// <summary>
     /// Extensions methods to be used on stings.
@@ -14,7 +14,7 @@ namespace NWorkQueue.Server.Common.Extensions
         /// </summary>
         /// <param name="rawQueueName">Raw queue name.</param>
         /// <returns>Standardized queue name.</returns>
-        internal static string StandardizeQueueName(this string rawQueueName)
+        public static string StandardizeQueueName(this string rawQueueName)
         {
             return rawQueueName.Replace(" ", string.Empty);
         }

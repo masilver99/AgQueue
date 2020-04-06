@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NWorkQueue.Server.Common.Extensions
+namespace NWorkQueue.Common.Extensions
 {
     /// <summary>
     /// Extensions methods for use on Objects.
@@ -18,7 +18,7 @@ namespace NWorkQueue.Server.Common.Extensions
         /// </summary>
         /// <param name="obj">Object to perform null check on.</param>
         /// <param name="name">Param name to include in exception message.</param>
-        public static void ThrowIfNull(this object obj, string? name = null)
+        public static void ThrowIfNull(this object? obj, string? name = null)
         {
             if (obj == null)
             {

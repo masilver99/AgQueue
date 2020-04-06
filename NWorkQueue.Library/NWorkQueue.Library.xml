@@ -6,7 +6,7 @@
     <members>
         <member name="T:NWorkQueue.Server.Common.Extensions.ObjectExtensions">
             <summary>
-            Extensions methods for use on Objects
+            Extensions methods for use on Objects.
             </summary>
         </member>
         <member name="M:NWorkQueue.Server.Common.Extensions.ObjectExtensions.ThrowIfNull(System.Object,System.String)">
@@ -15,6 +15,18 @@
             </summary>
             <param name="obj">Object to perform null check on.</param>
             <param name="name">Param name to include in exception message.</param>
+        </member>
+        <member name="T:NWorkQueue.Server.Common.Extensions.StringExtensions">
+            <summary>
+            Extensions methods to be used on stings.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.Extensions.StringExtensions.StandardizeQueueName(System.String)">
+            <summary>
+            Standardizes the queue name so it's always consistent.
+            </summary>
+            <param name="rawQueueName">Raw queue name.</param>
+            <returns>Standardized queue name.</returns>
         </member>
         <member name="T:NWorkQueue.Server.Common.InternalApi">
             <summary>
@@ -94,6 +106,14 @@
             <param name="expiryTimeInMinutes">How long to extend the transaction by.</param>
             <returns>ValueTask.</returns>
         </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.PeekMessageByQueueId(System.Int64)">
+            <summary>
+            View the next message in the spcified queue.
+            </summary>
+            <remarks>Keep in mind, this may change by the time of the dequeue call.</remarks>
+            <param name="queueId">The queue to peek from.</param>
+            <returns>Message object or null if no message available.</returns>
+        </member>
         <member name="M:NWorkQueue.Server.Common.InternalApi.CommitTransaction(System.Int64)">
             <summary>
             Commits Transaction, updating all messages in transaction.
@@ -122,6 +142,14 @@
             <param name="correlation">Correlation number.</param>
             <param name="groupName">Group name applied to message.</param>
             <returns>Return the message id.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.DequeueMessage(System.Int64,System.Int64)">
+            <summary>
+            Dequeues a message from a specific queue.
+            </summary>
+            <param name="transId">The transaction ID of the transaction the message will be dequeued in.</param>
+            <param name="queueId">The queue to pull the messge from.</param>
+            <returns>Returns a message object or null if there is no message to dequeue.</returns>
         </member>
         <member name="M:NWorkQueue.Server.Common.InternalApi.PerformTransactionHouseCleaning(System.DateTime)">
             <summary>
@@ -292,19 +320,70 @@
             <param name="currentDateTime">DateTime to expire against.</param>
             <returns>Returns the number of transactions expired.</returns>
         </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.ExpireMessages(System.DateTime)">
+            <summary>
+            Expire messages that are past their expiration date.
+            </summary>
+            <param name="currentDateTime">Date used to validate expiration date against.  Also to be used as the close datetime.</param>
+            <returns>Number of messages updated.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.CloseRetryExceededMessages(System.DateTime)">
+            <summary>
+            Close message that are beyond their retry count.
+            </summary>
+            <param name="currentDateTime">DateTime to use a close datetime.</param>
+            <returns>Number of messages closed.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.DequeueMessage(System.Int64,System.Int64)">
+            <summary>
+            Dequeue the next message in the queue and flag the message with the transaction id.
+            </summary>
+            <param name="transId">The transaction id to add to the message.</param>
+            <param name="queueId">The queue to pull the message frrom.</param>
+            <returns>Message object or null of no message to pull.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.PeekMessageByQueueId(System.Int64)">
+            <summary>
+            View the next message in the queue, without removing it from queue.
+            </summary>
+            <param name="queueId">The queue to pull the message from.</param>
+            <returns>Message object or null of no message to pull.</returns>
+        </member>
+        <member name="M:NWorkQueue.Server.Common.IStorage.PeekMessageByMessageId(System.Int64)">
+            <summary>
+            View a message by the message ID.
+            </summary>
+            <param name="messageId">The ID of the message to view.</param>
+            <returns>Message object or null of no message to view.</returns>
+        </member>
         <member name="T:NWorkQueue.Server.Common.IStorageTransaction">
             <summary>
-            Represents a transaction used by the storage (usually a database transaction)
+            Represents a transaction used by the storage (usually a database transaction).
             </summary>
         </member>
         <member name="M:NWorkQueue.Server.Common.IStorageTransaction.Commit">
             <summary>
-            Commits the transaction, usually this reprents a database transaction
+            Commits the transaction, usually this reprents a database transaction.
             </summary>
         </member>
         <member name="M:NWorkQueue.Server.Common.IStorageTransaction.Rollback">
             <summary>
-            Rollsback the transaction, usually this reprents a database transaction
+            Rollsback the transaction, usually this reprents a database transaction.
+            </summary>
+        </member>
+        <member name="T:NWorkQueue.Server.Common.Models.QueueInfo">
+            <summary>
+            Contains information a specific queue.
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Server.Common.Models.QueueInfo.Name">
+            <summary>
+            Gets or sets queue name.
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Server.Common.Models.QueueInfo.Id">
+            <summary>
+            Gets or sets queue ID.
             </summary>
         </member>
         <member name="T:NWorkQueue.Server.Common.ResultCode">

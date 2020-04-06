@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
-using NWorkQueue.Server.Common.Extensions;
+using NWorkQueue.Common.Extensions;
 using NWorkQueue.Server.Common;
 using NWorkQueue.Models;
 using NWorkQueue.Common;

@@ -1,4 +1,4 @@
-﻿// <copyright file="MessageModel.cs" company="Michael Silver">
+﻿// <copyright file="Message.cs" company="Michael Silver">
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
@@ -78,8 +78,14 @@ namespace NWorkQueue.Common.Models
         /// </summary>
         public byte[]? Payload { get; }
 
+        /// <summary>
+        /// Gets Message State, i.e. Active, closed, etc.
+        /// </summary>
         public MessageState MessageState { get; } = MessageState.InTransaction;
 
-        public String Metadata { get; }
+        /// <summary>
+        /// Gets string based metadata describing the message in more detail.  Optional.
+        /// </summary>
+        public string Metadata { get; } = string.Empty;
     }
 }

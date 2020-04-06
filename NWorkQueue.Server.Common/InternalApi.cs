@@ -12,8 +12,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using NWorkQueue.Common;
+using NWorkQueue.Common.Extensions;
 using NWorkQueue.Common.Models;
-using NWorkQueue.Server.Common.Extensions;
 using NWorkQueue.Server.Common.Models;
 
 [assembly: InternalsVisibleTo("NWorkQueue.Tests")]

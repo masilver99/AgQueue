@@ -91,10 +91,16 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.ExpireMessages(System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CloseRetryEceededMessages(System.DateTime)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CloseRetryExceededMessages(System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.PullMessage(System.Int64,System.Int64)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.DequeueMessage(System.Int64,System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.PeekMessageByQueueId(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.PeekMessageByMessageId(System.Int64)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.ExecuteAsync``1(System.Func{Microsoft.Data.Sqlite.SqliteConnection,System.Threading.Tasks.ValueTask{``0}},Microsoft.Data.Sqlite.SqliteConnection)">

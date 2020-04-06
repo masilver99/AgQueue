@@ -7,14 +7,14 @@ using NWorkQueue.Server.Common;
 namespace NWorkQueue.Sqlite
 {
     /// <summary>
-    /// Wrapper around SQLite transaction.  Used by storage classes
+    /// Wrapper around SQLite transaction.  Used by storage classes.
     /// </summary>
     internal class DbTransaction : IStorageTransaction
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DbTransaction"/> class.
         /// </summary>
-        /// <param name="connection">SQLite connection</param>
+        /// <param name="connection">SQLite connection.</param>
         public DbTransaction(SqliteConnection connection)
         {
             this.SqliteTransaction = connection.BeginTransaction();
@@ -37,5 +37,4 @@ namespace NWorkQueue.Sqlite
             this.SqliteTransaction.Rollback();
         }
     }
-
 }

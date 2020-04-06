@@ -1,4 +1,4 @@
-﻿// <copyright file="QueueModel.cs" company="Michael Silver">
+﻿// <copyright file="Queue.cs" company="Michael Silver">
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
@@ -10,7 +10,7 @@ namespace NWorkQueue.Common.Models
     public class Queue
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueueModel"/> class.
+        /// Initializes a new instance of the <see cref="Queue"/> class.
         /// </summary>
         /// <param name="id">queue Id.</param>
         /// <param name="name">queue name.</param>

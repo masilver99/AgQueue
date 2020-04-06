@@ -37,7 +37,7 @@ namespace NWorkQueue.Common
         /// Transaction was automatically expired due to timeout.
         /// </summary>
         public static readonly TransactionState Expired = new TransactionState("Expired", 4);
-    
+
         private TransactionState(string name, int value)
         {
             this.Name = name;
