@@ -1,11 +1,15 @@
-﻿using System;
+﻿// <copyright file="ObjectExtensions.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace NWorkQueue.Server.Common.Extensions
 {
     /// <summary>
-    /// Extensions methods for use on Objects
+    /// Extensions methods for use on Objects.
     /// </summary>
     public static class ObjectExtensions
     {

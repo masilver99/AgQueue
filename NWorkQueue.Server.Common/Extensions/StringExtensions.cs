@@ -1,11 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// <copyright file="StringExtensions.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
 
 namespace NWorkQueue.Server.Common.Extensions
 {
+    /// <summary>
+    /// Extensions methods to be used on stings.
+    /// </summary>
     public static class StringExtensions
     {
+        /// <summary>
+        /// Standardizes the queue name so it's always consistent.
+        /// </summary>
+        /// <param name="rawQueueName">Raw queue name.</param>
+        /// <returns>Standardized queue name.</returns>
         internal static string StandardizeQueueName(this string rawQueueName)
         {
             return rawQueueName.Replace(" ", string.Empty);

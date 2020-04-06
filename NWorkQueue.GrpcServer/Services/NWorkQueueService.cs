@@ -87,8 +87,8 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<CommitTransactionResponse> CommitTransaction(CommitTransactionRequest request, ServerCallContext context)
         {
-            var count = await this.internalApi.CommitTransaction(request.TransId);
-            return new CommitTransactionResponse { MessagesAdded = count.AddCount, MessagesPulled = count.PullCount };
+            var (addCount, pullCount) = await this.internalApi.CommitTransaction(request.TransId);
+            return new CommitTransactionResponse { MessagesAdded = addCount, MessagesPulled = pullCount };
         }
 
         /// <inheritdoc/>

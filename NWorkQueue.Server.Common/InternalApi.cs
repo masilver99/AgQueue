@@ -171,7 +171,13 @@ namespace NWorkQueue.Server.Common
             await this.storage.ExtendTransaction(transId, DateTime.Now.AddMinutes(expiryMinutes));
         }
 
-        public async ValueTask <Message?> PeekMessageByQueueId(long queueId)
+        /// <summary>
+        /// View the next message in the spcified queue.
+        /// </summary>
+        /// <remarks>Keep in mind, this may change by the time of the dequeue call.</remarks>
+        /// <param name="queueId">The queue to peek from.</param>
+        /// <returns>Message object or null if no message available.</returns>
+        public async ValueTask<Message?> PeekMessageByQueueId(long queueId)
         {
             return await this.storage.PeekMessageByQueueId(
                 queueId);
@@ -311,7 +317,13 @@ namespace NWorkQueue.Server.Common
                 MessageState.InTransaction.Value);
         }
 
-        public async ValueTask<Message> DequeueMessage(
+        /// <summary>
+        /// Dequeues a message from a specific queue.
+        /// </summary>
+        /// <param name="transId">The transaction ID of the transaction the message will be dequeued in.</param>
+        /// <param name="queueId">The queue to pull the messge from.</param>
+        /// <returns>Returns a message object or null if there is no message to dequeue.</returns>
+        public async ValueTask<Message?> DequeueMessage(
             long transId,
             long queueId)
         {
@@ -332,7 +344,7 @@ namespace NWorkQueue.Server.Common
 
             if (trans.State != TransactionState.Active)
             {
-                throw new Exception($"Transaction {transId} not active: {trans.State.ToString()}");
+                throw new Exception($"Transaction {transId} not active: {trans.State}");
             }
         }
 
@@ -368,7 +380,7 @@ namespace NWorkQueue.Server.Common
             await this.storage.ExpireMessages(currentDateTime);
 
             // Check for active messages at or past the retry count
-            await this.storage.CloseRetryEceededMessages(currentDateTime);
+            await this.storage.CloseRetryExceededMessages(currentDateTime);
 
                 // Mark as RetryExceeded
         }

@@ -5,17 +5,17 @@
 namespace NWorkQueue.Server.Common
 {
     /// <summary>
-    /// Represents a transaction used by the storage (usually a database transaction)
+    /// Represents a transaction used by the storage (usually a database transaction).
     /// </summary>
     public interface IStorageTransaction
     {
         /// <summary>
-        /// Commits the transaction, usually this reprents a database transaction
+        /// Commits the transaction, usually this reprents a database transaction.
         /// </summary>
         void Commit();
 
         /// <summary>
-        /// Rollsback the transaction, usually this reprents a database transaction
+        /// Rollsback the transaction, usually this reprents a database transaction.
         /// </summary>
         void Rollback();
     }

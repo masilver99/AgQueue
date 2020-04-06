@@ -24,7 +24,7 @@ namespace NWorkQueue.Sqlite
     {
         private readonly string connectionString;
 
-        private ConcurrentDictionary<long, SemaphoreSlim> queueLocks = new ConcurrentDictionary<long, SemaphoreSlim>();
+        private readonly ConcurrentDictionary<long, SemaphoreSlim> queueLocks = new ConcurrentDictionary<long, SemaphoreSlim>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StorageSqlite"/> class.
@@ -339,7 +339,7 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask<int> CloseRetryEceededMessages(DateTime currentDateTime)
+        public async ValueTask<int> CloseRetryExceededMessages(DateTime currentDateTime)
         {
             const string sql =
                 "Update Messages set State = @NewMessageState, CloseDateTime = @currentDateTime where TransactionId = null and State = @OldMessageState and Retries >= MaxRetries;";
@@ -363,10 +363,6 @@ namespace NWorkQueue.Sqlite
             long queueId)
         {
             // This routine is the bread and butter of the queue.  It must ensure only the next record is returned.
-
-            // Get next message
-            // Add message to transaction
-
             var semaphore = this.GetSemaphore(queueId);
 
             return await this.ExecuteAsync<Message?>(async (connection) =>
@@ -458,8 +454,7 @@ namespace NWorkQueue.Sqlite
         {
             // Will need to examine how this performs with a large amount of queues
             // it may consume a lot of memory.
-            SemaphoreSlim? semaphore;
-            if (this.queueLocks.TryGetValue(queueId, out semaphore))
+            if (this.queueLocks.TryGetValue(queueId, out SemaphoreSlim? semaphore))
             {
                 return semaphore;
             }
@@ -504,11 +499,13 @@ namespace NWorkQueue.Sqlite
                 T returnValue = await action(liveConnection);
                 stopwatch.Stop();
                 return returnValue;
+
                 // logger.Information("{ProgramName} completed in {ElapsedTime}ms", programName, stopwatch.ElapsedMilliseconds);
             }
             catch (Exception exc)
             {
                 throw exc;
+
                 // logger.Fatal(exc, "A fatal exception prevented this application from running to completion.");
             }
             finally
@@ -554,11 +551,13 @@ namespace NWorkQueue.Sqlite
                 T returnValue = action(liveConnection);
                 stopwatch.Stop();
                 return returnValue;
+
                 // logger.Information("{ProgramName} completed in {ElapsedTime}ms", programName, stopwatch.ElapsedMilliseconds);
             }
             catch (Exception exc)
             {
                 throw exc;
+
                 // logger.Fatal(exc, "A fatal exception prevented this application from running to completion.");
             }
             finally
@@ -571,16 +570,6 @@ namespace NWorkQueue.Sqlite
 
                 // Log.CloseAndFlush();
             }
-        }
-
-        private async ValueTask Execute(Func<SqliteConnection, ValueTask> action, SqliteConnection? connection = null)
-        {
-            await this.ExecuteAsync<object?>(
-                async (newConnection) =>
-                {
-                    await action(newConnection);
-                    return null;
-                }, connection);
         }
 
         private async ValueTask CreateTables(SqliteConnection connection)

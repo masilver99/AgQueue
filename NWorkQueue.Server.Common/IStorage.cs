@@ -185,14 +185,40 @@ namespace NWorkQueue.Server.Common
         /// <returns>Returns the number of transactions expired.</returns>
         ValueTask<int> ExpireTransactions(IStorageTransaction storagetrans, DateTime currentDateTime);
 
+        /// <summary>
+        /// Expire messages that are past their expiration date.
+        /// </summary>
+        /// <param name="currentDateTime">Date used to validate expiration date against.  Also to be used as the close datetime.</param>
+        /// <returns>Number of messages updated.</returns>
         ValueTask<int> ExpireMessages(DateTime currentDateTime);
 
-        ValueTask<int> CloseRetryEceededMessages(DateTime currentDateTime);
+        /// <summary>
+        /// Close message that are beyond their retry count.
+        /// </summary>
+        /// <param name="currentDateTime">DateTime to use a close datetime.</param>
+        /// <returns>Number of messages closed.</returns>
+        ValueTask<int> CloseRetryExceededMessages(DateTime currentDateTime);
 
+        /// <summary>
+        /// Dequeue the next message in the queue and flag the message with the transaction id.
+        /// </summary>
+        /// <param name="transId">The transaction id to add to the message.</param>
+        /// <param name="queueId">The queue to pull the message frrom.</param>
+        /// <returns>Message object or null of no message to pull.</returns>
         ValueTask<Message?> DequeueMessage(long transId, long queueId);
 
+        /// <summary>
+        /// View the next message in the queue, without removing it from queue.
+        /// </summary>
+        /// <param name="queueId">The queue to pull the message from.</param>
+        /// <returns>Message object or null of no message to pull.</returns>
         ValueTask<Message?> PeekMessageByQueueId(long queueId);
 
+        /// <summary>
+        /// View a message by the message ID.
+        /// </summary>
+        /// <param name="messageId">The ID of the message to view.</param>
+        /// <returns>Message object or null of no message to view.</returns>
         ValueTask<Message?> PeekMessageByMessageId(long messageId);
     }
 }
