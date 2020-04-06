@@ -62,33 +62,34 @@ namespace NWorkQueue.Models {
             "ZXNzYWdlUmVxdWVzdBIPCgdRdWV1ZUlkGAEgASgDEg8KB1RyYW5zSWQYAiAB",
             "KAMiSgoTUHVsbE1lc3NhZ2VSZXNwb25zZRIPCgdUcmFuc0lkGAEgASgDEiIK",
             "B01lc3NhZ2UYAiABKAsyES5ncmVldC5NZXNzYWdlT3V0IiUKElBlZWtNZXNz",
-            "YWdlUmVxdWVzdBIPCgdRdWV1ZUlkGAEgASgDIhUKE1BlZWtNZXNzYWdlUmVz",
-            "cG9uc2UqXAoMTWVzc2FnZVN0YXRlEgoKBkFjdGl2ZRAAEhEKDUluVHJhbnNh",
-            "Y3Rpb24QARINCglQcm9jZXNzZWQQAhILCgdFeHBpcmVkEAMSEQoNUmV0cnlF",
-            "eGNlZWRlZBAEKiYKEVRyYW5zYWN0aW9uQWN0aW9uEgcKA0FkZBAAEggKBFB1",
-            "bGwQATLZBwoIUXVldWVBcGkSRAoLQ3JlYXRlUXVldWUSGS5ncmVldC5DcmVh",
-            "dGVRdWV1ZVJlcXVlc3QaGi5ncmVldC5DcmVhdGVRdWV1ZVJlc3BvbnNlElYK",
-            "EUluaXRpYWxpemVTdG9yYWdlEh8uZ3JlZXQuSW5pdGlhbGl6ZVN0b3JhZ2VS",
-            "ZXF1ZXN0GiAuZ3JlZXQuSW5pdGlhbGl6ZVN0b3JhZ2VSZXNwb25zZRJQCg9E",
-            "ZWxldGVRdWV1ZUJ5SWQSHS5ncmVldC5EZWxldGVRdWV1ZUJ5SWRSZXF1ZXN0",
-            "Gh4uZ3JlZXQuRGVsZXRlUXVldWVCeUlkUmVzcG9uc2USVgoRRGVsZXRlUXVl",
-            "dWVCeU5hbWUSHy5ncmVldC5EZWxldGVRdWV1ZUJ5TmFtZVJlcXVlc3QaIC5n",
-            "cmVldC5EZWxldGVRdWV1ZUJ5TmFtZVJlc3BvbnNlEk8KEEdldFF1ZXVlSW5m",
-            "b0J5SWQSHi5ncmVldC5HZXRRdWV1ZUluZm9CeUlkUmVxdWVzdBobLmdyZWV0",
-            "LkdldFF1ZXVlSW5mb1Jlc3BvbnNlElMKEkdldFF1ZXVlSW5mb0J5TmFtZRIg",
-            "LmdyZWV0LkdldFF1ZXVlSW5mb0J5TmFtZVJlcXVlc3QaGy5ncmVldC5HZXRR",
-            "dWV1ZUluZm9SZXNwb25zZRJTChBTdGFydFRyYW5zYWN0aW9uEh4uZ3JlZXQu",
-            "U3RhcnRUcmFuc2FjdGlvblJlcXVlc3QaHy5ncmVldC5TdGFydFRyYW5zYWN0",
-            "aW9uUmVzcG9uc2USVgoRQ29tbWl0VHJhbnNhY3Rpb24SHy5ncmVldC5Db21t",
-            "aXRUcmFuc2FjdGlvblJlcXVlc3QaIC5ncmVldC5Db21taXRUcmFuc2FjdGlv",
-            "blJlc3BvbnNlElsKElJvbGxiYWNrVHJhbmFjdGlvbhIhLmdyZWV0LlJvbGxi",
-            "YWNrVHJhbnNhY3Rpb25SZXF1ZXN0GiIuZ3JlZXQuUm9sbGJhY2tUcmFuc2Fj",
-            "dGlvblJlc3BvbnNlEkcKDFF1ZXVlTWVzc2FnZRIaLmdyZWV0LlF1ZXVlTWVz",
-            "c2FnZVJlcXVlc3QaGy5ncmVldC5RdWV1ZU1lc3NhZ2VSZXNwb25zZRJFCgxQ",
-            "dWxsTWVzc2FnZXMSGS5ncmVldC5QdWxsTWVzc2FnZVJlcXVlc3QaGi5ncmVl",
-            "dC5QdWxsTWVzc2FnZVJlc3BvbnNlEkUKDFBlZWtNZXNzYWdlcxIZLmdyZWV0",
-            "LlBlZWtNZXNzYWdlUmVxdWVzdBoaLmdyZWV0LlBlZWtNZXNzYWdlUmVzcG9u",
-            "c2VCFKoCEU5Xb3JrUXVldWUuTW9kZWxzYgZwcm90bzM="));
+            "YWdlUmVxdWVzdBIPCgdRdWV1ZUlkGAEgASgDIjkKE1BlZWtNZXNzYWdlUmVz",
+            "cG9uc2USIgoHTWVzc2FnZRgBIAEoCzIRLmdyZWV0Lk1lc3NhZ2VPdXQqXAoM",
+            "TWVzc2FnZVN0YXRlEgoKBkFjdGl2ZRAAEhEKDUluVHJhbnNhY3Rpb24QARIN",
+            "CglQcm9jZXNzZWQQAhILCgdFeHBpcmVkEAMSEQoNUmV0cnlFeGNlZWRlZBAE",
+            "KiYKEVRyYW5zYWN0aW9uQWN0aW9uEgcKA0FkZBAAEggKBFB1bGwQATLZBwoI",
+            "UXVldWVBcGkSRAoLQ3JlYXRlUXVldWUSGS5ncmVldC5DcmVhdGVRdWV1ZVJl",
+            "cXVlc3QaGi5ncmVldC5DcmVhdGVRdWV1ZVJlc3BvbnNlElYKEUluaXRpYWxp",
+            "emVTdG9yYWdlEh8uZ3JlZXQuSW5pdGlhbGl6ZVN0b3JhZ2VSZXF1ZXN0GiAu",
+            "Z3JlZXQuSW5pdGlhbGl6ZVN0b3JhZ2VSZXNwb25zZRJQCg9EZWxldGVRdWV1",
+            "ZUJ5SWQSHS5ncmVldC5EZWxldGVRdWV1ZUJ5SWRSZXF1ZXN0Gh4uZ3JlZXQu",
+            "RGVsZXRlUXVldWVCeUlkUmVzcG9uc2USVgoRRGVsZXRlUXVldWVCeU5hbWUS",
+            "Hy5ncmVldC5EZWxldGVRdWV1ZUJ5TmFtZVJlcXVlc3QaIC5ncmVldC5EZWxl",
+            "dGVRdWV1ZUJ5TmFtZVJlc3BvbnNlEk8KEEdldFF1ZXVlSW5mb0J5SWQSHi5n",
+            "cmVldC5HZXRRdWV1ZUluZm9CeUlkUmVxdWVzdBobLmdyZWV0LkdldFF1ZXVl",
+            "SW5mb1Jlc3BvbnNlElMKEkdldFF1ZXVlSW5mb0J5TmFtZRIgLmdyZWV0Lkdl",
+            "dFF1ZXVlSW5mb0J5TmFtZVJlcXVlc3QaGy5ncmVldC5HZXRRdWV1ZUluZm9S",
+            "ZXNwb25zZRJTChBTdGFydFRyYW5zYWN0aW9uEh4uZ3JlZXQuU3RhcnRUcmFu",
+            "c2FjdGlvblJlcXVlc3QaHy5ncmVldC5TdGFydFRyYW5zYWN0aW9uUmVzcG9u",
+            "c2USVgoRQ29tbWl0VHJhbnNhY3Rpb24SHy5ncmVldC5Db21taXRUcmFuc2Fj",
+            "dGlvblJlcXVlc3QaIC5ncmVldC5Db21taXRUcmFuc2FjdGlvblJlc3BvbnNl",
+            "ElsKElJvbGxiYWNrVHJhbmFjdGlvbhIhLmdyZWV0LlJvbGxiYWNrVHJhbnNh",
+            "Y3Rpb25SZXF1ZXN0GiIuZ3JlZXQuUm9sbGJhY2tUcmFuc2FjdGlvblJlc3Bv",
+            "bnNlEkcKDFF1ZXVlTWVzc2FnZRIaLmdyZWV0LlF1ZXVlTWVzc2FnZVJlcXVl",
+            "c3QaGy5ncmVldC5RdWV1ZU1lc3NhZ2VSZXNwb25zZRJFCgxQdWxsTWVzc2Fn",
+            "ZXMSGS5ncmVldC5QdWxsTWVzc2FnZVJlcXVlc3QaGi5ncmVldC5QdWxsTWVz",
+            "c2FnZVJlc3BvbnNlEkUKDFBlZWtNZXNzYWdlcxIZLmdyZWV0LlBlZWtNZXNz",
+            "YWdlUmVxdWVzdBoaLmdyZWV0LlBlZWtNZXNzYWdlUmVzcG9uc2VCFKoCEU5X",
+            "b3JrUXVldWUuTW9kZWxzYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::NWorkQueue.Models.MessageState), typeof(global::NWorkQueue.Models.TransactionAction), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -116,7 +117,7 @@ namespace NWorkQueue.Models {
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PullMessageRequest), global::NWorkQueue.Models.PullMessageRequest.Parser, new[]{ "QueueId", "TransId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PullMessageResponse), global::NWorkQueue.Models.PullMessageResponse.Parser, new[]{ "TransId", "Message" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PeekMessageRequest), global::NWorkQueue.Models.PeekMessageRequest.Parser, new[]{ "QueueId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PeekMessageResponse), global::NWorkQueue.Models.PeekMessageResponse.Parser, null, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PeekMessageResponse), global::NWorkQueue.Models.PeekMessageResponse.Parser, new[]{ "Message" }, null, null, null, null)
           }));
     }
     #endregion
@@ -4003,12 +4004,24 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public PeekMessageResponse(PeekMessageResponse other) : this() {
+      message_ = other.message_ != null ? other.message_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public PeekMessageResponse Clone() {
       return new PeekMessageResponse(this);
+    }
+
+    /// <summary>Field number for the "Message" field.</summary>
+    public const int MessageFieldNumber = 1;
+    private global::NWorkQueue.Models.MessageOut message_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::NWorkQueue.Models.MessageOut Message {
+      get { return message_; }
+      set {
+        message_ = value;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4024,12 +4037,14 @@ namespace NWorkQueue.Models {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (!object.Equals(Message, other.Message)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
+      if (message_ != null) hash ^= Message.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -4043,6 +4058,10 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+      if (message_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Message);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -4051,6 +4070,9 @@ namespace NWorkQueue.Models {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
+      if (message_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Message);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -4061,6 +4083,12 @@ namespace NWorkQueue.Models {
     public void MergeFrom(PeekMessageResponse other) {
       if (other == null) {
         return;
+      }
+      if (other.message_ != null) {
+        if (message_ == null) {
+          Message = new global::NWorkQueue.Models.MessageOut();
+        }
+        Message.MergeFrom(other.Message);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -4073,6 +4101,13 @@ namespace NWorkQueue.Models {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
+          case 10: {
+            if (message_ == null) {
+              Message = new global::NWorkQueue.Models.MessageOut();
+            }
+            input.ReadMessage(Message);
+            break;
+          }
         }
       }
     }

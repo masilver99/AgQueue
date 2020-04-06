@@ -142,7 +142,28 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<PeekMessageResponse> PeekMessages(PeekMessageRequest request, ServerCallContext context)
         {
-            throw new NotImplementedException();
+            var message = await this.internalApi.PeekMessage(
+                request.QueueId);
+
+            return new PeekMessageResponse
+            {
+                Message = new MessageOut()
+                {
+                    CorrelationId = message.CorrelationId,
+                    ExpiryDateTime = Timestamp.FromDateTime(message.ExpiryDateTime),
+                    AddDateTime = Timestamp.FromDateTime(message.AddDateTime),
+                    CloseDateTime = Timestamp.FromDateTime(message.CloseDateTime),
+                    GroupName = message.GroupName,
+                    MaxRetries = message.MaxRetries,
+                    MessageState = (Models.MessageState)message.MessageState.Value,
+                    MetaData = message.Metadata,
+                    Payload = ByteString.CopyFrom(message.Payload),
+                    Priority = message.Priority,
+                    QueueId = message.QueueId,
+                    TransAction = (Models.TransactionAction)message.TransactionAction.Value,
+                    TransId = message.TransactionId
+                }
+            };
         }
     }
 }

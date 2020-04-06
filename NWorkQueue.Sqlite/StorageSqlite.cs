@@ -400,7 +400,7 @@ namespace NWorkQueue.Sqlite
                     await semaphore.WaitAsync();
 
                     // We shouldn't need a db transaction here since it only happends within a semaphore lock,
-                    var message = await this.GetNextMessage(connection, transId, queueId);
+                    var message = await this.GetNextMessage(connection, queueId);
                     if (message == null)
                     {
                         return null;
@@ -416,12 +416,21 @@ namespace NWorkQueue.Sqlite
             });
         }
 
-        private async ValueTask<Message?> GetNextMessage(SqliteConnection connection, long transId, long queueId)
+        public async ValueTask<Message?> PeekMessage(long queueId)
+        {
+            return await this.ExecuteAsync<Message?>(async (connection) =>
+            {
+                return await this.GetNextMessage(connection, queueId);
+            });
+        }
+
+        private async ValueTask<Message?> GetNextMessage(SqliteConnection connection, long queueId)
         {
             const string sql =
                 "SELECT Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, CloseDateTime, " +
                 "Priority, MaxRetries, Retries, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload" +
-                "FROM Messages WHERE State = @MessageState AND CloseDateTime = NULL AND TransactionId = NULL " +
+                "FROM Messages WHERE State = @MessageState AND CloseDateTime = NULL AND TransactionId = NULL AND " +
+                "QueueId = @QueueId" +
                 "ORDER by Priority DESC, AddDateTime " +
                 "LIMIT 1 ";
             return await connection.QuerySingleOrDefaultAsync<Message?>(
@@ -429,6 +438,7 @@ namespace NWorkQueue.Sqlite
                 param: new
                 {
                     MessageState = MessageState.Active.Value,
+                    queueId
                 });
         }
 

@@ -222,6 +222,8 @@ namespace NWorkQueue.Server.Common
 
         ValueTask<Message> PullMessage(long transId, long queueId);
 
+        ValueTask<Message> PeekMessage(long queueId);
+
         /*
         /// <summary>
         /// Does a Quque exist for the specified id.
@@ -238,4 +240,4 @@ namespace NWorkQueue.Server.Common
         void DeleteMessagesByQueueId(long queueId, IStorageTransaction storageTrans);
         */
     }
-    }
+}

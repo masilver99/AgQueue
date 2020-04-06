@@ -181,6 +181,7 @@ message PeekMessageRequest {
 }
 
 message PeekMessageResponse {
+  MessageOut Message = 1;
 }
 
 /*testing...

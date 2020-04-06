@@ -171,6 +171,12 @@ namespace NWorkQueue.Server.Common
             await this.storage.ExtendTransaction(transId, DateTime.Now.AddMinutes(expiryMinutes));
         }
 
+        public async ValueTask <Message?> PeekMessage(long queueId)
+        {
+            return await this.storage.PeekMessage(
+                queueId);
+        }
+
         /// <summary>
         /// Commits Transaction, updating all messages in transaction.
         /// </summary>
