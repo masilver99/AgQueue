@@ -81,8 +81,8 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<StartTransactionResponse> StartTransaction(StartTransactionRequest request, ServerCallContext context)
         {
-            await this.internalApi.StartTrasaction(request.ExpireInMin);
-            return new StartTransactionResponse();
+            var transId = await this.internalApi.StartTrasaction(request.ExpireInMin);
+            return new StartTransactionResponse() { TransId = transId };
         }
 
         public override async Task<CommitTransactionResponse> CommitTransaction(CommitTransactionRequest request, ServerCallContext context)
@@ -102,7 +102,7 @@ namespace NWorkQueue.GrpcServer
         {
             var messageId = await this.internalApi.QueueMessage(
                 request.TransId, 
-                request.Message.QueueId,
+                request.QueueId,
                 request.Message.Payload.ToByteArray(),
                 request.Message.MetaData,
                 request.Message.Priority,
@@ -129,7 +129,7 @@ namespace NWorkQueue.GrpcServer
                     CloseDateTime = Timestamp.FromDateTime(message.CloseDateTime),
                     GroupName = message.GroupName,
                     MaxRetries = message.MaxRetries,
-                    MessageState = (Models.MessageState)message.MessageState.Value,
+                    MessageState = (Models.MessageState)message.MessageState,
                     MetaData = message.Metadata,
                     Payload = ByteString.CopyFrom(message.Payload),
                     Priority = message.Priority,
@@ -155,7 +155,7 @@ namespace NWorkQueue.GrpcServer
                     CloseDateTime = Timestamp.FromDateTime(message.CloseDateTime),
                     GroupName = message.GroupName,
                     MaxRetries = message.MaxRetries,
-                    MessageState = (Models.MessageState)message.MessageState.Value,
+                    MessageState = (Models.MessageState)message.MessageState,
                     MetaData = message.Metadata,
                     Payload = ByteString.CopyFrom(message.Payload),
                     Priority = message.Priority,

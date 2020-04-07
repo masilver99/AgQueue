@@ -97,12 +97,11 @@ message RollbackTransactionResponse {
 message QueueMessageRequest {
   // Queue Transaction id.  All messages must be added in a transaction.
   int64 TransId = 1;
-  MessageIn Message = 2;
+  int64 QueueId = 2;
+  MessageIn Message = 3;
 }
 
 message MessageIn {
-  // The queue id to add the message to.
-  int64 QueueId = 1;
   // Message object to be serialized.
   bytes Payload = 2;
   // String of optional data describing the message.

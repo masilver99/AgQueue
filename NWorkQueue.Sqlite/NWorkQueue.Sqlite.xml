@@ -6,14 +6,14 @@
     <members>
         <member name="T:NWorkQueue.Sqlite.DbTransaction">
             <summary>
-            Wrapper around SQLite transaction.  Used by storage classes
+            Wrapper around SQLite transaction.  Used by storage classes.
             </summary>
         </member>
         <member name="M:NWorkQueue.Sqlite.DbTransaction.#ctor(Microsoft.Data.Sqlite.SqliteConnection)">
             <summary>
             Initializes a new instance of the <see cref="T:NWorkQueue.Sqlite.DbTransaction"/> class.
             </summary>
-            <param name="connection">SQLite connection</param>
+            <param name="connection">SQLite connection.</param>
         </member>
         <member name="P:NWorkQueue.Sqlite.DbTransaction.SqliteTransaction">
             <summary>
@@ -25,6 +25,18 @@
         </member>
         <member name="M:NWorkQueue.Sqlite.DbTransaction.Rollback">
             <inheritdoc/>
+        </member>
+        <member name="T:NWorkQueue.Sqlite.IStorageTransactionExtensions">
+            <summary>
+            Extensions on the IStorageTransaction interface.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Sqlite.IStorageTransactionExtensions.SqliteTransaction(NWorkQueue.Server.Common.IStorageTransaction)">
+            <summary>
+            Converts the IStorageTransaction to a SqliteTransaction.
+            </summary>
+            <param name="iTrans">The IStorageTransaction to convert.</param>
+            <returns>SqliteTransaction.</returns>
         </member>
         <member name="T:NWorkQueue.Sqlite.StorageSqlite">
             <summary>
@@ -64,16 +76,16 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetQueueInfoById(System.Int64)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,System.Int32)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,NWorkQueue.Common.MessageState)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.BeginStorageTransaction">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,System.Int32,System.Int32)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,NWorkQueue.Common.MessageState,NWorkQueue.Common.MessageState,System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,System.Int32)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,NWorkQueue.Common.MessageState)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.DeleteAddedMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64)">

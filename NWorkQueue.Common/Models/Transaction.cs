@@ -11,6 +11,11 @@ namespace NWorkQueue.Common.Models
     /// </summary>
     public class Transaction
     {
+        public Transaction()
+        {
+
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Transaction"/> class.
         /// </summary>
@@ -36,7 +41,7 @@ namespace NWorkQueue.Common.Models
         /// <summary>
         /// Gets a value indicating the state of the transaction.
         /// </summary>
-        public TransactionState State { get; }
+        public TransactionState State { get; set; }
 
         /// <summary>
         /// Gets the date and time the transaction was created.

@@ -4,6 +4,30 @@
         <name>NWorkQueue.Common</name>
     </assembly>
     <members>
+        <member name="T:NWorkQueue.Common.Extensions.ObjectExtensions">
+            <summary>
+            Extensions methods for use on Objects.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Common.Extensions.ObjectExtensions.ThrowIfNull(System.Object,System.String)">
+            <summary>
+            Throws ArgumentNullException if object is null.
+            </summary>
+            <param name="obj">Object to perform null check on.</param>
+            <param name="name">Param name to include in exception message.</param>
+        </member>
+        <member name="T:NWorkQueue.Common.Extensions.StringExtensions">
+            <summary>
+            Extensions methods to be used on stings.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Common.Extensions.StringExtensions.StandardizeQueueName(System.String)">
+            <summary>
+            Standardizes the queue name so it's always consistent.
+            </summary>
+            <param name="rawQueueName">Raw queue name.</param>
+            <returns>Standardized queue name.</returns>
+        </member>
         <member name="T:NWorkQueue.Common.INWorkQueueClient">
             <summary>
             Interface for Client to implement.
@@ -14,39 +38,29 @@
             Current state of a message.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.MessageState.Active">
+        <member name="F:NWorkQueue.Common.MessageState.Active">
             <summary>
             Gets active value.  Is the message is live and can be pulled from the queue.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.MessageState.InTransaction">
+        <member name="F:NWorkQueue.Common.MessageState.InTransaction">
             <summary>
             Gets InTransaction.  Means the message is currently tied to a transaction, either during insert of during processing.  IOW, this message is currently being inserted or pulled from the queue.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.MessageState.Processed">
+        <member name="F:NWorkQueue.Common.MessageState.Processed">
             <summary>
             Gets processed state. i.e. This message has been processed and will not be pulled.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.MessageState.Expired">
+        <member name="F:NWorkQueue.Common.MessageState.Expired">
             <summary>
             Gets if Message has expired and will not be pulled.
             </summary>
         </member>
-        <member name="P:NWorkQueue.Common.MessageState.RetryExceeded">
+        <member name="F:NWorkQueue.Common.MessageState.RetryExceeded">
             <summary>
             Gets boolean representing if RetryExceeded. Message retry limit has been reached and message will no longer be pulled.
-            </summary>
-        </member>
-        <member name="P:NWorkQueue.Common.MessageState.Name">
-            <summary>
-            Gets the message state string.
-            </summary>
-        </member>
-        <member name="P:NWorkQueue.Common.MessageState.Value">
-            <summary>
-            Gets the message state ID.
             </summary>
         </member>
         <member name="T:NWorkQueue.Common.Models.Message">
@@ -119,6 +133,16 @@
             Gets actual message data.
             </summary>
         </member>
+        <member name="P:NWorkQueue.Common.Models.Message.MessageState">
+            <summary>
+            Gets Message State, i.e. Active, closed, etc.
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Common.Models.Message.Metadata">
+            <summary>
+            Gets string based metadata describing the message in more detail.  Optional.
+            </summary>
+        </member>
         <member name="T:NWorkQueue.Common.Models.Queue">
             <summary>
             Represents a Queue.
@@ -126,7 +150,7 @@
         </member>
         <member name="M:NWorkQueue.Common.Models.Queue.#ctor(System.Int64,System.String)">
             <summary>
-            Initializes a new instance of the <see cref="!:QueueModel"/> class.
+            Initializes a new instance of the <see cref="T:NWorkQueue.Common.Models.Queue"/> class.
             </summary>
             <param name="id">queue Id.</param>
             <param name="name">queue name.</param>
@@ -208,28 +232,28 @@
         </member>
         <member name="T:NWorkQueue.Common.TransactionResult">
             <summary>
-            Result of transaction commital
+            Result of transaction commital.
             </summary>
-            <remarks>Only commits use the results since commits may have valid responses.  If a rollback fails, an exception should be thrown, at least for now</remarks>
+            <remarks>Only commits use the results since commits may have valid responses.  If a rollback fails, an exception should be thrown, at least for now.</remarks>
         </member>
         <member name="F:NWorkQueue.Common.TransactionResult.Success">
             <summary>
-            Transaction was successfully committed
+            Transaction was successfully committed.
             </summary>
         </member>
         <member name="F:NWorkQueue.Common.TransactionResult.Expired">
             <summary>
-            Transaction expired before the commit could be completed
+            Transaction expired before the commit could be completed.
             </summary>
         </member>
         <member name="F:NWorkQueue.Common.TransactionResult.Closed">
             <summary>
-            The transaction was already closed
+            The transaction was already closed.
             </summary>
         </member>
         <member name="F:NWorkQueue.Common.TransactionResult.NotFound">
             <summary>
-            Transaction could not be found. Perhaps this should be an exception
+            Transaction could not be found. Perhaps this should be an exception.
             </summary>
         </member>
         <member name="T:NWorkQueue.Common.TransactionState">
@@ -260,16 +284,6 @@
         <member name="F:NWorkQueue.Common.TransactionState.Expired">
             <summary>
             Transaction was automatically expired due to timeout.
-            </summary>
-        </member>
-        <member name="P:NWorkQueue.Common.TransactionState.Name">
-            <summary>
-            Gets transaction state name.
-            </summary>
-        </member>
-        <member name="P:NWorkQueue.Common.TransactionState.Value">
-            <summary>
-            Gets transaction state value / id.
             </summary>
         </member>
         <member name="T:NWorkQueue.Common.WorkQueueException">

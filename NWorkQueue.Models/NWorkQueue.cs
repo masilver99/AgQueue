@@ -43,9 +43,9 @@ namespace NWorkQueue.Models {
             "blJlc3BvbnNlEhUKDU1lc3NhZ2VzQWRkZWQYASABKAUSFgoOTWVzc2FnZXNQ",
             "dWxsZWQYAiABKAUiLQoaUm9sbGJhY2tUcmFuc2FjdGlvblJlcXVlc3QSDwoH",
             "VHJhbnNJZBgBIAEoAyIdChtSb2xsYmFja1RyYW5zYWN0aW9uUmVzcG9uc2Ui",
-            "SQoTUXVldWVNZXNzYWdlUmVxdWVzdBIPCgdUcmFuc0lkGAEgASgDEiEKB01l",
-            "c3NhZ2UYAiABKAsyEC5ncmVldC5NZXNzYWdlSW4iqAEKCU1lc3NhZ2VJbhIP",
-            "CgdRdWV1ZUlkGAEgASgDEg8KB1BheWxvYWQYAiABKAwSEAoITWV0YURhdGEY",
+            "WgoTUXVldWVNZXNzYWdlUmVxdWVzdBIPCgdUcmFuc0lkGAEgASgDEg8KB1F1",
+            "ZXVlSWQYAiABKAMSIQoHTWVzc2FnZRgDIAEoCzIQLmdyZWV0Lk1lc3NhZ2VJ",
+            "biKXAQoJTWVzc2FnZUluEg8KB1BheWxvYWQYAiABKAwSEAoITWV0YURhdGEY",
             "AyABKAkSEAoIUHJpb3JpdHkYBCABKAUSEgoKTWF4UmV0cmllcxgFIAEoBRIX",
             "Cg9FeHBpcnlJbk1pbnV0ZXMYBiABKAUSFQoNQ29ycmVsYXRpb25JZBgHIAEo",
             "BRIRCglHcm91cE5hbWUYCCABKAkikwMKCk1lc3NhZ2VPdXQSDwoHUXVldWVJ",
@@ -115,8 +115,8 @@ namespace NWorkQueue.Models {
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.CommitTransactionResponse), global::NWorkQueue.Models.CommitTransactionResponse.Parser, new[]{ "MessagesAdded", "MessagesPulled" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.RollbackTransactionRequest), global::NWorkQueue.Models.RollbackTransactionRequest.Parser, new[]{ "TransId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.RollbackTransactionResponse), global::NWorkQueue.Models.RollbackTransactionResponse.Parser, null, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueMessageRequest), global::NWorkQueue.Models.QueueMessageRequest.Parser, new[]{ "TransId", "Message" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.MessageIn), global::NWorkQueue.Models.MessageIn.Parser, new[]{ "QueueId", "Payload", "MetaData", "Priority", "MaxRetries", "ExpiryInMinutes", "CorrelationId", "GroupName" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueMessageRequest), global::NWorkQueue.Models.QueueMessageRequest.Parser, new[]{ "TransId", "QueueId", "Message" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.MessageIn), global::NWorkQueue.Models.MessageIn.Parser, new[]{ "Payload", "MetaData", "Priority", "MaxRetries", "ExpiryInMinutes", "CorrelationId", "GroupName" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.MessageOut), global::NWorkQueue.Models.MessageOut.Parser, new[]{ "QueueId", "Payload", "MetaData", "Priority", "MaxRetries", "ExpiryDateTime", "CorrelationId", "GroupName", "MessageState", "AddDateTime", "CloseDateTime", "TransId", "TransAction" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueMessageResponse), global::NWorkQueue.Models.QueueMessageResponse.Parser, new[]{ "TransId", "MessageId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DequeueMessageRequest), global::NWorkQueue.Models.DequeueMessageRequest.Parser, new[]{ "QueueId", "TransId" }, null, null, null, null),
@@ -2375,6 +2375,7 @@ namespace NWorkQueue.Models {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public QueueMessageRequest(QueueMessageRequest other) : this() {
       transId_ = other.transId_;
+      queueId_ = other.queueId_;
       message_ = other.message_ != null ? other.message_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -2398,8 +2399,19 @@ namespace NWorkQueue.Models {
       }
     }
 
+    /// <summary>Field number for the "QueueId" field.</summary>
+    public const int QueueIdFieldNumber = 2;
+    private long queueId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long QueueId {
+      get { return queueId_; }
+      set {
+        queueId_ = value;
+      }
+    }
+
     /// <summary>Field number for the "Message" field.</summary>
-    public const int MessageFieldNumber = 2;
+    public const int MessageFieldNumber = 3;
     private global::NWorkQueue.Models.MessageIn message_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::NWorkQueue.Models.MessageIn Message {
@@ -2423,6 +2435,7 @@ namespace NWorkQueue.Models {
         return true;
       }
       if (TransId != other.TransId) return false;
+      if (QueueId != other.QueueId) return false;
       if (!object.Equals(Message, other.Message)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -2431,6 +2444,7 @@ namespace NWorkQueue.Models {
     public override int GetHashCode() {
       int hash = 1;
       if (TransId != 0L) hash ^= TransId.GetHashCode();
+      if (QueueId != 0L) hash ^= QueueId.GetHashCode();
       if (message_ != null) hash ^= Message.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -2449,8 +2463,12 @@ namespace NWorkQueue.Models {
         output.WriteRawTag(8);
         output.WriteInt64(TransId);
       }
+      if (QueueId != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(QueueId);
+      }
       if (message_ != null) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteMessage(Message);
       }
       if (_unknownFields != null) {
@@ -2463,6 +2481,9 @@ namespace NWorkQueue.Models {
       int size = 0;
       if (TransId != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(TransId);
+      }
+      if (QueueId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(QueueId);
       }
       if (message_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Message);
@@ -2480,6 +2501,9 @@ namespace NWorkQueue.Models {
       }
       if (other.TransId != 0L) {
         TransId = other.TransId;
+      }
+      if (other.QueueId != 0L) {
+        QueueId = other.QueueId;
       }
       if (other.message_ != null) {
         if (message_ == null) {
@@ -2502,7 +2526,11 @@ namespace NWorkQueue.Models {
             TransId = input.ReadInt64();
             break;
           }
-          case 18: {
+          case 16: {
+            QueueId = input.ReadInt64();
+            break;
+          }
+          case 26: {
             if (message_ == null) {
               Message = new global::NWorkQueue.Models.MessageIn();
             }
@@ -2540,7 +2568,6 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public MessageIn(MessageIn other) : this() {
-      queueId_ = other.queueId_;
       payload_ = other.payload_;
       metaData_ = other.metaData_;
       priority_ = other.priority_;
@@ -2554,20 +2581,6 @@ namespace NWorkQueue.Models {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public MessageIn Clone() {
       return new MessageIn(this);
-    }
-
-    /// <summary>Field number for the "QueueId" field.</summary>
-    public const int QueueIdFieldNumber = 1;
-    private long queueId_;
-    /// <summary>
-    /// The queue id to add the message to.
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public long QueueId {
-      get { return queueId_; }
-      set {
-        queueId_ = value;
-      }
     }
 
     /// <summary>Field number for the "Payload" field.</summary>
@@ -2681,7 +2694,6 @@ namespace NWorkQueue.Models {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (QueueId != other.QueueId) return false;
       if (Payload != other.Payload) return false;
       if (MetaData != other.MetaData) return false;
       if (Priority != other.Priority) return false;
@@ -2695,7 +2707,6 @@ namespace NWorkQueue.Models {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (QueueId != 0L) hash ^= QueueId.GetHashCode();
       if (Payload.Length != 0) hash ^= Payload.GetHashCode();
       if (MetaData.Length != 0) hash ^= MetaData.GetHashCode();
       if (Priority != 0) hash ^= Priority.GetHashCode();
@@ -2716,10 +2727,6 @@ namespace NWorkQueue.Models {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (QueueId != 0L) {
-        output.WriteRawTag(8);
-        output.WriteInt64(QueueId);
-      }
       if (Payload.Length != 0) {
         output.WriteRawTag(18);
         output.WriteBytes(Payload);
@@ -2756,9 +2763,6 @@ namespace NWorkQueue.Models {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (QueueId != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(QueueId);
-      }
       if (Payload.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeBytesSize(Payload);
       }
@@ -2790,9 +2794,6 @@ namespace NWorkQueue.Models {
     public void MergeFrom(MessageIn other) {
       if (other == null) {
         return;
-      }
-      if (other.QueueId != 0L) {
-        QueueId = other.QueueId;
       }
       if (other.Payload.Length != 0) {
         Payload = other.Payload;
@@ -2826,10 +2827,6 @@ namespace NWorkQueue.Models {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 8: {
-            QueueId = input.ReadInt64();
-            break;
-          }
           case 18: {
             Payload = input.ReadBytes();
             break;

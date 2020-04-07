@@ -203,10 +203,10 @@ namespace NWorkQueue.Server.Common
             try
             {
                 // Change status of added messages
-                var addCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Add.Value, MessageState.InTransaction.Value, MessageState.Active.Value);
+                var addCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Add.Value, MessageState.InTransaction, MessageState.Active, startDateTime);
 
                 // Change status of pulled messages
-                var pullCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Pull.Value, MessageState.InTransaction.Value, MessageState.Processed.Value);
+                var pullCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Pull.Value, MessageState.InTransaction, MessageState.Processed, startDateTime);
 
                 // Mark Transaction complete
                 await this.storage.UpdateTransactionState(storageTrans, transId, TransactionState.Commited, "Committed", startDateTime);
@@ -247,8 +247,8 @@ namespace NWorkQueue.Server.Common
 
                 // Update retry counts and change status of pulled messages
                 // Don't worry about retry count here, it will automactially get closed in house keeping.
-                var updateCount = await this.storage.UpdateMessageRetryCount(storageTrans, transId, TransactionAction.Pull.Value, MessageState.InTransaction.Value);
-                var pullCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Pull.Value, MessageState.InTransaction.Value, MessageState.Active.Value);
+                var updateCount = await this.storage.UpdateMessageRetryCount(storageTrans, transId, TransactionAction.Pull.Value, MessageState.InTransaction);
+                var pullCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Pull.Value, MessageState.InTransaction, MessageState.Active, startDateTime);
 
                 // Mark Transaction complete
                 await this.storage.UpdateTransactionState(storageTrans, transId, TransactionState.RolledBack, "User rollback", DateTime.Now);
@@ -314,7 +314,7 @@ namespace NWorkQueue.Server.Common
                 correlation,
                 groupName,
                 TransactionAction.Add.Value,
-                MessageState.InTransaction.Value);
+                MessageState.InTransaction);
         }
 
         /// <summary>

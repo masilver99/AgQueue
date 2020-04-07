@@ -8,16 +8,15 @@ using NWorkQueue.Models;
 using System.Threading.Tasks;
 using Grpc.Net.ClientFactory;
 using System;
-using Grpc.Core;
 
 namespace NWorkQueue.Integration.Tests
 {
     [TestClass]
-    public class BasicTests
+    public class ContentionTests
     {
         private IWebHost? _webHost;
 
-        public BasicTests()
+        public ContentionTests()
         {
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
         }
@@ -49,12 +48,14 @@ namespace NWorkQueue.Integration.Tests
         [TestCleanup]
         public async Task TestCleanup()
         {
-            _webHost.ThrowIfNull();
             await _webHost.StopAsync();
         }
 
+        // Add one, dont' commit, try to pull
+        // Add one, commit
+
         [TestMethod]
-        [DoNotParallelize]
+        //[DoNotParallelize]
         public async Task CreateQueue()
         {
             var client = await CreateClient();
@@ -68,7 +69,7 @@ namespace NWorkQueue.Integration.Tests
         }
 
         [TestMethod]
-        [DoNotParallelize]
+        //[DoNotParallelize]
         public async Task DeleteQueueById()
         {
             var client = await CreateClient();
@@ -86,7 +87,6 @@ namespace NWorkQueue.Integration.Tests
         }
 
         [TestMethod]
-        [DoNotParallelize]
         public async Task DeleteQueueByName()
         {
             var client = await CreateClient();
@@ -102,7 +102,7 @@ namespace NWorkQueue.Integration.Tests
         }
 
         [TestMethod]
-        [DoNotParallelize]
+        //[DoNotParallelize]
         public async Task TestExceptionInterceptor()
         {
             var client = await CreateBadClient();
@@ -115,63 +115,6 @@ namespace NWorkQueue.Integration.Tests
             Assert.IsTrue(queueInfo.RecordFound);
         }
 
-        [TestMethod]
-        [DoNotParallelize]
-        public async Task DequeueMessageDefault()
-        {
-            var client = await CreateClient();
-
-            // create quque
-            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
-            Assert.AreEqual(1, createResponse.QueueId);
-            var extraQueueResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "ExtraQueue" });
-            Assert.AreEqual(2, extraQueueResponse.QueueId);
-
-            var transResponse = await client.StartTransactionAsync(new StartTransactionRequest());
-
-            var inMessage = new MessageIn()
-            {
-
-            };
-            var queueMessageResponse = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
-            Assert.AreEqual(1, queueMessageResponse.MessageId);
-
-            await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
-
-            await _webHost.StopAsync();
-            _webHost = StartServer();
-
-            var transPullResponse = await client.StartTransactionAsync(new StartTransactionRequest());
-
-            var dequeueResponse = await client.DequeueMessageAsync(new DequeueMessageRequest { QueueId = 1, TransId = transPullResponse.TransId });
-
-
-        }
-
-        [TestMethod]
-        [DoNotParallelize]
-        public async Task QueueMessageWithoutTrans()
-        {
-            var client = await CreateClient();
-
-            // create quque
-            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
-            Assert.AreEqual(1, createResponse.QueueId);
-            var extraQueueResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "ExtraQueue" });
-            Assert.AreEqual(2, extraQueueResponse.QueueId);
-
-            var inMessage = new MessageIn()
-            {
-
-            };
-
-            var exception = await Assert.ThrowsExceptionAsync<RpcException>(async () =>
-            {
-                await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, TransId = 0 });
-            });
-
-            Assert.AreEqual("Transaction not found, id: 0", exception.Status.Detail);
-        }
 
         private static async Task<QueueApi.QueueApiClient> CreateClient()
         {
@@ -180,7 +123,6 @@ namespace NWorkQueue.Integration.Tests
             await client.InitializeStorageAsync(new InitializeStorageRequest { DeleteExistingData = true });
             return client;
         }
-        
         private static async Task<QueueApi.QueueApiClient> CreateBadClient()
         {
             var channel = GrpcChannel.ForAddress("http://localhost:10043");

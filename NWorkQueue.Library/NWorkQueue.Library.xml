@@ -4,30 +4,6 @@
         <name>NWorkQueue.Server.Common</name>
     </assembly>
     <members>
-        <member name="T:NWorkQueue.Server.Common.Extensions.ObjectExtensions">
-            <summary>
-            Extensions methods for use on Objects.
-            </summary>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Extensions.ObjectExtensions.ThrowIfNull(System.Object,System.String)">
-            <summary>
-            Throws ArgumentNullException if object is null.
-            </summary>
-            <param name="obj">Object to perform null check on.</param>
-            <param name="name">Param name to include in exception message.</param>
-        </member>
-        <member name="T:NWorkQueue.Server.Common.Extensions.StringExtensions">
-            <summary>
-            Extensions methods to be used on stings.
-            </summary>
-        </member>
-        <member name="M:NWorkQueue.Server.Common.Extensions.StringExtensions.StandardizeQueueName(System.String)">
-            <summary>
-            Standardizes the queue name so it's always consistent.
-            </summary>
-            <param name="rawQueueName">Raw queue name.</param>
-            <returns>Standardized queue name.</returns>
-        </member>
         <member name="T:NWorkQueue.Server.Common.InternalApi">
             <summary>
             Starting point for accessing all queue related APIS
@@ -193,7 +169,7 @@
             <param name="transId">The Id of the transaction to lookup.</param>
             <returns>Transaction object or null if not found.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,System.Int32)">
+        <member name="M:NWorkQueue.Server.Common.IStorage.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,NWorkQueue.Common.MessageState)">
             <summary>
             Add a message to the storage.
             </summary>
@@ -239,7 +215,7 @@
             <param name="expiryDateTime">When the transaction will end.</param>
             <returns>Returns transaction ID.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,System.Int32,System.Int32)">
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,NWorkQueue.Common.MessageState,NWorkQueue.Common.MessageState,System.DateTime)">
             <summary>
             Updates a set of messages.
             </summary>
@@ -250,7 +226,7 @@
             <param name="newMessageState">Update the message state to this value.</param>
             <returns>Returns the number of messages updated.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,System.Int32)">
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,NWorkQueue.Common.MessageState)">
             <summary>
             Updates the message retry cuont based on transactionAction and MessageState.
             </summary>
