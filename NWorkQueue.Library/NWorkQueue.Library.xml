@@ -169,7 +169,7 @@
             <param name="transId">The Id of the transaction to lookup.</param>
             <returns>Transaction object or null if not found.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,NWorkQueue.Common.MessageState)">
+        <member name="M:NWorkQueue.Server.Common.IStorage.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
             <summary>
             Add a message to the storage.
             </summary>
@@ -215,7 +215,7 @@
             <param name="expiryDateTime">When the transaction will end.</param>
             <returns>Returns transaction ID.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,NWorkQueue.Common.MessageState,NWorkQueue.Common.MessageState,System.DateTime)">
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState,NWorkQueue.Common.MessageState,System.Nullable{System.DateTime})">
             <summary>
             Updates a set of messages.
             </summary>
@@ -226,7 +226,7 @@
             <param name="newMessageState">Update the message state to this value.</param>
             <returns>Returns the number of messages updated.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,NWorkQueue.Common.MessageState)">
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
             <summary>
             Updates the message retry cuont based on transactionAction and MessageState.
             </summary>

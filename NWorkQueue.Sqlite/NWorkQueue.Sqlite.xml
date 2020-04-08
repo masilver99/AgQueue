@@ -76,16 +76,16 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetQueueInfoById(System.Int64)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,NWorkQueue.Common.MessageState)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.BeginStorageTransaction">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,NWorkQueue.Common.MessageState,NWorkQueue.Common.MessageState,System.DateTime)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState,NWorkQueue.Common.MessageState,System.Nullable{System.DateTime})">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,System.Int32,NWorkQueue.Common.MessageState)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.DeleteAddedMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64)">

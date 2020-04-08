@@ -170,16 +170,6 @@
             Represents a Queue Transaction.
             </summary>
         </member>
-        <member name="M:NWorkQueue.Common.Models.Transaction.#ctor(System.Int64,NWorkQueue.Common.TransactionState,System.DateTime,System.DateTime,System.Nullable{System.DateTime})">
-            <summary>
-            Initializes a new instance of the <see cref="T:NWorkQueue.Common.Models.Transaction"/> class.
-            </summary>
-            <param name="id">primary key.</param>
-            <param name="state">Is transaction active.</param>
-            <param name="createDateTime">Datetime transaction was created.</param>
-            <param name="expiryDateTime">Datetime transaction will expire.</param>
-            <param name="endDateTime">Datetime the transaction was closed.</param>
-        </member>
         <member name="P:NWorkQueue.Common.Models.Transaction.Id">
             <summary>
             Gets the unique ID for a transaction.
@@ -218,16 +208,6 @@
         <member name="F:NWorkQueue.Common.TransactionAction.Pull">
             <summary>
             Item was pulled within transaction, increment retry count if rolledback.
-            </summary>
-        </member>
-        <member name="P:NWorkQueue.Common.TransactionAction.Name">
-            <summary>
-            Gets transaction action name.
-            </summary>
-        </member>
-        <member name="P:NWorkQueue.Common.TransactionAction.Value">
-            <summary>
-            Gets transaction Action value / id.
             </summary>
         </member>
         <member name="T:NWorkQueue.Common.TransactionResult">

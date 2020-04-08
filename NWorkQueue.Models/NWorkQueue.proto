@@ -130,15 +130,15 @@ message MessageOut {
   // tries">How many failures before the message will be expired.
   int32 MaxRetries = 5;
   // Message expire after this DateTime.
-  google.protobuf.Timestamp ExpiryDateTime = 6;
+  int64 ExpiryDateTime = 6;
   // Optional correlation id. ID's are defined by the calling application.
   int32 CorrelationId = 7;
   // Optional group string. Defined by calling application.
   string GroupName = 8;
   //State
   MessageState MessageState = 9; 
-  google.protobuf.Timestamp AddDateTime = 10;
-  google.protobuf.Timestamp CloseDateTime = 11;
+  int64 AddDateTime = 10;
+  int64 CloseDateTime = 11;
   int64 TransId = 12;
   TransactionAction TransAction = 13;
 }
@@ -172,7 +172,8 @@ message DequeueMessageRequest {
 
 message DequeueMessageResponse {
   int64 TransId = 1;
-  MessageOut Message = 2;
+  bool MessageFound = 2;
+  MessageOut Message = 3;
 }
 
 message PeekMessageByQueueRequest {

@@ -73,7 +73,7 @@ namespace NWorkQueue.Server.Common
             DateTime? expiryDateTime,
             int correlation,
             string groupName,
-            int transactionAction,
+            TransactionAction transactionAction,
             MessageState messageState);
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace NWorkQueue.Server.Common
         /// <param name="oldMessageState">Current message state.</param>
         /// <param name="newMessageState">Update the message state to this value.</param>
         /// <returns>Returns the number of messages updated.</returns>
-        ValueTask<int> UpdateMessages(IStorageTransaction storageTrans, long transId, int transactionAction, MessageState oldMessageState, MessageState newMessageState, DateTime closeDateTime);
+        ValueTask<int> UpdateMessages(IStorageTransaction storageTrans, long transId, TransactionAction transactionAction, MessageState oldMessageState, MessageState newMessageState, DateTime? closeDateTime);
 
         /// <summary>
         /// Updates the message retry cuont based on transactionAction and MessageState.
@@ -123,7 +123,7 @@ namespace NWorkQueue.Server.Common
         /// <param name="transactionAction">The transactionAction the message must be in.</param>
         /// <param name="messageState">The messageState the message must be in. </param>
         /// <returns>Number of messages updated.</returns>
-        ValueTask<int> UpdateMessageRetryCount(IStorageTransaction storageTrans, long transId, int transactionAction, MessageState messageState);
+        ValueTask<int> UpdateMessageRetryCount(IStorageTransaction storageTrans, long transId, TransactionAction transactionAction, MessageState messageState);
 
         /// <summary>
         /// Delete messages that were added in the specified transtacion.

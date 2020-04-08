@@ -48,53 +48,52 @@ namespace NWorkQueue.Models {
             "biKXAQoJTWVzc2FnZUluEg8KB1BheWxvYWQYAiABKAwSEAoITWV0YURhdGEY",
             "AyABKAkSEAoIUHJpb3JpdHkYBCABKAUSEgoKTWF4UmV0cmllcxgFIAEoBRIX",
             "Cg9FeHBpcnlJbk1pbnV0ZXMYBiABKAUSFQoNQ29ycmVsYXRpb25JZBgHIAEo",
-            "BRIRCglHcm91cE5hbWUYCCABKAkikwMKCk1lc3NhZ2VPdXQSDwoHUXVldWVJ",
+            "BRIRCglHcm91cE5hbWUYCCABKAkivwIKCk1lc3NhZ2VPdXQSDwoHUXVldWVJ",
             "ZBgBIAEoAxIPCgdQYXlsb2FkGAIgASgMEhAKCE1ldGFEYXRhGAMgASgJEhAK",
-            "CFByaW9yaXR5GAQgASgFEhIKCk1heFJldHJpZXMYBSABKAUSMgoORXhwaXJ5",
-            "RGF0ZVRpbWUYBiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhUK",
-            "DUNvcnJlbGF0aW9uSWQYByABKAUSEQoJR3JvdXBOYW1lGAggASgJEikKDE1l",
-            "c3NhZ2VTdGF0ZRgJIAEoDjITLmdyZWV0Lk1lc3NhZ2VTdGF0ZRIvCgtBZGRE",
-            "YXRlVGltZRgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASMQoN",
-            "Q2xvc2VEYXRlVGltZRgLIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
-            "bXASDwoHVHJhbnNJZBgMIAEoAxItCgtUcmFuc0FjdGlvbhgNIAEoDjIYLmdy",
-            "ZWV0LlRyYW5zYWN0aW9uQWN0aW9uIjoKFFF1ZXVlTWVzc2FnZVJlc3BvbnNl",
-            "Eg8KB1RyYW5zSWQYASABKAMSEQoJTWVzc2FnZUlkGAIgASgDIjkKFURlcXVl",
-            "dWVNZXNzYWdlUmVxdWVzdBIPCgdRdWV1ZUlkGAEgASgDEg8KB1RyYW5zSWQY",
-            "AiABKAMiTQoWRGVxdWV1ZU1lc3NhZ2VSZXNwb25zZRIPCgdUcmFuc0lkGAEg",
-            "ASgDEiIKB01lc3NhZ2UYAiABKAsyES5ncmVldC5NZXNzYWdlT3V0IiwKGVBl",
-            "ZWtNZXNzYWdlQnlRdWV1ZVJlcXVlc3QSDwoHUXVldWVJZBgBIAEoAyJAChpQ",
-            "ZWVrTWVzc2FnZUJ5UXVldWVSZXNwb25zZRIiCgdNZXNzYWdlGAEgASgLMhEu",
-            "Z3JlZXQuTWVzc2FnZU91dCIrChZQZWVrTWVzc2FnZUJ5SWRSZXF1ZXN0EhEK",
-            "CU1lc3NhZ2VJZBgBIAEoAyI9ChdQZWVrTWVzc2FnZUJ5SWRSZXNwb25zZRIi",
-            "CgdNZXNzYWdlGAEgASgLMhEuZ3JlZXQuTWVzc2FnZU91dCpcCgxNZXNzYWdl",
-            "U3RhdGUSCgoGQWN0aXZlEAASEQoNSW5UcmFuc2FjdGlvbhABEg0KCVByb2Nl",
-            "c3NlZBACEgsKB0V4cGlyZWQQAxIRCg1SZXRyeUV4Y2VlZGVkEAQqJgoRVHJh",
-            "bnNhY3Rpb25BY3Rpb24SBwoDQWRkEAASCAoEUHVsbBABMscICghRdWV1ZUFw",
-            "aRJECgtDcmVhdGVRdWV1ZRIZLmdyZWV0LkNyZWF0ZVF1ZXVlUmVxdWVzdBoa",
-            "LmdyZWV0LkNyZWF0ZVF1ZXVlUmVzcG9uc2USVgoRSW5pdGlhbGl6ZVN0b3Jh",
-            "Z2USHy5ncmVldC5Jbml0aWFsaXplU3RvcmFnZVJlcXVlc3QaIC5ncmVldC5J",
-            "bml0aWFsaXplU3RvcmFnZVJlc3BvbnNlElAKD0RlbGV0ZVF1ZXVlQnlJZBId",
-            "LmdyZWV0LkRlbGV0ZVF1ZXVlQnlJZFJlcXVlc3QaHi5ncmVldC5EZWxldGVR",
-            "dWV1ZUJ5SWRSZXNwb25zZRJWChFEZWxldGVRdWV1ZUJ5TmFtZRIfLmdyZWV0",
-            "LkRlbGV0ZVF1ZXVlQnlOYW1lUmVxdWVzdBogLmdyZWV0LkRlbGV0ZVF1ZXVl",
-            "QnlOYW1lUmVzcG9uc2USTwoQR2V0UXVldWVJbmZvQnlJZBIeLmdyZWV0Lkdl",
-            "dFF1ZXVlSW5mb0J5SWRSZXF1ZXN0GhsuZ3JlZXQuR2V0UXVldWVJbmZvUmVz",
-            "cG9uc2USUwoSR2V0UXVldWVJbmZvQnlOYW1lEiAuZ3JlZXQuR2V0UXVldWVJ",
-            "bmZvQnlOYW1lUmVxdWVzdBobLmdyZWV0LkdldFF1ZXVlSW5mb1Jlc3BvbnNl",
-            "ElMKEFN0YXJ0VHJhbnNhY3Rpb24SHi5ncmVldC5TdGFydFRyYW5zYWN0aW9u",
-            "UmVxdWVzdBofLmdyZWV0LlN0YXJ0VHJhbnNhY3Rpb25SZXNwb25zZRJWChFD",
-            "b21taXRUcmFuc2FjdGlvbhIfLmdyZWV0LkNvbW1pdFRyYW5zYWN0aW9uUmVx",
-            "dWVzdBogLmdyZWV0LkNvbW1pdFRyYW5zYWN0aW9uUmVzcG9uc2USWwoSUm9s",
-            "bGJhY2tUcmFuYWN0aW9uEiEuZ3JlZXQuUm9sbGJhY2tUcmFuc2FjdGlvblJl",
-            "cXVlc3QaIi5ncmVldC5Sb2xsYmFja1RyYW5zYWN0aW9uUmVzcG9uc2USRwoM",
-            "UXVldWVNZXNzYWdlEhouZ3JlZXQuUXVldWVNZXNzYWdlUmVxdWVzdBobLmdy",
-            "ZWV0LlF1ZXVlTWVzc2FnZVJlc3BvbnNlEk0KDkRlcXVldWVNZXNzYWdlEhwu",
-            "Z3JlZXQuRGVxdWV1ZU1lc3NhZ2VSZXF1ZXN0Gh0uZ3JlZXQuRGVxdWV1ZU1l",
-            "c3NhZ2VSZXNwb25zZRJZChJQZWVrTWVzc2FnZUJ5UXVldWUSIC5ncmVldC5Q",
-            "ZWVrTWVzc2FnZUJ5UXVldWVSZXF1ZXN0GiEuZ3JlZXQuUGVla01lc3NhZ2VC",
-            "eVF1ZXVlUmVzcG9uc2USUAoPUGVla01lc3NhZ2VCeUlkEh0uZ3JlZXQuUGVl",
-            "a01lc3NhZ2VCeUlkUmVxdWVzdBoeLmdyZWV0LlBlZWtNZXNzYWdlQnlJZFJl",
-            "c3BvbnNlQhSqAhFOV29ya1F1ZXVlLk1vZGVsc2IGcHJvdG8z"));
+            "CFByaW9yaXR5GAQgASgFEhIKCk1heFJldHJpZXMYBSABKAUSFgoORXhwaXJ5",
+            "RGF0ZVRpbWUYBiABKAMSFQoNQ29ycmVsYXRpb25JZBgHIAEoBRIRCglHcm91",
+            "cE5hbWUYCCABKAkSKQoMTWVzc2FnZVN0YXRlGAkgASgOMhMuZ3JlZXQuTWVz",
+            "c2FnZVN0YXRlEhMKC0FkZERhdGVUaW1lGAogASgDEhUKDUNsb3NlRGF0ZVRp",
+            "bWUYCyABKAMSDwoHVHJhbnNJZBgMIAEoAxItCgtUcmFuc0FjdGlvbhgNIAEo",
+            "DjIYLmdyZWV0LlRyYW5zYWN0aW9uQWN0aW9uIjoKFFF1ZXVlTWVzc2FnZVJl",
+            "c3BvbnNlEg8KB1RyYW5zSWQYASABKAMSEQoJTWVzc2FnZUlkGAIgASgDIjkK",
+            "FURlcXVldWVNZXNzYWdlUmVxdWVzdBIPCgdRdWV1ZUlkGAEgASgDEg8KB1Ry",
+            "YW5zSWQYAiABKAMiYwoWRGVxdWV1ZU1lc3NhZ2VSZXNwb25zZRIPCgdUcmFu",
+            "c0lkGAEgASgDEhQKDE1lc3NhZ2VGb3VuZBgCIAEoCBIiCgdNZXNzYWdlGAMg",
+            "ASgLMhEuZ3JlZXQuTWVzc2FnZU91dCIsChlQZWVrTWVzc2FnZUJ5UXVldWVS",
+            "ZXF1ZXN0Eg8KB1F1ZXVlSWQYASABKAMiQAoaUGVla01lc3NhZ2VCeVF1ZXVl",
+            "UmVzcG9uc2USIgoHTWVzc2FnZRgBIAEoCzIRLmdyZWV0Lk1lc3NhZ2VPdXQi",
+            "KwoWUGVla01lc3NhZ2VCeUlkUmVxdWVzdBIRCglNZXNzYWdlSWQYASABKAMi",
+            "PQoXUGVla01lc3NhZ2VCeUlkUmVzcG9uc2USIgoHTWVzc2FnZRgBIAEoCzIR",
+            "LmdyZWV0Lk1lc3NhZ2VPdXQqXAoMTWVzc2FnZVN0YXRlEgoKBkFjdGl2ZRAA",
+            "EhEKDUluVHJhbnNhY3Rpb24QARINCglQcm9jZXNzZWQQAhILCgdFeHBpcmVk",
+            "EAMSEQoNUmV0cnlFeGNlZWRlZBAEKiYKEVRyYW5zYWN0aW9uQWN0aW9uEgcK",
+            "A0FkZBAAEggKBFB1bGwQATLHCAoIUXVldWVBcGkSRAoLQ3JlYXRlUXVldWUS",
+            "GS5ncmVldC5DcmVhdGVRdWV1ZVJlcXVlc3QaGi5ncmVldC5DcmVhdGVRdWV1",
+            "ZVJlc3BvbnNlElYKEUluaXRpYWxpemVTdG9yYWdlEh8uZ3JlZXQuSW5pdGlh",
+            "bGl6ZVN0b3JhZ2VSZXF1ZXN0GiAuZ3JlZXQuSW5pdGlhbGl6ZVN0b3JhZ2VS",
+            "ZXNwb25zZRJQCg9EZWxldGVRdWV1ZUJ5SWQSHS5ncmVldC5EZWxldGVRdWV1",
+            "ZUJ5SWRSZXF1ZXN0Gh4uZ3JlZXQuRGVsZXRlUXVldWVCeUlkUmVzcG9uc2US",
+            "VgoRRGVsZXRlUXVldWVCeU5hbWUSHy5ncmVldC5EZWxldGVRdWV1ZUJ5TmFt",
+            "ZVJlcXVlc3QaIC5ncmVldC5EZWxldGVRdWV1ZUJ5TmFtZVJlc3BvbnNlEk8K",
+            "EEdldFF1ZXVlSW5mb0J5SWQSHi5ncmVldC5HZXRRdWV1ZUluZm9CeUlkUmVx",
+            "dWVzdBobLmdyZWV0LkdldFF1ZXVlSW5mb1Jlc3BvbnNlElMKEkdldFF1ZXVl",
+            "SW5mb0J5TmFtZRIgLmdyZWV0LkdldFF1ZXVlSW5mb0J5TmFtZVJlcXVlc3Qa",
+            "Gy5ncmVldC5HZXRRdWV1ZUluZm9SZXNwb25zZRJTChBTdGFydFRyYW5zYWN0",
+            "aW9uEh4uZ3JlZXQuU3RhcnRUcmFuc2FjdGlvblJlcXVlc3QaHy5ncmVldC5T",
+            "dGFydFRyYW5zYWN0aW9uUmVzcG9uc2USVgoRQ29tbWl0VHJhbnNhY3Rpb24S",
+            "Hy5ncmVldC5Db21taXRUcmFuc2FjdGlvblJlcXVlc3QaIC5ncmVldC5Db21t",
+            "aXRUcmFuc2FjdGlvblJlc3BvbnNlElsKElJvbGxiYWNrVHJhbmFjdGlvbhIh",
+            "LmdyZWV0LlJvbGxiYWNrVHJhbnNhY3Rpb25SZXF1ZXN0GiIuZ3JlZXQuUm9s",
+            "bGJhY2tUcmFuc2FjdGlvblJlc3BvbnNlEkcKDFF1ZXVlTWVzc2FnZRIaLmdy",
+            "ZWV0LlF1ZXVlTWVzc2FnZVJlcXVlc3QaGy5ncmVldC5RdWV1ZU1lc3NhZ2VS",
+            "ZXNwb25zZRJNCg5EZXF1ZXVlTWVzc2FnZRIcLmdyZWV0LkRlcXVldWVNZXNz",
+            "YWdlUmVxdWVzdBodLmdyZWV0LkRlcXVldWVNZXNzYWdlUmVzcG9uc2USWQoS",
+            "UGVla01lc3NhZ2VCeVF1ZXVlEiAuZ3JlZXQuUGVla01lc3NhZ2VCeVF1ZXVl",
+            "UmVxdWVzdBohLmdyZWV0LlBlZWtNZXNzYWdlQnlRdWV1ZVJlc3BvbnNlElAK",
+            "D1BlZWtNZXNzYWdlQnlJZBIdLmdyZWV0LlBlZWtNZXNzYWdlQnlJZFJlcXVl",
+            "c3QaHi5ncmVldC5QZWVrTWVzc2FnZUJ5SWRSZXNwb25zZUIUqgIRTldvcmtR",
+            "dWV1ZS5Nb2RlbHNiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::NWorkQueue.Models.MessageState), typeof(global::NWorkQueue.Models.TransactionAction), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -120,7 +119,7 @@ namespace NWorkQueue.Models {
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.MessageOut), global::NWorkQueue.Models.MessageOut.Parser, new[]{ "QueueId", "Payload", "MetaData", "Priority", "MaxRetries", "ExpiryDateTime", "CorrelationId", "GroupName", "MessageState", "AddDateTime", "CloseDateTime", "TransId", "TransAction" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueMessageResponse), global::NWorkQueue.Models.QueueMessageResponse.Parser, new[]{ "TransId", "MessageId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DequeueMessageRequest), global::NWorkQueue.Models.DequeueMessageRequest.Parser, new[]{ "QueueId", "TransId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DequeueMessageResponse), global::NWorkQueue.Models.DequeueMessageResponse.Parser, new[]{ "TransId", "Message" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DequeueMessageResponse), global::NWorkQueue.Models.DequeueMessageResponse.Parser, new[]{ "TransId", "MessageFound", "Message" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PeekMessageByQueueRequest), global::NWorkQueue.Models.PeekMessageByQueueRequest.Parser, new[]{ "QueueId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PeekMessageByQueueResponse), global::NWorkQueue.Models.PeekMessageByQueueResponse.Parser, new[]{ "Message" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.PeekMessageByIdRequest), global::NWorkQueue.Models.PeekMessageByIdRequest.Parser, new[]{ "MessageId" }, null, null, null, null),
@@ -2891,12 +2890,12 @@ namespace NWorkQueue.Models {
       metaData_ = other.metaData_;
       priority_ = other.priority_;
       maxRetries_ = other.maxRetries_;
-      expiryDateTime_ = other.expiryDateTime_ != null ? other.expiryDateTime_.Clone() : null;
+      expiryDateTime_ = other.expiryDateTime_;
       correlationId_ = other.correlationId_;
       groupName_ = other.groupName_;
       messageState_ = other.messageState_;
-      addDateTime_ = other.addDateTime_ != null ? other.addDateTime_.Clone() : null;
-      closeDateTime_ = other.closeDateTime_ != null ? other.closeDateTime_.Clone() : null;
+      addDateTime_ = other.addDateTime_;
+      closeDateTime_ = other.closeDateTime_;
       transId_ = other.transId_;
       transAction_ = other.transAction_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -2979,12 +2978,12 @@ namespace NWorkQueue.Models {
 
     /// <summary>Field number for the "ExpiryDateTime" field.</summary>
     public const int ExpiryDateTimeFieldNumber = 6;
-    private global::Google.Protobuf.WellKnownTypes.Timestamp expiryDateTime_;
+    private long expiryDateTime_;
     /// <summary>
     /// Message expire after this DateTime.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Google.Protobuf.WellKnownTypes.Timestamp ExpiryDateTime {
+    public long ExpiryDateTime {
       get { return expiryDateTime_; }
       set {
         expiryDateTime_ = value;
@@ -3035,9 +3034,9 @@ namespace NWorkQueue.Models {
 
     /// <summary>Field number for the "AddDateTime" field.</summary>
     public const int AddDateTimeFieldNumber = 10;
-    private global::Google.Protobuf.WellKnownTypes.Timestamp addDateTime_;
+    private long addDateTime_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Google.Protobuf.WellKnownTypes.Timestamp AddDateTime {
+    public long AddDateTime {
       get { return addDateTime_; }
       set {
         addDateTime_ = value;
@@ -3046,9 +3045,9 @@ namespace NWorkQueue.Models {
 
     /// <summary>Field number for the "CloseDateTime" field.</summary>
     public const int CloseDateTimeFieldNumber = 11;
-    private global::Google.Protobuf.WellKnownTypes.Timestamp closeDateTime_;
+    private long closeDateTime_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Google.Protobuf.WellKnownTypes.Timestamp CloseDateTime {
+    public long CloseDateTime {
       get { return closeDateTime_; }
       set {
         closeDateTime_ = value;
@@ -3095,12 +3094,12 @@ namespace NWorkQueue.Models {
       if (MetaData != other.MetaData) return false;
       if (Priority != other.Priority) return false;
       if (MaxRetries != other.MaxRetries) return false;
-      if (!object.Equals(ExpiryDateTime, other.ExpiryDateTime)) return false;
+      if (ExpiryDateTime != other.ExpiryDateTime) return false;
       if (CorrelationId != other.CorrelationId) return false;
       if (GroupName != other.GroupName) return false;
       if (MessageState != other.MessageState) return false;
-      if (!object.Equals(AddDateTime, other.AddDateTime)) return false;
-      if (!object.Equals(CloseDateTime, other.CloseDateTime)) return false;
+      if (AddDateTime != other.AddDateTime) return false;
+      if (CloseDateTime != other.CloseDateTime) return false;
       if (TransId != other.TransId) return false;
       if (TransAction != other.TransAction) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -3114,12 +3113,12 @@ namespace NWorkQueue.Models {
       if (MetaData.Length != 0) hash ^= MetaData.GetHashCode();
       if (Priority != 0) hash ^= Priority.GetHashCode();
       if (MaxRetries != 0) hash ^= MaxRetries.GetHashCode();
-      if (expiryDateTime_ != null) hash ^= ExpiryDateTime.GetHashCode();
+      if (ExpiryDateTime != 0L) hash ^= ExpiryDateTime.GetHashCode();
       if (CorrelationId != 0) hash ^= CorrelationId.GetHashCode();
       if (GroupName.Length != 0) hash ^= GroupName.GetHashCode();
       if (MessageState != global::NWorkQueue.Models.MessageState.Active) hash ^= MessageState.GetHashCode();
-      if (addDateTime_ != null) hash ^= AddDateTime.GetHashCode();
-      if (closeDateTime_ != null) hash ^= CloseDateTime.GetHashCode();
+      if (AddDateTime != 0L) hash ^= AddDateTime.GetHashCode();
+      if (CloseDateTime != 0L) hash ^= CloseDateTime.GetHashCode();
       if (TransId != 0L) hash ^= TransId.GetHashCode();
       if (TransAction != global::NWorkQueue.Models.TransactionAction.Add) hash ^= TransAction.GetHashCode();
       if (_unknownFields != null) {
@@ -3155,9 +3154,9 @@ namespace NWorkQueue.Models {
         output.WriteRawTag(40);
         output.WriteInt32(MaxRetries);
       }
-      if (expiryDateTime_ != null) {
-        output.WriteRawTag(50);
-        output.WriteMessage(ExpiryDateTime);
+      if (ExpiryDateTime != 0L) {
+        output.WriteRawTag(48);
+        output.WriteInt64(ExpiryDateTime);
       }
       if (CorrelationId != 0) {
         output.WriteRawTag(56);
@@ -3171,13 +3170,13 @@ namespace NWorkQueue.Models {
         output.WriteRawTag(72);
         output.WriteEnum((int) MessageState);
       }
-      if (addDateTime_ != null) {
-        output.WriteRawTag(82);
-        output.WriteMessage(AddDateTime);
+      if (AddDateTime != 0L) {
+        output.WriteRawTag(80);
+        output.WriteInt64(AddDateTime);
       }
-      if (closeDateTime_ != null) {
-        output.WriteRawTag(90);
-        output.WriteMessage(CloseDateTime);
+      if (CloseDateTime != 0L) {
+        output.WriteRawTag(88);
+        output.WriteInt64(CloseDateTime);
       }
       if (TransId != 0L) {
         output.WriteRawTag(96);
@@ -3210,8 +3209,8 @@ namespace NWorkQueue.Models {
       if (MaxRetries != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(MaxRetries);
       }
-      if (expiryDateTime_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(ExpiryDateTime);
+      if (ExpiryDateTime != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ExpiryDateTime);
       }
       if (CorrelationId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(CorrelationId);
@@ -3222,11 +3221,11 @@ namespace NWorkQueue.Models {
       if (MessageState != global::NWorkQueue.Models.MessageState.Active) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MessageState);
       }
-      if (addDateTime_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(AddDateTime);
+      if (AddDateTime != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(AddDateTime);
       }
-      if (closeDateTime_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(CloseDateTime);
+      if (CloseDateTime != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(CloseDateTime);
       }
       if (TransId != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(TransId);
@@ -3260,11 +3259,8 @@ namespace NWorkQueue.Models {
       if (other.MaxRetries != 0) {
         MaxRetries = other.MaxRetries;
       }
-      if (other.expiryDateTime_ != null) {
-        if (expiryDateTime_ == null) {
-          ExpiryDateTime = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-        }
-        ExpiryDateTime.MergeFrom(other.ExpiryDateTime);
+      if (other.ExpiryDateTime != 0L) {
+        ExpiryDateTime = other.ExpiryDateTime;
       }
       if (other.CorrelationId != 0) {
         CorrelationId = other.CorrelationId;
@@ -3275,17 +3271,11 @@ namespace NWorkQueue.Models {
       if (other.MessageState != global::NWorkQueue.Models.MessageState.Active) {
         MessageState = other.MessageState;
       }
-      if (other.addDateTime_ != null) {
-        if (addDateTime_ == null) {
-          AddDateTime = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-        }
-        AddDateTime.MergeFrom(other.AddDateTime);
+      if (other.AddDateTime != 0L) {
+        AddDateTime = other.AddDateTime;
       }
-      if (other.closeDateTime_ != null) {
-        if (closeDateTime_ == null) {
-          CloseDateTime = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-        }
-        CloseDateTime.MergeFrom(other.CloseDateTime);
+      if (other.CloseDateTime != 0L) {
+        CloseDateTime = other.CloseDateTime;
       }
       if (other.TransId != 0L) {
         TransId = other.TransId;
@@ -3324,11 +3314,8 @@ namespace NWorkQueue.Models {
             MaxRetries = input.ReadInt32();
             break;
           }
-          case 50: {
-            if (expiryDateTime_ == null) {
-              ExpiryDateTime = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(ExpiryDateTime);
+          case 48: {
+            ExpiryDateTime = input.ReadInt64();
             break;
           }
           case 56: {
@@ -3343,18 +3330,12 @@ namespace NWorkQueue.Models {
             MessageState = (global::NWorkQueue.Models.MessageState) input.ReadEnum();
             break;
           }
-          case 82: {
-            if (addDateTime_ == null) {
-              AddDateTime = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(AddDateTime);
+          case 80: {
+            AddDateTime = input.ReadInt64();
             break;
           }
-          case 90: {
-            if (closeDateTime_ == null) {
-              CloseDateTime = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(CloseDateTime);
+          case 88: {
+            CloseDateTime = input.ReadInt64();
             break;
           }
           case 96: {
@@ -3717,6 +3698,7 @@ namespace NWorkQueue.Models {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public DequeueMessageResponse(DequeueMessageResponse other) : this() {
       transId_ = other.transId_;
+      messageFound_ = other.messageFound_;
       message_ = other.message_ != null ? other.message_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -3737,8 +3719,19 @@ namespace NWorkQueue.Models {
       }
     }
 
+    /// <summary>Field number for the "MessageFound" field.</summary>
+    public const int MessageFoundFieldNumber = 2;
+    private bool messageFound_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool MessageFound {
+      get { return messageFound_; }
+      set {
+        messageFound_ = value;
+      }
+    }
+
     /// <summary>Field number for the "Message" field.</summary>
-    public const int MessageFieldNumber = 2;
+    public const int MessageFieldNumber = 3;
     private global::NWorkQueue.Models.MessageOut message_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::NWorkQueue.Models.MessageOut Message {
@@ -3762,6 +3755,7 @@ namespace NWorkQueue.Models {
         return true;
       }
       if (TransId != other.TransId) return false;
+      if (MessageFound != other.MessageFound) return false;
       if (!object.Equals(Message, other.Message)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -3770,6 +3764,7 @@ namespace NWorkQueue.Models {
     public override int GetHashCode() {
       int hash = 1;
       if (TransId != 0L) hash ^= TransId.GetHashCode();
+      if (MessageFound != false) hash ^= MessageFound.GetHashCode();
       if (message_ != null) hash ^= Message.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -3788,8 +3783,12 @@ namespace NWorkQueue.Models {
         output.WriteRawTag(8);
         output.WriteInt64(TransId);
       }
+      if (MessageFound != false) {
+        output.WriteRawTag(16);
+        output.WriteBool(MessageFound);
+      }
       if (message_ != null) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(26);
         output.WriteMessage(Message);
       }
       if (_unknownFields != null) {
@@ -3802,6 +3801,9 @@ namespace NWorkQueue.Models {
       int size = 0;
       if (TransId != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(TransId);
+      }
+      if (MessageFound != false) {
+        size += 1 + 1;
       }
       if (message_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Message);
@@ -3819,6 +3821,9 @@ namespace NWorkQueue.Models {
       }
       if (other.TransId != 0L) {
         TransId = other.TransId;
+      }
+      if (other.MessageFound != false) {
+        MessageFound = other.MessageFound;
       }
       if (other.message_ != null) {
         if (message_ == null) {
@@ -3841,7 +3846,11 @@ namespace NWorkQueue.Models {
             TransId = input.ReadInt64();
             break;
           }
-          case 18: {
+          case 16: {
+            MessageFound = input.ReadBool();
+            break;
+          }
+          case 26: {
             if (message_ == null) {
               Message = new global::NWorkQueue.Models.MessageOut();
             }

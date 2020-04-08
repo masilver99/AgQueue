@@ -36,17 +36,17 @@ namespace NWorkQueue.Common.Models
         /// <summary>
         /// Gets the transaction action. i.e. was this message added or pulled in the transaction.
         /// </summary>
-        public TransactionAction? TransactionAction { get; set; }
+        public TransactionAction TransactionAction { get; set; }
 
         /// <summary>
         /// Gets the datetime the message was added.
         /// </summary>
-        public DateTime AddDateTime { get; set; }
+        public long AddDateTime { get; set; }
 
         /// <summary>
         /// Gets the datetime the message was closed, i.e. processed or cancelled or expired.
         /// </summary>
-        public DateTime CloseDateTime { get; set; }
+        public long? CloseDateTime { get; set; }
 
         /// <summary>
         /// Gets the priority of the message.  Lower is higher priority.
@@ -66,7 +66,7 @@ namespace NWorkQueue.Common.Models
         /// <summary>
         /// Gets DateTime the message will expire.
         /// </summary>
-        public DateTime ExpiryDateTime { get; set; }
+        public long? ExpiryDateTime { get; set; }
 
         /// <summary>
         /// Gets the interger correlation id, used by calling application.

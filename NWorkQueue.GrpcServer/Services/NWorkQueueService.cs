@@ -119,14 +119,23 @@ namespace NWorkQueue.GrpcServer
                 request.TransId,
                 request.QueueId);
 
+            if (message == null)
+            {
+                return new DequeueMessageResponse
+                {
+                    TransId = request.TransId,
+                    MessageFound = false
+                };
+            }
+
             return new DequeueMessageResponse
             {
                 Message = new MessageOut()
                 {
                     CorrelationId = message.CorrelationId,
-                    ExpiryDateTime = Timestamp.FromDateTime(message.ExpiryDateTime),
-                    AddDateTime = Timestamp.FromDateTime(message.AddDateTime),
-                    CloseDateTime = Timestamp.FromDateTime(message.CloseDateTime),
+                    ExpiryDateTime = message.ExpiryDateTime ?? 0, // Zero is a null in protbuf
+                    AddDateTime = message.AddDateTime,
+                    CloseDateTime = message.CloseDateTime ?? 0,
                     GroupName = message.GroupName,
                     MaxRetries = message.MaxRetries,
                     MessageState = (Models.MessageState)message.MessageState,
@@ -134,9 +143,10 @@ namespace NWorkQueue.GrpcServer
                     Payload = ByteString.CopyFrom(message.Payload),
                     Priority = message.Priority,
                     QueueId = message.QueueId,
-                    TransAction = (Models.TransactionAction)message.TransactionAction.Value,
+                    TransAction = (Models.TransactionAction)message.TransactionAction,
                     TransId = message.TransactionId
-                }
+                },
+                MessageFound = true
             };
         }
 
@@ -150,9 +160,9 @@ namespace NWorkQueue.GrpcServer
                 Message = new MessageOut()
                 {
                     CorrelationId = message.CorrelationId,
-                    ExpiryDateTime = Timestamp.FromDateTime(message.ExpiryDateTime),
-                    AddDateTime = Timestamp.FromDateTime(message.AddDateTime),
-                    CloseDateTime = Timestamp.FromDateTime(message.CloseDateTime),
+                    ExpiryDateTime = message.ExpiryDateTime ?? 0,
+                    AddDateTime = message.AddDateTime,
+                    CloseDateTime = message.CloseDateTime ?? 0,
                     GroupName = message.GroupName,
                     MaxRetries = message.MaxRetries,
                     MessageState = (Models.MessageState)message.MessageState,
@@ -160,7 +170,7 @@ namespace NWorkQueue.GrpcServer
                     Payload = ByteString.CopyFrom(message.Payload),
                     Priority = message.Priority,
                     QueueId = message.QueueId,
-                    TransAction = (Models.TransactionAction)message.TransactionAction.Value,
+                    TransAction = (Models.TransactionAction)message.TransactionAction,
                     TransId = message.TransactionId
                 }
             };
