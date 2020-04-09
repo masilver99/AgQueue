@@ -8,6 +8,7 @@ using NWorkQueue.Models;
 using System.Threading.Tasks;
 using Grpc.Net.ClientFactory;
 using System;
+using System.IO;
 
 namespace NWorkQueue.Integration.Tests
 {
@@ -125,6 +126,7 @@ namespace NWorkQueue.Integration.Tests
         }
         private static async Task<QueueApi.QueueApiClient> CreateBadClient()
         {
+            File.Delete("SqliteTesting.db");  // hard reset of the database.
             var channel = GrpcChannel.ForAddress("http://localhost:10043");
             var client = new QueueApi.QueueApiClient(channel);
             return client;

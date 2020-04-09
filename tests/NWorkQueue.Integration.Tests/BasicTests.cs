@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Grpc.Net.ClientFactory;
 using System;
 using Grpc.Core;
+using System.IO;
 
 namespace NWorkQueue.Integration.Tests
 {
@@ -107,12 +108,13 @@ namespace NWorkQueue.Integration.Tests
         {
             var client = await CreateBadClient();
 
-            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "Test" });
-            Assert.AreEqual(1, createResponse.QueueId);
+            var exception = await Assert.ThrowsExceptionAsync<RpcException>(async () =>
+            {
+                await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "Test" });
+            });
 
-            var queueInfo = await client.GetQueueInfoByIdAsync(new GetQueueInfoByIdRequest { QueueId = 1 });
-            Assert.AreEqual("Test", queueInfo.QueueName);
-            Assert.IsTrue(queueInfo.RecordFound);
+            Assert.AreEqual(StatusCode.Internal, exception.Status.StatusCode);
+            Assert.AreEqual("SQLite Error 1: 'no such table: Queues'.", exception.Status.Detail);
         }
 
         [TestMethod]
@@ -121,7 +123,7 @@ namespace NWorkQueue.Integration.Tests
         {
             var client = await CreateClient();
 
-            // create quque
+            // Test Create quque
             var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
             Assert.AreEqual(1, createResponse.QueueId);
             var extraQueueResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "ExtraQueue" });
@@ -131,21 +133,37 @@ namespace NWorkQueue.Integration.Tests
 
             var inMessage = new MessageIn()
             {
-
+                
             };
-            var queueMessageResponse = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
-            Assert.AreEqual(1, queueMessageResponse.MessageId);
+
+            // Add Message
+            var queueMessageResponse1 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            Assert.AreEqual(1, queueMessageResponse1.MessageId);
+
+            var queueMessageResponse2 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            Assert.AreEqual(2, queueMessageResponse2.MessageId);
+
+            var queueMessageResponse3 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            Assert.AreEqual(3, queueMessageResponse3.MessageId);
+
+            // Check Message is NOT yet in the queue (since transaction not committed)
+            var messageCheckResponse = await client.PeekMessageByIdAsync(new PeekMessageByIdRequest { MessageId = 2 });
+            Assert.AreEqual(2, messageCheckResponse.Message.Id);
 
             await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
 
+            var queueMessageResponse4 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            Assert.AreEqual(3, queueMessageResponse4.MessageId);
+
             await _webHost.StopAsync();
+            
             _webHost = StartServer();
 
             var transPullResponse = await client.StartTransactionAsync(new StartTransactionRequest());
 
             var dequeueResponse = await client.DequeueMessageAsync(new DequeueMessageRequest { QueueId = 1, TransId = transPullResponse.TransId });
 
-
+            Assert.AreEqual(1, dequeueResponse.Message.Id);
         }
 
         [TestMethod]
@@ -183,6 +201,10 @@ namespace NWorkQueue.Integration.Tests
         
         private static async Task<QueueApi.QueueApiClient> CreateBadClient()
         {
+            if (File.Exists("SqliteTesting.db"))
+            {
+                File.Delete("SqliteTesting.db");
+            }
             var channel = GrpcChannel.ForAddress("http://localhost:10043");
             var client = new QueueApi.QueueApiClient(channel);
             return client;

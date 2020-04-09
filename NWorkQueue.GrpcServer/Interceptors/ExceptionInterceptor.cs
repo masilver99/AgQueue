@@ -17,6 +17,12 @@ namespace NWorkQueue.GrpcServer.Interceptors
             }
             catch (Exception e)
             {
+                // No sense it wrapping an RPC exception in an RPC exception!
+                if (e.GetType() == typeof(RpcException))
+                {
+                    throw;
+                }
+                
                 throw new RpcException(new Status(StatusCode.Internal, e.Message));
             }
         }

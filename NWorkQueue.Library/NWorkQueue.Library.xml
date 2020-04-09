@@ -90,6 +90,14 @@
             <param name="queueId">The queue to peek from.</param>
             <returns>Message object or null if no message available.</returns>
         </member>
+        <member name="M:NWorkQueue.Server.Common.InternalApi.PeekMessageById(System.Int64)">
+            <summary>
+            Retrieve a message by it's message ID.
+            </summary>
+            <remarks>Keep in mind, this may change by the time of the dequeue call.</remarks>
+            <param name="messageId">The ID of the message to retrieve.</param>
+            <returns>Message object or null if no message available.</returns>
+        </member>
         <member name="M:NWorkQueue.Server.Common.InternalApi.CommitTransaction(System.Int64)">
             <summary>
             Commits Transaction, updating all messages in transaction.

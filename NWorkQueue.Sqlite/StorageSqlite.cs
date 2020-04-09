@@ -364,7 +364,7 @@ namespace NWorkQueue.Sqlite
         public async ValueTask<int> CloseRetryExceededMessages(DateTime currentDateTime)
         {
             const string sql =
-                "Update Messages set State = @NewMessageState, CloseDateTime = @currentDateTime where TransactionId IS null and State = @OldMessageState and Retries >= MaxRetries;";
+                "Update Messages set State = @NewMessageState, CloseDateTime = @CurrentDateTime where TransactionId IS null and State = @OldMessageState and Retries >= MaxRetries;";
 
             return await this.ExecuteAsync<int>(async (connection) =>
             {
@@ -426,7 +426,7 @@ namespace NWorkQueue.Sqlite
             {
                 const string sql =
                 "SELECT Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, CloseDateTime, " +
-                "Priority, MaxRetries, Retries, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload" +
+                "Priority, MaxRetries, Retries, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload " +
                 "FROM Messages WHERE Id = @MessageId;";
 
                 return await connection.QuerySingleOrDefaultAsync<Message?>(

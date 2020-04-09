@@ -164,6 +164,8 @@ namespace NWorkQueue.Server.Common
             // TODO: This 10 needs to be pulled from a config file
             var expiryMinutes = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
 
+            await this.PerformMessageHouseCleaning(DateTime.Now);
+
             // Check transaction is exists and is active
             await this.ConfirmTransactionExistsAndIsActive(transId);
 
@@ -179,8 +181,24 @@ namespace NWorkQueue.Server.Common
         /// <returns>Message object or null if no message available.</returns>
         public async ValueTask<Message?> PeekMessageByQueueId(long queueId)
         {
+            await this.PerformMessageHouseCleaning(DateTime.Now);
+
             return await this.storage.PeekMessageByQueueId(
                 queueId);
+        }
+
+        /// <summary>
+        /// Retrieve a message by it's message ID.
+        /// </summary>
+        /// <remarks>Keep in mind, this may change by the time of the dequeue call.</remarks>
+        /// <param name="messageId">The ID of the message to retrieve.</param>
+        /// <returns>Message object or null if no message available.</returns>
+        public async ValueTask<Message?> PeekMessageById(long messageId)
+        {
+            await this.PerformMessageHouseCleaning(DateTime.Now);
+
+            return await this.storage.PeekMessageByMessageId(
+                messageId);
         }
 
         /// <summary>
@@ -194,6 +212,8 @@ namespace NWorkQueue.Server.Common
 
             // Perform house cleaning (expire expired trans and messages)
             await this.PerformTransactionHouseCleaning(startDateTime);
+
+            await this.PerformMessageHouseCleaning(startDateTime);
 
             // Check transaction is exists and is active
             await this.ConfirmTransactionExistsAndIsActive(transId);
@@ -327,6 +347,8 @@ namespace NWorkQueue.Server.Common
             long transId,
             long queueId)
         {
+            await this.PerformMessageHouseCleaning(DateTime.Now);
+
             // Check count is above min
             // Pull Records, update them to be in transaction
             return await this.storage.DequeueMessage(

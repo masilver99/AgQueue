@@ -132,6 +132,7 @@ namespace NWorkQueue.GrpcServer
             {
                 Message = new MessageOut()
                 {
+                    Id = message.Id,
                     CorrelationId = message.CorrelationId,
                     ExpiryDateTime = message.ExpiryDateTime ?? 0, // Zero is a null in protbuf
                     AddDateTime = message.AddDateTime,
@@ -157,8 +158,36 @@ namespace NWorkQueue.GrpcServer
 
             return new PeekMessageByQueueResponse
             {
+                //  TODO: this needs to be merged into a MessageOut factory
                 Message = new MessageOut()
                 {
+                    Id = message.Id,
+                    CorrelationId = message.CorrelationId,
+                    ExpiryDateTime = message.ExpiryDateTime ?? 0,
+                    AddDateTime = message.AddDateTime,
+                    CloseDateTime = message.CloseDateTime ?? 0,
+                    GroupName = message.GroupName,
+                    MaxRetries = message.MaxRetries,
+                    MessageState = (Models.MessageState)message.MessageState,
+                    MetaData = message.Metadata,
+                    Payload = ByteString.CopyFrom(message.Payload),
+                    Priority = message.Priority,
+                    QueueId = message.QueueId,
+                    TransAction = (Models.TransactionAction)message.TransactionAction,
+                    TransId = message.TransactionId
+                }
+            };
+        }
+        public override async Task<PeekMessageByIdResponse> PeekMessageById(PeekMessageByIdRequest request, ServerCallContext context)
+        {
+            var message = await this.internalApi.PeekMessageById(
+                request.MessageId);
+
+            return new PeekMessageByIdResponse
+            {
+                Message = new MessageOut()
+                {
+                    Id = message.Id,
                     CorrelationId = message.CorrelationId,
                     ExpiryDateTime = message.ExpiryDateTime ?? 0,
                     AddDateTime = message.AddDateTime,

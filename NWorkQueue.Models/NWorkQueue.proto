@@ -119,28 +119,29 @@ message MessageIn {
 }
 
 message MessageOut {
+  int64 Id = 1;
   // The queue id to add the message to.
-  int64 QueueId = 1;
+  int64 QueueId = 2;
   // Message object to be serialized.
-  bytes Payload = 2;
+  bytes Payload = 3;
   // String of optional data describing the message.
-  string MetaData = 3;
+  string MetaData = 4;
   // Message priority.  Lower the number, the higher the priority.
-  int32 Priority = 4;
+  int32 Priority = 5;
   // tries">How many failures before the message will be expired.
-  int32 MaxRetries = 5;
+  int32 MaxRetries = 6;
   // Message expire after this DateTime.
-  int64 ExpiryDateTime = 6;
+  int64 ExpiryDateTime = 7;
   // Optional correlation id. ID's are defined by the calling application.
-  int32 CorrelationId = 7;
+  int32 CorrelationId = 8;
   // Optional group string. Defined by calling application.
-  string GroupName = 8;
+  string GroupName = 9;
   //State
-  MessageState MessageState = 9; 
-  int64 AddDateTime = 10;
-  int64 CloseDateTime = 11;
-  int64 TransId = 12;
-  TransactionAction TransAction = 13;
+  MessageState MessageState = 10; 
+  int64 AddDateTime = 11;
+  int64 CloseDateTime = 12;
+  int64 TransId = 13;
+  TransactionAction TransAction = 14;
 }
 
 enum MessageState {
