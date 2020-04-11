@@ -152,8 +152,14 @@ namespace NWorkQueue.Integration.Tests
 
             await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
 
-            var queueMessageResponse4 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
-            Assert.AreEqual(3, queueMessageResponse4.MessageId);
+            var exception = await Assert.ThrowsExceptionAsync<RpcException>(async () =>
+            {
+                var queueMessageResponse4 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            });
+
+            Assert.AreEqual(StatusCode.Internal, exception.Status.StatusCode);
+            Assert.AreEqual("Transaction 1 not active: Commited", exception.Status.Detail);
+
 
             await _webHost.StopAsync();
             
