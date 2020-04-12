@@ -133,7 +133,7 @@ namespace NWorkQueue.Integration.Tests
 
             var inMessage = new MessageIn()
             {
-                
+                MaxRetries = 3
             };
 
             // Add Message
@@ -154,12 +154,11 @@ namespace NWorkQueue.Integration.Tests
 
             var exception = await Assert.ThrowsExceptionAsync<RpcException>(async () =>
             {
-                var queueMessageResponse4 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+                await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
             });
 
             Assert.AreEqual(StatusCode.Internal, exception.Status.StatusCode);
             Assert.AreEqual("Transaction 1 not active: Commited", exception.Status.Detail);
-
 
             await _webHost.StopAsync();
             
@@ -169,7 +168,7 @@ namespace NWorkQueue.Integration.Tests
 
             var dequeueResponse = await client.DequeueMessageAsync(new DequeueMessageRequest { QueueId = 1, TransId = transPullResponse.TransId });
 
-            Assert.AreEqual(1, dequeueResponse.Message.Id);
+            Assert.AreEqual(1, dequeueResponse.Message?.Id);
         }
 
         [TestMethod]
