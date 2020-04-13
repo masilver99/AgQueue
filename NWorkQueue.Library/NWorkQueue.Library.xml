@@ -187,7 +187,7 @@
             <param name="addDateTime">Datetime the message was added.</param>
             <param name="metaData">String metadata on message data.</param>
             <param name="priority">Message priority.</param>
-            <param name="maxRetries">How many retries before expires.</param>
+            <param name="maxAttempts">How many retries before expires.</param>
             <param name="expiryDateTime">Datetime the message will expire.</param>
             <param name="correlation">Correlation ID.</param>
             <param name="groupName">Group name.</param>
@@ -234,7 +234,7 @@
             <param name="newMessageState">Update the message state to this value.</param>
             <returns>Returns the number of messages updated.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessageAttemptCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
             <summary>
             Updates the message retry cuont based on transactionAction and MessageState.
             </summary>
@@ -288,7 +288,7 @@
             <param name="currentDateTime">DateTime to expire against.</param>
             <returns>Returns the count of the deleted records.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessageRetriesInExpiredTrans(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
+        <member name="M:NWorkQueue.Server.Common.IStorage.UpdateMessageAttemptsInExpiredTrans(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
             <summary>
             Updates the retry counts for messages in an expired transaction.
             </summary>
@@ -311,7 +311,7 @@
             <param name="currentDateTime">Date used to validate expiration date against.  Also to be used as the close datetime.</param>
             <returns>Number of messages updated.</returns>
         </member>
-        <member name="M:NWorkQueue.Server.Common.IStorage.CloseRetryExceededMessages(System.DateTime)">
+        <member name="M:NWorkQueue.Server.Common.IStorage.CloseMaxAttemptsExceededMessages(System.DateTime)">
             <summary>
             Close message that are beyond their retry count.
             </summary>

@@ -45,55 +45,56 @@ namespace NWorkQueue.Models {
             "VHJhbnNJZBgBIAEoAyIdChtSb2xsYmFja1RyYW5zYWN0aW9uUmVzcG9uc2Ui",
             "WgoTUXVldWVNZXNzYWdlUmVxdWVzdBIPCgdUcmFuc0lkGAEgASgDEg8KB1F1",
             "ZXVlSWQYAiABKAMSIQoHTWVzc2FnZRgDIAEoCzIQLmdyZWV0Lk1lc3NhZ2VJ",
-            "biKXAQoJTWVzc2FnZUluEg8KB1BheWxvYWQYAiABKAwSEAoITWV0YURhdGEY",
-            "AyABKAkSEAoIUHJpb3JpdHkYBCABKAUSEgoKTWF4UmV0cmllcxgFIAEoBRIX",
-            "Cg9FeHBpcnlJbk1pbnV0ZXMYBiABKAUSFQoNQ29ycmVsYXRpb25JZBgHIAEo",
-            "BRIRCglHcm91cE5hbWUYCCABKAkiywIKCk1lc3NhZ2VPdXQSCgoCSWQYASAB",
-            "KAMSDwoHUXVldWVJZBgCIAEoAxIPCgdQYXlsb2FkGAMgASgMEhAKCE1ldGFE",
-            "YXRhGAQgASgJEhAKCFByaW9yaXR5GAUgASgFEhIKCk1heFJldHJpZXMYBiAB",
-            "KAUSFgoORXhwaXJ5RGF0ZVRpbWUYByABKAMSFQoNQ29ycmVsYXRpb25JZBgI",
-            "IAEoBRIRCglHcm91cE5hbWUYCSABKAkSKQoMTWVzc2FnZVN0YXRlGAogASgO",
-            "MhMuZ3JlZXQuTWVzc2FnZVN0YXRlEhMKC0FkZERhdGVUaW1lGAsgASgDEhUK",
-            "DUNsb3NlRGF0ZVRpbWUYDCABKAMSDwoHVHJhbnNJZBgNIAEoAxItCgtUcmFu",
-            "c0FjdGlvbhgOIAEoDjIYLmdyZWV0LlRyYW5zYWN0aW9uQWN0aW9uIjoKFFF1",
-            "ZXVlTWVzc2FnZVJlc3BvbnNlEg8KB1RyYW5zSWQYASABKAMSEQoJTWVzc2Fn",
-            "ZUlkGAIgASgDIjkKFURlcXVldWVNZXNzYWdlUmVxdWVzdBIPCgdRdWV1ZUlk",
-            "GAEgASgDEg8KB1RyYW5zSWQYAiABKAMiYwoWRGVxdWV1ZU1lc3NhZ2VSZXNw",
-            "b25zZRIPCgdUcmFuc0lkGAEgASgDEhQKDE1lc3NhZ2VGb3VuZBgCIAEoCBIi",
-            "CgdNZXNzYWdlGAMgASgLMhEuZ3JlZXQuTWVzc2FnZU91dCIsChlQZWVrTWVz",
-            "c2FnZUJ5UXVldWVSZXF1ZXN0Eg8KB1F1ZXVlSWQYASABKAMiQAoaUGVla01l",
-            "c3NhZ2VCeVF1ZXVlUmVzcG9uc2USIgoHTWVzc2FnZRgBIAEoCzIRLmdyZWV0",
-            "Lk1lc3NhZ2VPdXQiKwoWUGVla01lc3NhZ2VCeUlkUmVxdWVzdBIRCglNZXNz",
-            "YWdlSWQYASABKAMiPQoXUGVla01lc3NhZ2VCeUlkUmVzcG9uc2USIgoHTWVz",
-            "c2FnZRgBIAEoCzIRLmdyZWV0Lk1lc3NhZ2VPdXQqXAoMTWVzc2FnZVN0YXRl",
-            "EgoKBkFjdGl2ZRAAEhEKDUluVHJhbnNhY3Rpb24QARINCglQcm9jZXNzZWQQ",
-            "AhILCgdFeHBpcmVkEAMSEQoNUmV0cnlFeGNlZWRlZBAEKiYKEVRyYW5zYWN0",
-            "aW9uQWN0aW9uEgcKA0FkZBAAEggKBFB1bGwQATLHCAoIUXVldWVBcGkSRAoL",
-            "Q3JlYXRlUXVldWUSGS5ncmVldC5DcmVhdGVRdWV1ZVJlcXVlc3QaGi5ncmVl",
-            "dC5DcmVhdGVRdWV1ZVJlc3BvbnNlElYKEUluaXRpYWxpemVTdG9yYWdlEh8u",
-            "Z3JlZXQuSW5pdGlhbGl6ZVN0b3JhZ2VSZXF1ZXN0GiAuZ3JlZXQuSW5pdGlh",
-            "bGl6ZVN0b3JhZ2VSZXNwb25zZRJQCg9EZWxldGVRdWV1ZUJ5SWQSHS5ncmVl",
-            "dC5EZWxldGVRdWV1ZUJ5SWRSZXF1ZXN0Gh4uZ3JlZXQuRGVsZXRlUXVldWVC",
-            "eUlkUmVzcG9uc2USVgoRRGVsZXRlUXVldWVCeU5hbWUSHy5ncmVldC5EZWxl",
-            "dGVRdWV1ZUJ5TmFtZVJlcXVlc3QaIC5ncmVldC5EZWxldGVRdWV1ZUJ5TmFt",
-            "ZVJlc3BvbnNlEk8KEEdldFF1ZXVlSW5mb0J5SWQSHi5ncmVldC5HZXRRdWV1",
-            "ZUluZm9CeUlkUmVxdWVzdBobLmdyZWV0LkdldFF1ZXVlSW5mb1Jlc3BvbnNl",
-            "ElMKEkdldFF1ZXVlSW5mb0J5TmFtZRIgLmdyZWV0LkdldFF1ZXVlSW5mb0J5",
-            "TmFtZVJlcXVlc3QaGy5ncmVldC5HZXRRdWV1ZUluZm9SZXNwb25zZRJTChBT",
-            "dGFydFRyYW5zYWN0aW9uEh4uZ3JlZXQuU3RhcnRUcmFuc2FjdGlvblJlcXVl",
-            "c3QaHy5ncmVldC5TdGFydFRyYW5zYWN0aW9uUmVzcG9uc2USVgoRQ29tbWl0",
-            "VHJhbnNhY3Rpb24SHy5ncmVldC5Db21taXRUcmFuc2FjdGlvblJlcXVlc3Qa",
-            "IC5ncmVldC5Db21taXRUcmFuc2FjdGlvblJlc3BvbnNlElsKElJvbGxiYWNr",
-            "VHJhbmFjdGlvbhIhLmdyZWV0LlJvbGxiYWNrVHJhbnNhY3Rpb25SZXF1ZXN0",
-            "GiIuZ3JlZXQuUm9sbGJhY2tUcmFuc2FjdGlvblJlc3BvbnNlEkcKDFF1ZXVl",
-            "TWVzc2FnZRIaLmdyZWV0LlF1ZXVlTWVzc2FnZVJlcXVlc3QaGy5ncmVldC5R",
-            "dWV1ZU1lc3NhZ2VSZXNwb25zZRJNCg5EZXF1ZXVlTWVzc2FnZRIcLmdyZWV0",
-            "LkRlcXVldWVNZXNzYWdlUmVxdWVzdBodLmdyZWV0LkRlcXVldWVNZXNzYWdl",
-            "UmVzcG9uc2USWQoSUGVla01lc3NhZ2VCeVF1ZXVlEiAuZ3JlZXQuUGVla01l",
-            "c3NhZ2VCeVF1ZXVlUmVxdWVzdBohLmdyZWV0LlBlZWtNZXNzYWdlQnlRdWV1",
-            "ZVJlc3BvbnNlElAKD1BlZWtNZXNzYWdlQnlJZBIdLmdyZWV0LlBlZWtNZXNz",
-            "YWdlQnlJZFJlcXVlc3QaHi5ncmVldC5QZWVrTWVzc2FnZUJ5SWRSZXNwb25z",
-            "ZUIUqgIRTldvcmtRdWV1ZS5Nb2RlbHNiBnByb3RvMw=="));
+            "biKYAQoJTWVzc2FnZUluEg8KB1BheWxvYWQYAiABKAwSEAoITWV0YURhdGEY",
+            "AyABKAkSEAoIUHJpb3JpdHkYBCABKAUSEwoLTWF4QXR0ZW1wdHMYBSABKAUS",
+            "FwoPRXhwaXJ5SW5NaW51dGVzGAYgASgFEhUKDUNvcnJlbGF0aW9uSWQYByAB",
+            "KAUSEQoJR3JvdXBOYW1lGAggASgJIt4CCgpNZXNzYWdlT3V0EgoKAklkGAEg",
+            "ASgDEg8KB1F1ZXVlSWQYAiABKAMSDwoHUGF5bG9hZBgDIAEoDBIQCghNZXRh",
+            "RGF0YRgEIAEoCRIQCghQcmlvcml0eRgFIAEoBRITCgtNYXhBdHRlbXB0cxgG",
+            "IAEoBRIQCghBdHRlbXB0cxgHIAEoBRIWCg5FeHBpcnlEYXRlVGltZRgIIAEo",
+            "AxIVCg1Db3JyZWxhdGlvbklkGAkgASgFEhEKCUdyb3VwTmFtZRgKIAEoCRIp",
+            "CgxNZXNzYWdlU3RhdGUYCyABKA4yEy5ncmVldC5NZXNzYWdlU3RhdGUSEwoL",
+            "QWRkRGF0ZVRpbWUYDCABKAMSFQoNQ2xvc2VEYXRlVGltZRgNIAEoAxIPCgdU",
+            "cmFuc0lkGA4gASgDEi0KC1RyYW5zQWN0aW9uGA8gASgOMhguZ3JlZXQuVHJh",
+            "bnNhY3Rpb25BY3Rpb24iOgoUUXVldWVNZXNzYWdlUmVzcG9uc2USDwoHVHJh",
+            "bnNJZBgBIAEoAxIRCglNZXNzYWdlSWQYAiABKAMiOQoVRGVxdWV1ZU1lc3Nh",
+            "Z2VSZXF1ZXN0Eg8KB1F1ZXVlSWQYASABKAMSDwoHVHJhbnNJZBgCIAEoAyJj",
+            "ChZEZXF1ZXVlTWVzc2FnZVJlc3BvbnNlEg8KB1RyYW5zSWQYASABKAMSFAoM",
+            "TWVzc2FnZUZvdW5kGAIgASgIEiIKB01lc3NhZ2UYAyABKAsyES5ncmVldC5N",
+            "ZXNzYWdlT3V0IiwKGVBlZWtNZXNzYWdlQnlRdWV1ZVJlcXVlc3QSDwoHUXVl",
+            "dWVJZBgBIAEoAyJAChpQZWVrTWVzc2FnZUJ5UXVldWVSZXNwb25zZRIiCgdN",
+            "ZXNzYWdlGAEgASgLMhEuZ3JlZXQuTWVzc2FnZU91dCIrChZQZWVrTWVzc2Fn",
+            "ZUJ5SWRSZXF1ZXN0EhEKCU1lc3NhZ2VJZBgBIAEoAyI9ChdQZWVrTWVzc2Fn",
+            "ZUJ5SWRSZXNwb25zZRIiCgdNZXNzYWdlGAEgASgLMhEuZ3JlZXQuTWVzc2Fn",
+            "ZU91dCpsCgxNZXNzYWdlU3RhdGUSCwoHVW5rbm93bhAAEgoKBkFjdGl2ZRAB",
+            "EhEKDUluVHJhbnNhY3Rpb24QAhINCglQcm9jZXNzZWQQAxILCgdFeHBpcmVk",
+            "EAQSFAoQQXR0ZW1wdHNFeGNlZWRlZBAFKjAKEVRyYW5zYWN0aW9uQWN0aW9u",
+            "EggKBE5vbmUQABIHCgNBZGQQARIICgRQdWxsEAIyxwgKCFF1ZXVlQXBpEkQK",
+            "C0NyZWF0ZVF1ZXVlEhkuZ3JlZXQuQ3JlYXRlUXVldWVSZXF1ZXN0GhouZ3Jl",
+            "ZXQuQ3JlYXRlUXVldWVSZXNwb25zZRJWChFJbml0aWFsaXplU3RvcmFnZRIf",
+            "LmdyZWV0LkluaXRpYWxpemVTdG9yYWdlUmVxdWVzdBogLmdyZWV0LkluaXRp",
+            "YWxpemVTdG9yYWdlUmVzcG9uc2USUAoPRGVsZXRlUXVldWVCeUlkEh0uZ3Jl",
+            "ZXQuRGVsZXRlUXVldWVCeUlkUmVxdWVzdBoeLmdyZWV0LkRlbGV0ZVF1ZXVl",
+            "QnlJZFJlc3BvbnNlElYKEURlbGV0ZVF1ZXVlQnlOYW1lEh8uZ3JlZXQuRGVs",
+            "ZXRlUXVldWVCeU5hbWVSZXF1ZXN0GiAuZ3JlZXQuRGVsZXRlUXVldWVCeU5h",
+            "bWVSZXNwb25zZRJPChBHZXRRdWV1ZUluZm9CeUlkEh4uZ3JlZXQuR2V0UXVl",
+            "dWVJbmZvQnlJZFJlcXVlc3QaGy5ncmVldC5HZXRRdWV1ZUluZm9SZXNwb25z",
+            "ZRJTChJHZXRRdWV1ZUluZm9CeU5hbWUSIC5ncmVldC5HZXRRdWV1ZUluZm9C",
+            "eU5hbWVSZXF1ZXN0GhsuZ3JlZXQuR2V0UXVldWVJbmZvUmVzcG9uc2USUwoQ",
+            "U3RhcnRUcmFuc2FjdGlvbhIeLmdyZWV0LlN0YXJ0VHJhbnNhY3Rpb25SZXF1",
+            "ZXN0Gh8uZ3JlZXQuU3RhcnRUcmFuc2FjdGlvblJlc3BvbnNlElYKEUNvbW1p",
+            "dFRyYW5zYWN0aW9uEh8uZ3JlZXQuQ29tbWl0VHJhbnNhY3Rpb25SZXF1ZXN0",
+            "GiAuZ3JlZXQuQ29tbWl0VHJhbnNhY3Rpb25SZXNwb25zZRJbChJSb2xsYmFj",
+            "a1RyYW5hY3Rpb24SIS5ncmVldC5Sb2xsYmFja1RyYW5zYWN0aW9uUmVxdWVz",
+            "dBoiLmdyZWV0LlJvbGxiYWNrVHJhbnNhY3Rpb25SZXNwb25zZRJHCgxRdWV1",
+            "ZU1lc3NhZ2USGi5ncmVldC5RdWV1ZU1lc3NhZ2VSZXF1ZXN0GhsuZ3JlZXQu",
+            "UXVldWVNZXNzYWdlUmVzcG9uc2USTQoORGVxdWV1ZU1lc3NhZ2USHC5ncmVl",
+            "dC5EZXF1ZXVlTWVzc2FnZVJlcXVlc3QaHS5ncmVldC5EZXF1ZXVlTWVzc2Fn",
+            "ZVJlc3BvbnNlElkKElBlZWtNZXNzYWdlQnlRdWV1ZRIgLmdyZWV0LlBlZWtN",
+            "ZXNzYWdlQnlRdWV1ZVJlcXVlc3QaIS5ncmVldC5QZWVrTWVzc2FnZUJ5UXVl",
+            "dWVSZXNwb25zZRJQCg9QZWVrTWVzc2FnZUJ5SWQSHS5ncmVldC5QZWVrTWVz",
+            "c2FnZUJ5SWRSZXF1ZXN0Gh4uZ3JlZXQuUGVla01lc3NhZ2VCeUlkUmVzcG9u",
+            "c2VCFKoCEU5Xb3JrUXVldWUuTW9kZWxzYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::NWorkQueue.Models.MessageState), typeof(global::NWorkQueue.Models.TransactionAction), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -115,8 +116,8 @@ namespace NWorkQueue.Models {
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.RollbackTransactionRequest), global::NWorkQueue.Models.RollbackTransactionRequest.Parser, new[]{ "TransId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.RollbackTransactionResponse), global::NWorkQueue.Models.RollbackTransactionResponse.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueMessageRequest), global::NWorkQueue.Models.QueueMessageRequest.Parser, new[]{ "TransId", "QueueId", "Message" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.MessageIn), global::NWorkQueue.Models.MessageIn.Parser, new[]{ "Payload", "MetaData", "Priority", "MaxRetries", "ExpiryInMinutes", "CorrelationId", "GroupName" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.MessageOut), global::NWorkQueue.Models.MessageOut.Parser, new[]{ "Id", "QueueId", "Payload", "MetaData", "Priority", "MaxRetries", "ExpiryDateTime", "CorrelationId", "GroupName", "MessageState", "AddDateTime", "CloseDateTime", "TransId", "TransAction" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.MessageIn), global::NWorkQueue.Models.MessageIn.Parser, new[]{ "Payload", "MetaData", "Priority", "MaxAttempts", "ExpiryInMinutes", "CorrelationId", "GroupName" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.MessageOut), global::NWorkQueue.Models.MessageOut.Parser, new[]{ "Id", "QueueId", "Payload", "MetaData", "Priority", "MaxAttempts", "Attempts", "ExpiryDateTime", "CorrelationId", "GroupName", "MessageState", "AddDateTime", "CloseDateTime", "TransId", "TransAction" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.QueueMessageResponse), global::NWorkQueue.Models.QueueMessageResponse.Parser, new[]{ "TransId", "MessageId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DequeueMessageRequest), global::NWorkQueue.Models.DequeueMessageRequest.Parser, new[]{ "QueueId", "TransId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::NWorkQueue.Models.DequeueMessageResponse), global::NWorkQueue.Models.DequeueMessageResponse.Parser, new[]{ "TransId", "MessageFound", "Message" }, null, null, null, null),
@@ -131,16 +132,18 @@ namespace NWorkQueue.Models {
   }
   #region Enums
   public enum MessageState {
-    [pbr::OriginalName("Active")] Active = 0,
-    [pbr::OriginalName("InTransaction")] InTransaction = 1,
-    [pbr::OriginalName("Processed")] Processed = 2,
-    [pbr::OriginalName("Expired")] Expired = 3,
-    [pbr::OriginalName("RetryExceeded")] RetryExceeded = 4,
+    [pbr::OriginalName("Unknown")] Unknown = 0,
+    [pbr::OriginalName("Active")] Active = 1,
+    [pbr::OriginalName("InTransaction")] InTransaction = 2,
+    [pbr::OriginalName("Processed")] Processed = 3,
+    [pbr::OriginalName("Expired")] Expired = 4,
+    [pbr::OriginalName("AttemptsExceeded")] AttemptsExceeded = 5,
   }
 
   public enum TransactionAction {
-    [pbr::OriginalName("Add")] Add = 0,
-    [pbr::OriginalName("Pull")] Pull = 1,
+    [pbr::OriginalName("None")] None = 0,
+    [pbr::OriginalName("Add")] Add = 1,
+    [pbr::OriginalName("Pull")] Pull = 2,
   }
 
   #endregion
@@ -2570,7 +2573,7 @@ namespace NWorkQueue.Models {
       payload_ = other.payload_;
       metaData_ = other.metaData_;
       priority_ = other.priority_;
-      maxRetries_ = other.maxRetries_;
+      maxAttempts_ = other.maxAttempts_;
       expiryInMinutes_ = other.expiryInMinutes_;
       correlationId_ = other.correlationId_;
       groupName_ = other.groupName_;
@@ -2624,17 +2627,17 @@ namespace NWorkQueue.Models {
       }
     }
 
-    /// <summary>Field number for the "MaxRetries" field.</summary>
-    public const int MaxRetriesFieldNumber = 5;
-    private int maxRetries_;
+    /// <summary>Field number for the "MaxAttempts" field.</summary>
+    public const int MaxAttemptsFieldNumber = 5;
+    private int maxAttempts_;
     /// <summary>
     /// tries">How many failures before the message will be expired.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int MaxRetries {
-      get { return maxRetries_; }
+    public int MaxAttempts {
+      get { return maxAttempts_; }
       set {
-        maxRetries_ = value;
+        maxAttempts_ = value;
       }
     }
 
@@ -2696,7 +2699,7 @@ namespace NWorkQueue.Models {
       if (Payload != other.Payload) return false;
       if (MetaData != other.MetaData) return false;
       if (Priority != other.Priority) return false;
-      if (MaxRetries != other.MaxRetries) return false;
+      if (MaxAttempts != other.MaxAttempts) return false;
       if (ExpiryInMinutes != other.ExpiryInMinutes) return false;
       if (CorrelationId != other.CorrelationId) return false;
       if (GroupName != other.GroupName) return false;
@@ -2709,7 +2712,7 @@ namespace NWorkQueue.Models {
       if (Payload.Length != 0) hash ^= Payload.GetHashCode();
       if (MetaData.Length != 0) hash ^= MetaData.GetHashCode();
       if (Priority != 0) hash ^= Priority.GetHashCode();
-      if (MaxRetries != 0) hash ^= MaxRetries.GetHashCode();
+      if (MaxAttempts != 0) hash ^= MaxAttempts.GetHashCode();
       if (ExpiryInMinutes != 0) hash ^= ExpiryInMinutes.GetHashCode();
       if (CorrelationId != 0) hash ^= CorrelationId.GetHashCode();
       if (GroupName.Length != 0) hash ^= GroupName.GetHashCode();
@@ -2738,9 +2741,9 @@ namespace NWorkQueue.Models {
         output.WriteRawTag(32);
         output.WriteInt32(Priority);
       }
-      if (MaxRetries != 0) {
+      if (MaxAttempts != 0) {
         output.WriteRawTag(40);
-        output.WriteInt32(MaxRetries);
+        output.WriteInt32(MaxAttempts);
       }
       if (ExpiryInMinutes != 0) {
         output.WriteRawTag(48);
@@ -2771,8 +2774,8 @@ namespace NWorkQueue.Models {
       if (Priority != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Priority);
       }
-      if (MaxRetries != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MaxRetries);
+      if (MaxAttempts != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MaxAttempts);
       }
       if (ExpiryInMinutes != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(ExpiryInMinutes);
@@ -2803,8 +2806,8 @@ namespace NWorkQueue.Models {
       if (other.Priority != 0) {
         Priority = other.Priority;
       }
-      if (other.MaxRetries != 0) {
-        MaxRetries = other.MaxRetries;
+      if (other.MaxAttempts != 0) {
+        MaxAttempts = other.MaxAttempts;
       }
       if (other.ExpiryInMinutes != 0) {
         ExpiryInMinutes = other.ExpiryInMinutes;
@@ -2839,7 +2842,7 @@ namespace NWorkQueue.Models {
             break;
           }
           case 40: {
-            MaxRetries = input.ReadInt32();
+            MaxAttempts = input.ReadInt32();
             break;
           }
           case 48: {
@@ -2890,7 +2893,8 @@ namespace NWorkQueue.Models {
       payload_ = other.payload_;
       metaData_ = other.metaData_;
       priority_ = other.priority_;
-      maxRetries_ = other.maxRetries_;
+      maxAttempts_ = other.maxAttempts_;
+      attempts_ = other.attempts_;
       expiryDateTime_ = other.expiryDateTime_;
       correlationId_ = other.correlationId_;
       groupName_ = other.groupName_;
@@ -2974,22 +2978,33 @@ namespace NWorkQueue.Models {
       }
     }
 
-    /// <summary>Field number for the "MaxRetries" field.</summary>
-    public const int MaxRetriesFieldNumber = 6;
-    private int maxRetries_;
+    /// <summary>Field number for the "MaxAttempts" field.</summary>
+    public const int MaxAttemptsFieldNumber = 6;
+    private int maxAttempts_;
     /// <summary>
     /// tries">How many failures before the message will be expired.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int MaxRetries {
-      get { return maxRetries_; }
+    public int MaxAttempts {
+      get { return maxAttempts_; }
       set {
-        maxRetries_ = value;
+        maxAttempts_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "Attempts" field.</summary>
+    public const int AttemptsFieldNumber = 7;
+    private int attempts_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Attempts {
+      get { return attempts_; }
+      set {
+        attempts_ = value;
       }
     }
 
     /// <summary>Field number for the "ExpiryDateTime" field.</summary>
-    public const int ExpiryDateTimeFieldNumber = 7;
+    public const int ExpiryDateTimeFieldNumber = 8;
     private long expiryDateTime_;
     /// <summary>
     /// Message expire after this DateTime.
@@ -3003,7 +3018,7 @@ namespace NWorkQueue.Models {
     }
 
     /// <summary>Field number for the "CorrelationId" field.</summary>
-    public const int CorrelationIdFieldNumber = 8;
+    public const int CorrelationIdFieldNumber = 9;
     private int correlationId_;
     /// <summary>
     /// Optional correlation id. ID's are defined by the calling application.
@@ -3017,7 +3032,7 @@ namespace NWorkQueue.Models {
     }
 
     /// <summary>Field number for the "GroupName" field.</summary>
-    public const int GroupNameFieldNumber = 9;
+    public const int GroupNameFieldNumber = 10;
     private string groupName_ = "";
     /// <summary>
     /// Optional group string. Defined by calling application.
@@ -3031,10 +3046,10 @@ namespace NWorkQueue.Models {
     }
 
     /// <summary>Field number for the "MessageState" field.</summary>
-    public const int MessageStateFieldNumber = 10;
-    private global::NWorkQueue.Models.MessageState messageState_ = global::NWorkQueue.Models.MessageState.Active;
+    public const int MessageStateFieldNumber = 11;
+    private global::NWorkQueue.Models.MessageState messageState_ = global::NWorkQueue.Models.MessageState.Unknown;
     /// <summary>
-    ///State
+    /// State
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::NWorkQueue.Models.MessageState MessageState {
@@ -3045,7 +3060,7 @@ namespace NWorkQueue.Models {
     }
 
     /// <summary>Field number for the "AddDateTime" field.</summary>
-    public const int AddDateTimeFieldNumber = 11;
+    public const int AddDateTimeFieldNumber = 12;
     private long addDateTime_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public long AddDateTime {
@@ -3056,7 +3071,7 @@ namespace NWorkQueue.Models {
     }
 
     /// <summary>Field number for the "CloseDateTime" field.</summary>
-    public const int CloseDateTimeFieldNumber = 12;
+    public const int CloseDateTimeFieldNumber = 13;
     private long closeDateTime_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public long CloseDateTime {
@@ -3067,7 +3082,7 @@ namespace NWorkQueue.Models {
     }
 
     /// <summary>Field number for the "TransId" field.</summary>
-    public const int TransIdFieldNumber = 13;
+    public const int TransIdFieldNumber = 14;
     private long transId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public long TransId {
@@ -3078,8 +3093,8 @@ namespace NWorkQueue.Models {
     }
 
     /// <summary>Field number for the "TransAction" field.</summary>
-    public const int TransActionFieldNumber = 14;
-    private global::NWorkQueue.Models.TransactionAction transAction_ = global::NWorkQueue.Models.TransactionAction.Add;
+    public const int TransActionFieldNumber = 15;
+    private global::NWorkQueue.Models.TransactionAction transAction_ = global::NWorkQueue.Models.TransactionAction.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::NWorkQueue.Models.TransactionAction TransAction {
       get { return transAction_; }
@@ -3106,7 +3121,8 @@ namespace NWorkQueue.Models {
       if (Payload != other.Payload) return false;
       if (MetaData != other.MetaData) return false;
       if (Priority != other.Priority) return false;
-      if (MaxRetries != other.MaxRetries) return false;
+      if (MaxAttempts != other.MaxAttempts) return false;
+      if (Attempts != other.Attempts) return false;
       if (ExpiryDateTime != other.ExpiryDateTime) return false;
       if (CorrelationId != other.CorrelationId) return false;
       if (GroupName != other.GroupName) return false;
@@ -3126,15 +3142,16 @@ namespace NWorkQueue.Models {
       if (Payload.Length != 0) hash ^= Payload.GetHashCode();
       if (MetaData.Length != 0) hash ^= MetaData.GetHashCode();
       if (Priority != 0) hash ^= Priority.GetHashCode();
-      if (MaxRetries != 0) hash ^= MaxRetries.GetHashCode();
+      if (MaxAttempts != 0) hash ^= MaxAttempts.GetHashCode();
+      if (Attempts != 0) hash ^= Attempts.GetHashCode();
       if (ExpiryDateTime != 0L) hash ^= ExpiryDateTime.GetHashCode();
       if (CorrelationId != 0) hash ^= CorrelationId.GetHashCode();
       if (GroupName.Length != 0) hash ^= GroupName.GetHashCode();
-      if (MessageState != global::NWorkQueue.Models.MessageState.Active) hash ^= MessageState.GetHashCode();
+      if (MessageState != global::NWorkQueue.Models.MessageState.Unknown) hash ^= MessageState.GetHashCode();
       if (AddDateTime != 0L) hash ^= AddDateTime.GetHashCode();
       if (CloseDateTime != 0L) hash ^= CloseDateTime.GetHashCode();
       if (TransId != 0L) hash ^= TransId.GetHashCode();
-      if (TransAction != global::NWorkQueue.Models.TransactionAction.Add) hash ^= TransAction.GetHashCode();
+      if (TransAction != global::NWorkQueue.Models.TransactionAction.None) hash ^= TransAction.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3168,40 +3185,44 @@ namespace NWorkQueue.Models {
         output.WriteRawTag(40);
         output.WriteInt32(Priority);
       }
-      if (MaxRetries != 0) {
+      if (MaxAttempts != 0) {
         output.WriteRawTag(48);
-        output.WriteInt32(MaxRetries);
+        output.WriteInt32(MaxAttempts);
+      }
+      if (Attempts != 0) {
+        output.WriteRawTag(56);
+        output.WriteInt32(Attempts);
       }
       if (ExpiryDateTime != 0L) {
-        output.WriteRawTag(56);
+        output.WriteRawTag(64);
         output.WriteInt64(ExpiryDateTime);
       }
       if (CorrelationId != 0) {
-        output.WriteRawTag(64);
+        output.WriteRawTag(72);
         output.WriteInt32(CorrelationId);
       }
       if (GroupName.Length != 0) {
-        output.WriteRawTag(74);
+        output.WriteRawTag(82);
         output.WriteString(GroupName);
       }
-      if (MessageState != global::NWorkQueue.Models.MessageState.Active) {
-        output.WriteRawTag(80);
+      if (MessageState != global::NWorkQueue.Models.MessageState.Unknown) {
+        output.WriteRawTag(88);
         output.WriteEnum((int) MessageState);
       }
       if (AddDateTime != 0L) {
-        output.WriteRawTag(88);
+        output.WriteRawTag(96);
         output.WriteInt64(AddDateTime);
       }
       if (CloseDateTime != 0L) {
-        output.WriteRawTag(96);
+        output.WriteRawTag(104);
         output.WriteInt64(CloseDateTime);
       }
       if (TransId != 0L) {
-        output.WriteRawTag(104);
+        output.WriteRawTag(112);
         output.WriteInt64(TransId);
       }
-      if (TransAction != global::NWorkQueue.Models.TransactionAction.Add) {
-        output.WriteRawTag(112);
+      if (TransAction != global::NWorkQueue.Models.TransactionAction.None) {
+        output.WriteRawTag(120);
         output.WriteEnum((int) TransAction);
       }
       if (_unknownFields != null) {
@@ -3227,8 +3248,11 @@ namespace NWorkQueue.Models {
       if (Priority != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Priority);
       }
-      if (MaxRetries != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MaxRetries);
+      if (MaxAttempts != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MaxAttempts);
+      }
+      if (Attempts != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Attempts);
       }
       if (ExpiryDateTime != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(ExpiryDateTime);
@@ -3239,7 +3263,7 @@ namespace NWorkQueue.Models {
       if (GroupName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(GroupName);
       }
-      if (MessageState != global::NWorkQueue.Models.MessageState.Active) {
+      if (MessageState != global::NWorkQueue.Models.MessageState.Unknown) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) MessageState);
       }
       if (AddDateTime != 0L) {
@@ -3251,7 +3275,7 @@ namespace NWorkQueue.Models {
       if (TransId != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(TransId);
       }
-      if (TransAction != global::NWorkQueue.Models.TransactionAction.Add) {
+      if (TransAction != global::NWorkQueue.Models.TransactionAction.None) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) TransAction);
       }
       if (_unknownFields != null) {
@@ -3280,8 +3304,11 @@ namespace NWorkQueue.Models {
       if (other.Priority != 0) {
         Priority = other.Priority;
       }
-      if (other.MaxRetries != 0) {
-        MaxRetries = other.MaxRetries;
+      if (other.MaxAttempts != 0) {
+        MaxAttempts = other.MaxAttempts;
+      }
+      if (other.Attempts != 0) {
+        Attempts = other.Attempts;
       }
       if (other.ExpiryDateTime != 0L) {
         ExpiryDateTime = other.ExpiryDateTime;
@@ -3292,7 +3319,7 @@ namespace NWorkQueue.Models {
       if (other.GroupName.Length != 0) {
         GroupName = other.GroupName;
       }
-      if (other.MessageState != global::NWorkQueue.Models.MessageState.Active) {
+      if (other.MessageState != global::NWorkQueue.Models.MessageState.Unknown) {
         MessageState = other.MessageState;
       }
       if (other.AddDateTime != 0L) {
@@ -3304,7 +3331,7 @@ namespace NWorkQueue.Models {
       if (other.TransId != 0L) {
         TransId = other.TransId;
       }
-      if (other.TransAction != global::NWorkQueue.Models.TransactionAction.Add) {
+      if (other.TransAction != global::NWorkQueue.Models.TransactionAction.None) {
         TransAction = other.TransAction;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -3339,38 +3366,42 @@ namespace NWorkQueue.Models {
             break;
           }
           case 48: {
-            MaxRetries = input.ReadInt32();
+            MaxAttempts = input.ReadInt32();
             break;
           }
           case 56: {
-            ExpiryDateTime = input.ReadInt64();
+            Attempts = input.ReadInt32();
             break;
           }
           case 64: {
+            ExpiryDateTime = input.ReadInt64();
+            break;
+          }
+          case 72: {
             CorrelationId = input.ReadInt32();
             break;
           }
-          case 74: {
+          case 82: {
             GroupName = input.ReadString();
             break;
           }
-          case 80: {
+          case 88: {
             MessageState = (global::NWorkQueue.Models.MessageState) input.ReadEnum();
             break;
           }
-          case 88: {
+          case 96: {
             AddDateTime = input.ReadInt64();
             break;
           }
-          case 96: {
+          case 104: {
             CloseDateTime = input.ReadInt64();
             break;
           }
-          case 104: {
+          case 112: {
             TransId = input.ReadInt64();
             break;
           }
-          case 112: {
+          case 120: {
             TransAction = (global::NWorkQueue.Models.TransactionAction) input.ReadEnum();
             break;
           }

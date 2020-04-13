@@ -52,6 +52,14 @@ namespace NWorkQueue.Integration.Tests
         {
             _webHost.ThrowIfNull();
             await _webHost.StopAsync();
+            _webHost.WaitForShutdown();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            if (File.Exists("SqliteTesting.db"))
+            {
+                File.Delete("SqliteTesting.db");
+            }
         }
 
         [TestMethod]
@@ -133,7 +141,7 @@ namespace NWorkQueue.Integration.Tests
 
             var inMessage = new MessageIn()
             {
-                MaxRetries = 3
+                MaxAttempts = 3
             };
 
             // Add Message
@@ -160,7 +168,7 @@ namespace NWorkQueue.Integration.Tests
             Assert.AreEqual(StatusCode.Internal, exception.Status.StatusCode);
             Assert.AreEqual("Transaction 1 not active: Commited", exception.Status.Detail);
 
-            await _webHost.StopAsync();
+            await _webHost.StopAsync(TimeSpan.FromSeconds(60));
             
             _webHost = StartServer();
 
@@ -196,6 +204,87 @@ namespace NWorkQueue.Integration.Tests
             Assert.AreEqual("Transaction not found, id: 0", exception.Status.Detail);
         }
 
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task MessageRetryOneExceeded()
+        {
+            var client = await CreateClient();
+
+            // Test Create quque
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
+
+            var transResponse = await client.StartTransactionAsync(new StartTransactionRequest());
+
+            var inMessage = new MessageIn()
+            {
+                MaxAttempts = 1
+            };
+
+            // Add Message
+            var queueMessageResponse = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            Assert.AreEqual(1, queueMessageResponse.MessageId);
+
+            await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
+
+            // Cancel Pulled Message
+            var transPullResponse = await client.StartTransactionAsync(new StartTransactionRequest());
+            var dequeueResponse = await client.DequeueMessageAsync(new DequeueMessageRequest { QueueId = 1, TransId = transPullResponse.TransId });
+            await client.RollbackTranactionAsync(new RollbackTransactionRequest { TransId = transPullResponse.TransId });
+
+            // Attempt Second Pull (should fail)
+            var transPullResponse2 = await client.StartTransactionAsync(new StartTransactionRequest());
+            var dequeueResponse2 = await client.DequeueMessageAsync(new DequeueMessageRequest { QueueId = 1, TransId = transPullResponse.TransId });
+            Assert.IsNull(dequeueResponse2.Message);
+
+            // Peek Message to confirm retry expiration
+            var peekResult = await client.PeekMessageByIdAsync(new PeekMessageByIdRequest { MessageId = queueMessageResponse.MessageId });
+            Assert.AreEqual(1, peekResult.Message?.Attempts);
+            Assert.AreEqual(MessageState.AttemptsExceeded, peekResult.Message?.MessageState);
+            Assert.AreNotEqual(0, peekResult.Message?.CloseDateTime);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task MessageRetryTenExceeded()
+        {
+            var client = await CreateClient();
+
+            // Test Create quque
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
+
+            var transResponse = await client.StartTransactionAsync(new StartTransactionRequest());
+
+            var inMessage = new MessageIn()
+            {
+                MaxAttempts = 10
+            };
+
+            // Add Message
+            var queueMessageResponse = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            Assert.AreEqual(1, queueMessageResponse.MessageId);
+
+            await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
+
+            // Cancel Pulled Message
+            for (int i = 0; i < 10; i++)
+            {
+                var transPullResponse = await client.StartTransactionAsync(new StartTransactionRequest());
+                var dequeueResponse = await client.DequeueMessageAsync(new DequeueMessageRequest { QueueId = 1, TransId = transPullResponse.TransId });
+                await client.RollbackTranactionAsync(new RollbackTransactionRequest { TransId = transPullResponse.TransId });
+            }
+
+            // Attempt Final Pull (should fail)
+            var transPullResponse2 = await client.StartTransactionAsync(new StartTransactionRequest());
+            var dequeueResponse2 = await client.DequeueMessageAsync(new DequeueMessageRequest { QueueId = 1, TransId = transPullResponse2.TransId });
+            Assert.IsNull(dequeueResponse2.Message);
+
+            // Peek Message to confirm retry expiration
+            var peekResult = await client.PeekMessageByIdAsync(new PeekMessageByIdRequest { MessageId = queueMessageResponse.MessageId });
+            Assert.AreEqual(10, peekResult.Message?.Attempts);
+            Assert.AreEqual(MessageState.AttemptsExceeded, peekResult.Message?.MessageState);
+            Assert.AreNotEqual(0, peekResult.Message?.CloseDateTime);
+        }
+
         private static async Task<QueueApi.QueueApiClient> CreateClient()
         {
             var channel = GrpcChannel.ForAddress("http://localhost:10043");
@@ -206,10 +295,6 @@ namespace NWorkQueue.Integration.Tests
         
         private static async Task<QueueApi.QueueApiClient> CreateBadClient()
         {
-            if (File.Exists("SqliteTesting.db"))
-            {
-                File.Delete("SqliteTesting.db");
-            }
             var channel = GrpcChannel.ForAddress("http://localhost:10043");
             var client = new QueueApi.QueueApiClient(channel);
             return client;

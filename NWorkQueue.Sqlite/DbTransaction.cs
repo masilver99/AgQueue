@@ -29,6 +29,7 @@ namespace NWorkQueue.Sqlite
         public void Commit()
         {
             this.SqliteTransaction.Commit();
+            // this should also close out the connection
         }
 
         /// <inheritdoc/>

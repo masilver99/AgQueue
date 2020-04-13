@@ -109,7 +109,7 @@ message MessageIn {
   // Message priority.  Lower the number, the higher the priority.
   int32 Priority = 4;
   // tries">How many failures before the message will be expired.
-  int32 MaxRetries = 5;
+  int32 MaxAttempts = 5;
   // Message will expire after this many minutes if not already processed or in a transaction. Zero indicates no expiration.
   int32 ExpiryInMinutes = 6;
   // Optional correlation id. ID's are defined by the calling application.
@@ -129,32 +129,35 @@ message MessageOut {
   // Message priority.  Lower the number, the higher the priority.
   int32 Priority = 5;
   // tries">How many failures before the message will be expired.
-  int32 MaxRetries = 6;
+  int32 MaxAttempts = 6;
+  int32 Attempts = 7;
   // Message expire after this DateTime.
-  int64 ExpiryDateTime = 7;
+  int64 ExpiryDateTime = 8;
   // Optional correlation id. ID's are defined by the calling application.
-  int32 CorrelationId = 8;
+  int32 CorrelationId = 9;
   // Optional group string. Defined by calling application.
-  string GroupName = 9;
-  //State
-  MessageState MessageState = 10; 
-  int64 AddDateTime = 11;
-  int64 CloseDateTime = 12;
-  int64 TransId = 13;
-  TransactionAction TransAction = 14;
+  string GroupName = 10;
+  // State
+  MessageState MessageState = 11; 
+  int64 AddDateTime = 12;
+  int64 CloseDateTime = 13;
+  int64 TransId = 14;
+  TransactionAction TransAction = 15;
 }
 
 enum MessageState {
-    Active = 0; 
-    InTransaction = 1;
-    Processed = 2;
-    Expired = 3;
-    RetryExceeded = 4;
+    Unknown = 0;
+    Active = 1; 
+    InTransaction = 2;
+    Processed = 3;
+    Expired = 4;
+    AttemptsExceeded = 5;
 }
 
 enum TransactionAction {
-    Add = 0;
-    Pull = 1;
+    None = 0;
+    Add = 1;
+    Pull = 2;
 }
 
 message QueueMessageResponse {

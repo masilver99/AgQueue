@@ -26,6 +26,7 @@ namespace NWorkQueue.Sqlite
         private readonly string connectionString;
 
         private readonly ConcurrentDictionary<long, SemaphoreSlim> queueLocks = new ConcurrentDictionary<long, SemaphoreSlim>();
+        private readonly object semaphoreLock = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StorageSqlite"/> class.
@@ -160,15 +161,15 @@ namespace NWorkQueue.Sqlite
             DateTime addDateTime,
             string metaData,
             int priority,
-            int maxRetries,
+            int maxAttempts,
             DateTime? expiryDateTime,
             int correlation,
             string groupName,
             TransactionAction transactionAction,
             MessageState messageState)
         {
-            const string sql = "INSERT INTO Messages (QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxRetries, Retries, ExpiryDateTime, Payload, CorrelationId, GroupName, Metadata) VALUES " +
-                      "(@QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxRetries, 0, @ExpiryDateTime, @Payload, @CorrelationId, @GroupName, @Metadata);" +
+            const string sql = "INSERT INTO Messages (QueueId, TransactionId, TransactionAction, State, AddDateTime, Priority, MaxAttempts, Attempts, ExpiryDateTime, Payload, CorrelationId, GroupName, Metadata) VALUES " +
+                      "(@QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxAttempts, 0, @ExpiryDateTime, @Payload, @CorrelationId, @GroupName, @Metadata);" +
                       "SELECT last_insert_rowid();";
 
             return await this.ExecuteAsync<long>(async (connection) =>
@@ -181,7 +182,7 @@ namespace NWorkQueue.Sqlite
                     State = messageState,
                     AddDateTime = addDateTime.ToUnixEpoch(),
                     Priority = priority,
-                    MaxRetries = maxRetries,
+                    MaxAttempts = maxAttempts,
                     ExpiryDateTime = expiryDateTime?.ToUnixEpoch(),
                     Payload = payload,
                     CorrelationId = correlation,
@@ -227,9 +228,9 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask<int> UpdateMessageRetryCount(IStorageTransaction storageTrans, long transId, TransactionAction transactionAction, MessageState messageState)
+        public async ValueTask<int> UpdateMessageAttemptCount(IStorageTransaction storageTrans, long transId, TransactionAction transactionAction, MessageState messageState)
         {
-            const string sql = "Update Messages set Retries = Retries + 1 " +
+            const string sql = "Update Messages set Attempts = Attempts + 1 " +
                     "where transactionId = @TransId AND TransactionAction = @TransactionAction AND State = @MessageState;";
             var sqliteConnection = storageTrans.SqliteTransaction().Connection;
             return await this.ExecuteAsync<int>(
@@ -293,10 +294,10 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask<int> UpdateMessageRetriesInExpiredTrans(IStorageTransaction storageTrans, DateTime currentDateTime)
+        public async ValueTask<int> UpdateMessageAttemptsInExpiredTrans(IStorageTransaction storageTrans, DateTime currentDateTime)
         {
             const string sql =
-                "Update messages set Retries = Retries + 1, TransactionAction = 0, TransactionId = null " +
+                "Update messages set Attempts = Attempts + 1, TransactionAction = 0, TransactionId = null " +
                 "where TransactionAction = @TransactionAction AND State = @MessageState AND " +
                 "TransactionId in (select ID from Transactions Where ExpiryDateTime <= @CurrentDateTime);";
             var sqliteConnection = storageTrans.SqliteTransaction().Connection;
@@ -361,10 +362,10 @@ namespace NWorkQueue.Sqlite
         }
 
         /// <inheritdoc/>
-        public async ValueTask<int> CloseRetryExceededMessages(DateTime currentDateTime)
+        public async ValueTask<int> CloseMaxAttemptsExceededMessages(DateTime currentDateTime)
         {
             const string sql =
-                "Update Messages set State = @NewMessageState, CloseDateTime = @CurrentDateTime where TransactionId IS null and State = @OldMessageState and Retries >= MaxRetries;";
+                "Update Messages set State = @NewMessageState, CloseDateTime = @CurrentDateTime where TransactionId IS null and State = @OldMessageState and Attempts >= MaxAttempts;";
 
             return await this.ExecuteAsync<int>(async (connection) =>
             {
@@ -372,7 +373,7 @@ namespace NWorkQueue.Sqlite
                     sql,
                     param: new
                     {
-                        NewMessageState = MessageState.RetryExceeded,
+                        NewMessageState = MessageState.AttemptsExceeded,
                         OldMessageState = MessageState.Active,
                         CurrentDateTime = currentDateTime.ToUnixEpoch()
                     });
@@ -425,8 +426,8 @@ namespace NWorkQueue.Sqlite
             return await this.ExecuteAsync<Message?>(async (connection) =>
             {
                 const string sql =
-                "SELECT Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, CloseDateTime, " +
-                "Priority, MaxRetries, Retries, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload " +
+                "SELECT Id, QueueId, TransactionId, TransactionAction, State as MessageState, AddDateTime, CloseDateTime, " +
+                "Priority, MaxAttempts, Attempts, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload " +
                 "FROM Messages WHERE Id = @MessageId;";
 
                 return await connection.QuerySingleOrDefaultAsync<Message?>(
@@ -441,8 +442,8 @@ namespace NWorkQueue.Sqlite
         private async ValueTask<Message?> GetNextMessage(SqliteConnection connection, long queueId)
         {
             const string sql =
-                "SELECT Id, QueueId, TransactionId, TransactionAction, State, AddDateTime, CloseDateTime, " +
-                "Priority, MaxRetries, Retries, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload " +
+                "SELECT Id, QueueId, TransactionId, TransactionAction, State as MessageState, AddDateTime, CloseDateTime, " +
+                "Priority, MaxAttempts, Attempts, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload " +
                 "FROM Messages WHERE State = @MessageState AND CloseDateTime IS NULL AND TransactionId IS NULL AND " +
                 "QueueId = @QueueId " +
                 "ORDER BY Priority DESC, AddDateTime " +
@@ -474,20 +475,22 @@ namespace NWorkQueue.Sqlite
 
         private SemaphoreSlim GetSemaphore(long queueId)
         {
-            // Will need to examine how this performs with a large amount of queues
-            // it may consume a lot of memory.
-            if (this.queueLocks.TryGetValue(queueId, out SemaphoreSlim? semaphore))
+            return this.queueLocks.GetOrAdd(queueId, new SemaphoreSlim(1, 1));
+/*            lock (this.semaphoreLock)
             {
+                // Will need to examine how this performs with a large amount of queues
+                // it may consume a lot of memory.
+                if (this.queueLocks.TryGetValue(queueId, out SemaphoreSlim? semaphore))
+                {
+                    return semaphore;
+                }
+                semaphore = new SemaphoreSlim(1, 1);
+                if (!this.queueLocks.TryAdd(queueId, semaphore))
+                {
+                    throw new Exception("Unabled to add to new semaphore.");
+                }
                 return semaphore;
-            }
-
-            semaphore = new SemaphoreSlim(1, 1);
-            if (!this.queueLocks.TryAdd(queueId, semaphore))
-            {
-                throw new Exception("Unabled to add to new semaphore.");
-            }
-
-            return semaphore;
+            }*/
         }
 
         /// <summary>
@@ -535,6 +538,7 @@ namespace NWorkQueue.Sqlite
                 // If connection wasn't passed in, we must dispose of the resource manually
                 if (connection == null)
                 {
+                    liveConnection?.Close();
                     liveConnection?.Dispose();
                 }
 
@@ -587,6 +591,7 @@ namespace NWorkQueue.Sqlite
                 // If connection wasn't passed in, we must dispose of the resource manually
                 if (connection == null)
                 {
+                    liveConnection?.Close();
                     liveConnection?.Dispose();
                 }
 
@@ -631,8 +636,8 @@ namespace NWorkQueue.Sqlite
                 " AddDateTime INTEGER NOT NULL," +
                 " CloseDateTime INTEGER, " +
                 " Priority INTEGER NOT NULL, " +
-                " MaxRetries INTEGER NOT NULL, " +
-                " Retries INTEGER NOT NULL, " +
+                " MaxAttempts INTEGER NOT NULL, " +
+                " Attempts INTEGER NOT NULL, " +
                 " ExpiryDateTime INTEGER NULL, " + // Null means it won't expire.
                 " CorrelationId INTEGER, " +
                 " GroupName TEXT, " +
@@ -662,6 +667,11 @@ namespace NWorkQueue.Sqlite
                 "DROP table IF EXISTS Transactions;" +
                 "COMMIT;";
             await connection.ExecuteAsync(sql);
+        }
+
+        public void Dispose()
+        {
+            // Do nothing
         }
     }
 }

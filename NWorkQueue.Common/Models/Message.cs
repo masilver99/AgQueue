@@ -56,12 +56,12 @@ namespace NWorkQueue.Common.Models
         /// <summary>
         /// Gets number of attempts to have message processed, i.e. commited.
         /// </summary>
-        public int MaxRetries { get; set; }
+        public int MaxAttempts { get; set; }
 
         /// <summary>
         /// Gets the number of rollbacks or timeouts before the message expires.
         /// </summary>
-        public int Retries { get; set; } = 0;
+        public int Attempts { get; set; }
 
         /// <summary>
         /// Gets DateTime the message will expire.
@@ -86,11 +86,11 @@ namespace NWorkQueue.Common.Models
         /// <summary>
         /// Gets Message State, i.e. Active, closed, etc.
         /// </summary>
-        public MessageState MessageState { get; set; } = MessageState.InTransaction;
+        public MessageState MessageState { get; set; }
 
         /// <summary>
         /// Gets string based metadata describing the message in more detail.  Optional.
         /// </summary>
-        public string Metadata { get; } = string.Empty;
+        public string Metadata { get; set; }
     }
 }

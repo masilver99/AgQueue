@@ -16,7 +16,7 @@ namespace NWorkQueue.Server.Common
     /// When implementing IStorage, use the StorageSqlite as an example.  There should be no business logic in
     /// classes that implement IStorage.
     /// </summary>
-    public interface IStorage
+    public interface IStorage : IDisposable
     {
         /// <summary>
         /// Called when Queue process starts.  Connections to the storage should be made here, etc.
@@ -55,7 +55,7 @@ namespace NWorkQueue.Server.Common
         /// <param name="addDateTime">Datetime the message was added.</param>
         /// <param name="metaData">String metadata on message data.</param>
         /// <param name="priority">Message priority.</param>
-        /// <param name="maxRetries">How many retries before expires.</param>
+        /// <param name="maxAttempts">How many retries before expires.</param>
         /// <param name="expiryDateTime">Datetime the message will expire.</param>
         /// <param name="correlation">Correlation ID.</param>
         /// <param name="groupName">Group name.</param>
@@ -69,7 +69,7 @@ namespace NWorkQueue.Server.Common
             DateTime addDateTime,
             string metaData,
             int priority,
-            int maxRetries,
+            int maxAttempts,
             DateTime? expiryDateTime,
             int correlation,
             string groupName,
@@ -123,7 +123,7 @@ namespace NWorkQueue.Server.Common
         /// <param name="transactionAction">The transactionAction the message must be in.</param>
         /// <param name="messageState">The messageState the message must be in. </param>
         /// <returns>Number of messages updated.</returns>
-        ValueTask<int> UpdateMessageRetryCount(IStorageTransaction storageTrans, long transId, TransactionAction transactionAction, MessageState messageState);
+        ValueTask<int> UpdateMessageAttemptCount(IStorageTransaction storageTrans, long transId, TransactionAction transactionAction, MessageState messageState);
 
         /// <summary>
         /// Delete messages that were added in the specified transtacion.
@@ -175,7 +175,7 @@ namespace NWorkQueue.Server.Common
         /// <param name="storageTrans">Storage Transaction to run under.</param>
         /// <param name="currentDateTime">DateTime to expire against.</param>
         /// <returns>Number of records updated.</returns>
-        ValueTask<int> UpdateMessageRetriesInExpiredTrans(IStorageTransaction storageTrans, DateTime currentDateTime);
+        ValueTask<int> UpdateMessageAttemptsInExpiredTrans(IStorageTransaction storageTrans, DateTime currentDateTime);
 
         /// <summary>
         /// Expires transactions whose expiry date time is past the currentDateTime.
@@ -197,7 +197,7 @@ namespace NWorkQueue.Server.Common
         /// </summary>
         /// <param name="currentDateTime">DateTime to use a close datetime.</param>
         /// <returns>Number of messages closed.</returns>
-        ValueTask<int> CloseRetryExceededMessages(DateTime currentDateTime);
+        ValueTask<int> CloseMaxAttemptsExceededMessages(DateTime currentDateTime);
 
         /// <summary>
         /// Dequeue the next message in the queue and flag the message with the transaction id.

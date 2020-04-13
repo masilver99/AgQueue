@@ -85,7 +85,7 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState,NWorkQueue.Common.MessageState,System.Nullable{System.DateTime})">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessageRetryCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessageAttemptCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.DeleteAddedMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64)">
@@ -94,7 +94,7 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.DeleteAddedMessagesInExpiredTrans(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessageRetriesInExpiredTrans(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessageAttemptsInExpiredTrans(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.ExpireTransactions(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
@@ -103,7 +103,7 @@
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.ExpireMessages(System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CloseRetryExceededMessages(System.DateTime)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.CloseMaxAttemptsExceededMessages(System.DateTime)">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.DequeueMessage(System.Int64,System.Int64)">

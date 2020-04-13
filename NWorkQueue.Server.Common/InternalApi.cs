@@ -126,6 +126,7 @@ namespace NWorkQueue.Server.Common
         /// </summary>
         public void Dispose()
         {
+            this.storage.Dispose();
             // TODO: Need to add OnDsiapose action in case some storage services require disposal
         }
 
@@ -267,8 +268,8 @@ namespace NWorkQueue.Server.Common
 
                 // Update retry counts and change status of pulled messages
                 // Don't worry about retry count here, it will automactially get closed in house keeping.
-                var updateCount = await this.storage.UpdateMessageRetryCount(storageTrans, transId, TransactionAction.Pull, MessageState.InTransaction);
-                var pullCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Pull, MessageState.InTransaction, MessageState.Active, startDateTime);
+                var updateCount = await this.storage.UpdateMessageAttemptCount(storageTrans, transId, TransactionAction.Pull, MessageState.InTransaction);
+                var pullCount = await this.storage.UpdateMessages(storageTrans, transId, TransactionAction.Pull, MessageState.InTransaction, MessageState.Active, null);
 
                 // Mark Transaction complete
                 await this.storage.UpdateTransactionState(storageTrans, transId, TransactionState.RolledBack, "User rollback", DateTime.Now);
@@ -386,7 +387,7 @@ namespace NWorkQueue.Server.Common
 
             // Increment retry count on pulled messages.
             // Removed trans info from pulled messages
-            await this.storage.UpdateMessageRetriesInExpiredTrans(storageTrans, currentTime);
+            await this.storage.UpdateMessageAttemptsInExpiredTrans(storageTrans, currentTime);
 
             // Mark trans as closed due to expiry
             await this.storage.ExpireTransactions(storageTrans, currentTime);
@@ -402,7 +403,7 @@ namespace NWorkQueue.Server.Common
             await this.storage.ExpireMessages(currentDateTime);
 
             // Check for active messages at or past the retry count
-            await this.storage.CloseRetryExceededMessages(currentDateTime);
+            await this.storage.CloseMaxAttemptsExceededMessages(currentDateTime);
 
                 // Mark as RetryExceeded
         }
