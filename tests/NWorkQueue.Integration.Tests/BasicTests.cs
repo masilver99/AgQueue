@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using NWorkQueue.Common.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using NWorkQueue.Models;
 using System.Threading.Tasks;
 using Grpc.Net.ClientFactory;
 using System;
 using Grpc.Core;
 using System.IO;
+using NWorkQueue.Server.Common;
 
 namespace NWorkQueue.Integration.Tests
 {
@@ -23,16 +25,20 @@ namespace NWorkQueue.Integration.Tests
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
         }
 
-        private IWebHost StartServer()
+        private IWebHost StartServer(QueueOptions? queueOptions = null)
         {
-            var webHostBuilder = CreateHostBuilder();
+            var webHostBuilder = CreateHostBuilder(queueOptions ?? new QueueOptions());
             var webHost = webHostBuilder.Build();
             webHost.Start();
             return webHost;
         }
 
-        public static IWebHostBuilder CreateHostBuilder() =>
+        public static IWebHostBuilder CreateHostBuilder(QueueOptions queueOptions) =>
             WebHost.CreateDefaultBuilder(new string[0])
+                .ConfigureServices(services =>
+                { 
+                    services.Configure<QueueOptions>(o => o = queueOptions);
+                })
                 .ConfigureKestrel(option =>
                 {
                     option.ListenLocalhost(10043, listenOptions =>

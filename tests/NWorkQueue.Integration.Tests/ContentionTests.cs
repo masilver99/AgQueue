@@ -11,6 +11,9 @@ using System;
 using System.IO;
 using System.Collections.Concurrent;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
+using NWorkQueue.Server.Common;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NWorkQueue.Integration.Tests
 {
@@ -33,7 +36,7 @@ namespace NWorkQueue.Integration.Tests
         }
 
         public static IWebHostBuilder CreateHostBuilder() =>
-            WebHost.CreateDefaultBuilder(new string[0])
+            WebHost.CreateDefaultBuilder()
             .UseShutdownTimeout(TimeSpan.FromSeconds(60))
                 .ConfigureKestrel(option =>
                 {

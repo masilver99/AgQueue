@@ -370,6 +370,23 @@
             Gets or sets queue ID.
             </summary>
         </member>
+        <member name="T:NWorkQueue.Server.Common.QueueOptions">
+            <summary>
+            Options used by the queue server.
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Server.Common.QueueOptions.DefaultMessageTimeoutInMinutes">
+            <summary>
+            How many minutes until a message expires.  Will be overriden by the value in the message, unless it's zero.
+            0 = no message timeout.  0 in the message, means use the detault here..
+            </summary>
+        </member>
+        <member name="P:NWorkQueue.Server.Common.QueueOptions.DefaultTranactionTimeoutInMinutes">
+            <summary>
+            How long until a transaction expires in minutes.  The value in the transaction will override this value, 
+            unless it zero.  If this is zero as well, transactions won't expire.
+            </summary>
+        </member>
         <member name="T:NWorkQueue.Server.Common.ResultCode">
             <summary>
             Result codes from internal API calls.  This currently map directly to gRPC status codes, but

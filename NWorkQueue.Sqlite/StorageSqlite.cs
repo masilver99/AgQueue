@@ -346,7 +346,7 @@ namespace NWorkQueue.Sqlite
         {
             const string sql =
                 "Update Messages set State = @NewMessageState, CloseDateTime = @CurrentDateTime where TransactionId IS null " +
-                "and State = @OldMessageState and ExpiryDateTime >= @CurrentDateTime";
+                "and State = @OldMessageState and ExpiryDateTime <= @CurrentDateTime";
 
             return await this.ExecuteAsync<int>(async (connection) =>
             {
