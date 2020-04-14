@@ -38,8 +38,9 @@ namespace NWorkQueue.Integration.Tests
         public static IWebHostBuilder CreateHostBuilder(QueueOptions queueOptions) =>
             WebHost.CreateDefaultBuilder(new string[0])
                 .ConfigureServices(services =>
-                { 
-                    services.Configure<QueueOptions>(o => o = queueOptions);
+                {
+                    services.Configure<QueueOptions>(o => o = queueOptions)
+                        .AddOptions();
                 })
                 .ConfigureKestrel(option =>
                 {
