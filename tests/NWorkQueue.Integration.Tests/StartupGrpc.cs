@@ -11,6 +11,7 @@ using NWorkQueue.GrpcServer;
 using NWorkQueue.GrpcServer.Interceptors;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace NWorkQueue.Integration.Tests
 {
@@ -32,13 +33,10 @@ namespace NWorkQueue.Integration.Tests
 
             services.AddSingleton<IStorage>(new StorageSqlite(@"Data Source=SqliteTesting.db;"));
             services.AddSingleton(typeof(InternalApi));
-
-            var configBuilder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true);
-            var config = configBuilder.Build();
-
-            services.Configure<QueueOptions>(config);
+            services.AddLogging(logging =>
+            {
+                logging.AddConsole();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -11,6 +11,8 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NWorkQueue.Common;
 using NWorkQueue.Common.Extensions;
 using NWorkQueue.Common.Models;
@@ -32,14 +34,37 @@ namespace NWorkQueue.Server.Common
     {
         private readonly IStorage storage;
 
+        private readonly QueueOptions queueOptions;
+
+        private readonly ILogger logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InternalApi"/> class.
         /// </summary>
         /// <param name="storage">The storage implementation to use for storage of queues and messages.</param>
-        public InternalApi(IStorage storage)
+        /// <param name="options">The QueueOptions object passed in via DI.</param>
+        public InternalApi(IStorage storage, IOptions<QueueOptions> options, ILogger<InternalApi> logger)
         {
+            this.logger = logger;
+
             // Setup Storage
             this.storage = storage;
+
+            this.queueOptions = options.Value;
+
+            // A transaction must have an expiration date, this ensures it.
+            if (this.queueOptions.DefaultTranactionTimeoutInMinutes <= 0)
+            {
+                this.queueOptions.DefaultTranactionTimeoutInMinutes = 10;
+                logger.LogWarning("Invalid value for DefaultTranactionTimeoutInMinutes. Using a value of 10.");
+            }
+
+            // Check Message timeout is valid.
+            if (this.queueOptions.DefaultMessageTimeoutInMinutes <= 0)
+            {
+                this.queueOptions.DefaultMessageTimeoutInMinutes = 10;
+                logger.LogWarning("Invalid value for DefaultMessageTimeoutInMinutes. Using a value of 0 (no timeout).");
+            }
         }
 
         /// <summary>
@@ -148,7 +173,9 @@ namespace NWorkQueue.Server.Common
         public async ValueTask<long> StartTrasaction(int expiryTimeInMinutes = 0)
         {
             // TODO: This 10 needs to be pulled from a config file
-            var expiryMinutes = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
+            var expiryMinutes = expiryTimeInMinutes <= 0 ?
+                this.queueOptions.DefaultTranactionTimeoutInMinutes :
+                expiryTimeInMinutes;
             var curDateTime = DateTime.Now;
 
             return await this.storage.StartTransaction(curDateTime, curDateTime.AddMinutes(expiryMinutes));
@@ -162,8 +189,9 @@ namespace NWorkQueue.Server.Common
         /// <returns>ValueTask.</returns>
         public async ValueTask ExtendTransaction(long transId, int expiryTimeInMinutes = 0)
         {
-            // TODO: This 10 needs to be pulled from a config file
-            var expiryMinutes = expiryTimeInMinutes == 0 ? 10 : expiryTimeInMinutes;
+            var expiryMinutes = expiryTimeInMinutes <= 0 ?
+                this.queueOptions.DefaultTranactionTimeoutInMinutes :
+                expiryTimeInMinutes;
 
             await this.PerformMessageHouseCleaning(DateTime.Now);
 
@@ -323,6 +351,10 @@ namespace NWorkQueue.Server.Common
                 throw new WorkQueueException($"Queue {queueId} not found.");
             }
 
+            var calculatedExpiry = expiryInMinutes <= 0 ?
+                this.queueOptions.DefaultMessageTimeoutInMinutes :
+                expiryInMinutes;
+
             return await this.storage.AddMessage(
                 transId,
                 queueId,
@@ -331,7 +363,8 @@ namespace NWorkQueue.Server.Common
                 metaData,
                 priority,
                 maxRetries,
-                expiryInMinutes < 1 ? (DateTime?)null : startDateTime.AddMinutes(expiryInMinutes),
+                // I was going to allow umlimited time, but I'm rethrinking that.
+                startDateTime.AddMinutes(calculatedExpiry),
                 correlation,
                 groupName,
                 TransactionAction.Add,

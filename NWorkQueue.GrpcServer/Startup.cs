@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NWorkQueue.Common;
 using NWorkQueue.GrpcServer.Interceptors;
 using NWorkQueue.Server.Common;
@@ -26,6 +27,10 @@ namespace NWorkQueue.GrpcServer
             });
             services.AddSingleton<IStorage>(new StorageSqlite(@"Data Source=Sqlite.db;"));
             services.AddSingleton(typeof(InternalApi));
+            services.AddLogging(logging =>
+            {
+                logging.AddConsole();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

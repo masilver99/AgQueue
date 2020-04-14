@@ -73,7 +73,10 @@ namespace NWorkQueue.Integration.Tests
         [DoNotParallelize]
         public async Task TimeoutInMessage()
         {
-            this.TestInitialize();
+            this.TestInitialize(new QueueOptions
+            {
+                DefaultMessageTimeoutInMinutes = 10
+            });
 
             var client = await CreateClient();
 
@@ -111,6 +114,58 @@ namespace NWorkQueue.Integration.Tests
             Assert.AreNotEqual(0, peekResponse.Message.CloseDateTime);
             Assert.AreEqual(0, peekResponse.Message.TransId);
             Assert.AreEqual(TransactionAction.None, peekResponse.Message.TransAction);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task MessageTimeoutInSettings()
+        {
+            this.TestInitialize(new QueueOptions
+            {
+                DefaultMessageTimeoutInMinutes = 1
+            });
+
+            var client = await CreateClient();
+
+            // Test Create quque
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
+
+            var transResponse = await client.StartTransactionAsync(new StartTransactionRequest());
+
+            var inMessage = new MessageIn()
+            {
+                ExpiryInMinutes = 0,   // Should default to the options timeout
+                MaxAttempts = 3
+            };
+
+            // Add Message
+            var queueMessageResponse1 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            Assert.AreEqual(1, queueMessageResponse1.MessageId);
+
+            await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
+
+            Thread.Sleep(1000 * 30);
+
+            var peekResponse = await client.PeekMessageByIdAsync(new PeekMessageByIdRequest { MessageId = queueMessageResponse1.MessageId });
+            Assert.AreEqual(MessageState.Active, peekResponse.Message?.MessageState);
+
+            Thread.Sleep(1000 * 31);
+
+            // Check Message is expired 
+            var transPullResponse = await client.StartTransactionAsync(new StartTransactionRequest());
+
+            var dequeueResponse = await client.DequeueMessageAsync(new DequeueMessageRequest { QueueId = 1, TransId = transPullResponse.TransId });
+
+            Assert.IsNull(dequeueResponse.Message);
+
+            await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transPullResponse.TransId });
+
+            var peekResponse2 = await client.PeekMessageByIdAsync(new PeekMessageByIdRequest { MessageId = 1 });
+
+            Assert.AreEqual(MessageState.Expired, peekResponse2.Message?.MessageState);
+            Assert.AreNotEqual(0, peekResponse2.Message?.CloseDateTime);
+            Assert.AreEqual(0, peekResponse2.Message?.TransId);
+            Assert.AreEqual(TransactionAction.None, peekResponse2.Message?.TransAction);
         }
 
         private static async Task<QueueApi.QueueApiClient> CreateClient()

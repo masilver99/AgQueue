@@ -14,11 +14,12 @@
             this is handled without an exception.  This is mostly for speed and simplicity with the gRPC interface.
             </remarks>
         </member>
-        <member name="M:NWorkQueue.Server.Common.InternalApi.#ctor(NWorkQueue.Server.Common.IStorage)">
+        <member name="M:NWorkQueue.Server.Common.InternalApi.#ctor(NWorkQueue.Server.Common.IStorage,Microsoft.Extensions.Options.IOptions{NWorkQueue.Server.Common.QueueOptions},Microsoft.Extensions.Logging.ILogger{NWorkQueue.Server.Common.InternalApi})">
             <summary>
             Initializes a new instance of the <see cref="T:NWorkQueue.Server.Common.InternalApi"/> class.
             </summary>
             <param name="storage">The storage implementation to use for storage of queues and messages.</param>
+            <param name="options">The QueueOptions object passed in via DI.</param>
         </member>
         <member name="M:NWorkQueue.Server.Common.InternalApi.CreateQueue(System.String)">
             <summary>
