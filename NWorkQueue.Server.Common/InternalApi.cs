@@ -43,14 +43,14 @@ namespace NWorkQueue.Server.Common
         /// </summary>
         /// <param name="storage">The storage implementation to use for storage of queues and messages.</param>
         /// <param name="options">The QueueOptions object passed in via DI.</param>
-        public InternalApi(IStorage storage, IOptions<QueueOptions> options, ILogger<InternalApi> logger)
+        public InternalApi(IStorage storage, QueueOptions options, ILogger<InternalApi> logger)
         {
             this.logger = logger;
 
             // Setup Storage
             this.storage = storage;
 
-            this.queueOptions = options.Value;
+            this.queueOptions = options;
 
             // A transaction must have an expiration date, this ensures it.
             if (this.queueOptions.DefaultTranactionTimeoutInMinutes <= 0)

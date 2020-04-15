@@ -45,7 +45,9 @@ namespace NWorkQueue.Integration.Tests
                     {
                         listenOptions.Protocols = HttpProtocols.Http2;
                     });
-                }).UseStartup<StartupGrpc>();
+                })
+                .ConfigureServices(services => services.AddSingleton(new QueueOptions()))
+                .UseStartup<StartupGrpc>();
 
         [TestInitialize]
         public void TestInitialize()

@@ -37,18 +37,15 @@ namespace NWorkQueue.Integration.Tests
 
         public static IWebHostBuilder CreateHostBuilder(QueueOptions queueOptions) =>
             WebHost.CreateDefaultBuilder(new string[0])
-                .ConfigureServices(services =>
-                {
-                    services.Configure<QueueOptions>(o => o = queueOptions)
-                        .AddOptions();
-                })
                 .ConfigureKestrel(option =>
                 {
                     option.ListenLocalhost(10043, listenOptions =>
                     {
                         listenOptions.Protocols = HttpProtocols.Http2;
                     });
-                }).UseStartup<StartupGrpc>();
+                })
+                .ConfigureServices(services => services.AddSingleton(queueOptions))
+                .UseStartup<StartupGrpc>();
 
         public void TestInitialize(QueueOptions? queueOptions = null)
         {
@@ -112,9 +109,9 @@ namespace NWorkQueue.Integration.Tests
             var peekResponse = await client.PeekMessageByIdAsync(new PeekMessageByIdRequest { MessageId = 1 });
 
             Assert.AreEqual(MessageState.Expired, peekResponse.Message?.MessageState);
-            Assert.AreNotEqual(0, peekResponse.Message.CloseDateTime);
-            Assert.AreEqual(0, peekResponse.Message.TransId);
-            Assert.AreEqual(TransactionAction.None, peekResponse.Message.TransAction);
+            Assert.AreNotEqual(0, peekResponse.Message?.CloseDateTime);
+            Assert.AreEqual(0, peekResponse.Message?.TransId);
+            Assert.AreEqual(TransactionAction.None, peekResponse.Message?.TransAction);
         }
 
         [TestMethod]
@@ -167,6 +164,44 @@ namespace NWorkQueue.Integration.Tests
             Assert.AreNotEqual(0, peekResponse2.Message?.CloseDateTime);
             Assert.AreEqual(0, peekResponse2.Message?.TransId);
             Assert.AreEqual(TransactionAction.None, peekResponse2.Message?.TransAction);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task TransactionTimeoutInSettingsAddMessage()
+        {
+            this.TestInitialize(new QueueOptions
+            {
+                DefaultTranactionTimeoutInMinutes = 1
+            });
+
+            var client = await CreateClient();
+
+            // Test Create quque
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
+
+            var transResponse = await client.StartTransactionAsync(new StartTransactionRequest() { ExpireInMin = 0 });
+
+            var inMessage = new MessageIn()
+            {
+                MaxAttempts = 3
+            };
+
+            // Add Message
+            var queueMessageResponse1 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            Assert.AreEqual(1, queueMessageResponse1.MessageId);
+
+            Thread.Sleep(1000 * 61);
+
+            var exception = await Assert.ThrowsExceptionAsync<RpcException>(async () =>
+            {
+                await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
+            });
+
+            Assert.AreEqual("Transaction 1 not active: Expired", exception.Status.Detail);
+
+            var peekResponse = await client.PeekMessageByIdAsync(new PeekMessageByIdRequest { MessageId = queueMessageResponse1.MessageId });
+            Assert.IsNull(peekResponse.Message);
         }
 
         private static async Task<QueueApi.QueueApiClient> CreateClient()

@@ -156,6 +156,11 @@ namespace NWorkQueue.GrpcServer
             var message = await this.internalApi.PeekMessageByQueueId(
                 request.QueueId);
 
+            if (message == null)
+            {
+                return new PeekMessageByQueueResponse();
+            }
+
             return new PeekMessageByQueueResponse
             {
                 //  TODO: this needs to be merged into a MessageOut factory
@@ -183,6 +188,11 @@ namespace NWorkQueue.GrpcServer
         {
             var message = await this.internalApi.PeekMessageById(
                 request.MessageId);
+
+            if (message == null)
+            {
+                return new PeekMessageByQueueResponse();
+            }
 
             return new PeekMessageByIdResponse
             {
