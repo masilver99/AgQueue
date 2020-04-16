@@ -191,7 +191,7 @@ namespace NWorkQueue.GrpcServer
 
             if (message == null)
             {
-                return new PeekMessageByQueueResponse();
+                return new PeekMessageByIdResponse();
             }
 
             return new PeekMessageByIdResponse
