@@ -204,6 +204,87 @@ namespace NWorkQueue.Integration.Tests
             Assert.IsNull(peekResponse.Message);
         }
 
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task TransactionTimeoutInTransactionAddMessage()
+        {
+            this.TestInitialize(new QueueOptions
+            {
+                DefaultTranactionTimeoutInMinutes = 10
+            });
+
+            var client = await CreateClient();
+
+            // Test Create quque
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
+
+            var transResponse = await client.StartTransactionAsync(new StartTransactionRequest() { ExpireInMin = 1 });
+
+            var inMessage = new MessageIn()
+            {
+                MaxAttempts = 3
+            };
+
+            // Add Message
+            var queueMessageResponse1 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            Assert.AreEqual(1, queueMessageResponse1.MessageId);
+
+            Thread.Sleep(1000 * 61);
+
+            var exception = await Assert.ThrowsExceptionAsync<RpcException>(async () =>
+            {
+                await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
+            });
+
+            Assert.AreEqual("Transaction 1 not active: Expired", exception.Status.Detail);
+
+            var peekResponse = await client.PeekMessageByIdAsync(new PeekMessageByIdRequest { MessageId = queueMessageResponse1.MessageId });
+            Assert.IsNull(peekResponse.Message);
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task TransactionTimeoutInTransactionPullMessage()
+        {
+            this.TestInitialize(new QueueOptions
+            {
+                DefaultTranactionTimeoutInMinutes = 10
+            });
+
+            var client = await CreateClient();
+
+            // Test Create quque
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
+
+            var transResponse = await client.StartTransactionAsync(new StartTransactionRequest() { ExpireInMin = 10 });
+
+            var inMessage = new MessageIn()
+            {
+                MaxAttempts = 3
+            };
+
+
+            var queueMessageResponse1 = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            Assert.AreEqual(1, queueMessageResponse1.MessageId);
+
+            var commitTransResponse = await client.CommitTransactionAsync(new CommitTransactionRequest() { TransId = transResponse.TransId });
+
+            var trans2Response = await client.StartTransactionAsync(new StartTransactionRequest() { ExpireInMin = 1 });
+
+            var pullResponse = await client.DequeueMessageAsync(new DequeueMessageRequest { QueueId = 1, TransId = trans2Response.TransId });
+            Assert.IsNotNull(pullResponse.Message);
+
+            Thread.Sleep(1000 * 61);
+
+            var exception = await Assert.ThrowsExceptionAsync<RpcException>(async () =>
+            {
+                await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
+            });
+
+            var peekResponse = await client.PeekMessageByIdAsync(new PeekMessageByIdRequest { MessageId = queueMessageResponse1.MessageId });
+            Assert.AreEqual(MessageState.Expired, peekResponse.Message.MessageState);
+        }
+
         private static async Task<QueueApi.QueueApiClient> CreateClient()
         {
             var channel = GrpcChannel.ForAddress("http://localhost:10043");

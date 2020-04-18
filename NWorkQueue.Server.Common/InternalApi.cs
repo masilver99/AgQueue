@@ -193,7 +193,10 @@ namespace NWorkQueue.Server.Common
                 this.queueOptions.DefaultTranactionTimeoutInMinutes :
                 expiryTimeInMinutes;
 
-            await this.PerformMessageHouseCleaning(DateTime.Now);
+            // Perform house cleaning (expire expired trans and messages)
+            var startDateTime = DateTime.Now;
+            await this.PerformTransactionHouseCleaning(startDateTime);
+            await this.PerformMessageHouseCleaning(startDateTime);
 
             // Check transaction is exists and is active
             await this.ConfirmTransactionExistsAndIsActive(transId);
@@ -210,7 +213,10 @@ namespace NWorkQueue.Server.Common
         /// <returns>Message object or null if no message available.</returns>
         public async ValueTask<Message?> PeekMessageByQueueId(long queueId)
         {
-            await this.PerformMessageHouseCleaning(DateTime.Now);
+            // Perform house cleaning (expire expired trans and messages)
+            var startDateTime = DateTime.Now;
+            await this.PerformTransactionHouseCleaning(startDateTime);
+            await this.PerformMessageHouseCleaning(startDateTime);
 
             return await this.storage.PeekMessageByQueueId(
                 queueId);
@@ -224,7 +230,10 @@ namespace NWorkQueue.Server.Common
         /// <returns>Message object or null if no message available.</returns>
         public async ValueTask<Message?> PeekMessageById(long messageId)
         {
-            await this.PerformMessageHouseCleaning(DateTime.Now);
+            // Perform house cleaning (expire expired trans and messages)
+            var startDateTime = DateTime.Now;
+            await this.PerformTransactionHouseCleaning(startDateTime);
+            await this.PerformMessageHouseCleaning(startDateTime);
 
             return await this.storage.PeekMessageByMessageId(
                 messageId);
@@ -381,7 +390,10 @@ namespace NWorkQueue.Server.Common
             long transId,
             long queueId)
         {
-            await this.PerformMessageHouseCleaning(DateTime.Now);
+            // Perform house cleaning (expire expired trans and messages)
+            var startDateTime = DateTime.Now;
+            await this.PerformTransactionHouseCleaning(startDateTime);
+            await this.PerformMessageHouseCleaning(startDateTime);
 
             // Check count is above min
             // Pull Records, update them to be in transaction
