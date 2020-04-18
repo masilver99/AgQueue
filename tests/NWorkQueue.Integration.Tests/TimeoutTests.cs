@@ -276,13 +276,8 @@ namespace NWorkQueue.Integration.Tests
 
             Thread.Sleep(1000 * 61);
 
-            var exception = await Assert.ThrowsExceptionAsync<RpcException>(async () =>
-            {
-                await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
-            });
-
             var peekResponse = await client.PeekMessageByIdAsync(new PeekMessageByIdRequest { MessageId = queueMessageResponse1.MessageId });
-            Assert.AreEqual(MessageState.Expired, peekResponse.Message.MessageState);
+            Assert.AreEqual(MessageState.Active, peekResponse.Message.MessageState);
         }
 
         private static async Task<QueueApi.QueueApiClient> CreateClient()

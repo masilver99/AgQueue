@@ -297,7 +297,7 @@ namespace NWorkQueue.Sqlite
         public async ValueTask<int> UpdateMessageAttemptsInExpiredTrans(IStorageTransaction storageTrans, DateTime currentDateTime)
         {
             const string sql =
-                "Update messages set Attempts = Attempts + 1, TransactionAction = 0, TransactionId = null " +
+                "Update messages set Attempts = Attempts + 1, TransactionAction = 0, TransactionId = null, State = @NewMessageState " +
                 "where TransactionAction = @TransactionAction AND State = @MessageState AND " +
                 "TransactionId in (select ID from Transactions Where ExpiryDateTime <= @CurrentDateTime);";
             var sqliteConnection = storageTrans.SqliteTransaction().Connection;
@@ -311,7 +311,8 @@ namespace NWorkQueue.Sqlite
                         {
                             TransactionAction = TransactionAction.Pull,
                             MessageState = MessageState.InTransaction,
-                            CurrentDateTime = currentDateTime.ToUnixEpoch()
+                            CurrentDateTime = currentDateTime.ToUnixEpoch(),
+                            NewMessageState = MessageState.Active // Return to active for now. We won't worry about closing it here, if it needs to be.
                         });
                 },
                 sqliteConnection);
