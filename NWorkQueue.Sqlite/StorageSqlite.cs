@@ -645,24 +645,40 @@ namespace NWorkQueue.Sqlite
                 " Metadata TEXT, " +
                 " Payload BLOB," +
                 " FOREIGN KEY(QueueId) REFERENCES Queues(Id), " +
-                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));";
-                /*
-                "Create TABLE IF NOT EXISTS MessageTransactions " +
-                "(TransactionId INTEGER, " +
+                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id));" +
+
+                "Create table IF NOT EXISTS Tags" +
+                "(Id INTEGER PRIMARY KEY," +
+                " TagName TEXT," +
+                " TagValue TEXT);" +
+
+                "CREATE UNIQUE INDEX idx_tag_name ON Tags(TagName); " +
+
+                "Create table IF NOT EXISTS MessageTags" +
+                "(TagId INTEGER, " +
                 " MessageId INTEGER, " +
-                " TransactionStatus INTEGER, " +
-                " PRIMARY KEY(TransactionId, MessageId), " +
-                " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id), " +
-                " FOREIGN KEY(MessageId) REFERENCES Messages(Id));";
-                */
-            await connection.ExecuteAsync(sql);
-#pragma warning restore SA1515
+                " PRIMARY KEY(TagId, MessageId), " +
+                " FOREIGN KEY(TagId) REFERENCES Tags(Id) ON DELETE CASCADE, " +
+                " FOREIGN KEY(MessageId) REFERENCES Messages(Id) ON DELETE CASCADE); ";
+        /*
+        "Create TABLE IF NOT EXISTS MessageTransactions " +
+        "(TransactionId INTEGER, " +
+        " MessageId INTEGER, " +
+        " TransactionStatus INTEGER, " +
+        " PRIMARY KEY(TransactionId, MessageId), " +
+        " FOREIGN KEY(TransactionId) REFERENCES Transactions(Id), " +
+        " FOREIGN KEY(MessageId) REFERENCES Messages(Id));";
+        */
+                await connection.ExecuteAsync(sql);
+                #pragma warning restore SA1515
         }
 
         private async ValueTask DeleteAllTables(SqliteConnection connection)
         {
             const string sql =
                 "BEGIN;" +
+                "DROP TABLE IF EXISTS MessageTags; " +
+                "DROP TABLE IF EXISTS Tags; " +
                 "DROP TABLE IF EXISTS Messages; " +
                 "DROP TABLE IF EXISTS Queues;" +
                 "DROP table IF EXISTS Transactions;" +
