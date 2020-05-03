@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NWorkQueue.GrpcServer", "NW
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NWorkQueue.Server.Common", "NWorkQueue.Server.Common\NWorkQueue.Server.Common.csproj", "{1EE5F540-299F-437A-A2F9-0ADDD5B759A4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NWorkQueue.Postgres", "NWorkQueue.Postgres\NWorkQueue.Postgres.csproj", "{C65F1603-11CA-47BF-B5C6-5F91FF551C29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{1EE5F540-299F-437A-A2F9-0ADDD5B759A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EE5F540-299F-437A-A2F9-0ADDD5B759A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EE5F540-299F-437A-A2F9-0ADDD5B759A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C65F1603-11CA-47BF-B5C6-5F91FF551C29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C65F1603-11CA-47BF-B5C6-5F91FF551C29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C65F1603-11CA-47BF-B5C6-5F91FF551C29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C65F1603-11CA-47BF-B5C6-5F91FF551C29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
