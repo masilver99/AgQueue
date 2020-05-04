@@ -4,7 +4,7 @@
 using Npgsql;
 using NWorkQueue.Server.Common;
 
-namespace NWorkQueue.Sqlite
+namespace NWorkQueue.Postgres
 {
     /// <summary>
     /// Wrapper around SQLite transaction.  Used by storage classes.

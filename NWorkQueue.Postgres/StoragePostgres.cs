@@ -16,7 +16,7 @@ using NWorkQueue.Common.Models;
 using NWorkQueue.Server.Common;
 using NWorkQueue.Server.Common.Models;
 
-namespace NWorkQueue.Sqlite
+namespace NWorkQueue.Postgres
 {
     /// <summary>
     /// Implements the IStorage interface for storing and retriving queue date to SQLite.
@@ -24,9 +24,6 @@ namespace NWorkQueue.Sqlite
     public class StoragePostgres : IStorage
     {
         private readonly string connectionString;
-
-        private readonly ConcurrentDictionary<long, SemaphoreSlim> queueLocks = new ConcurrentDictionary<long, SemaphoreSlim>();
-        private readonly object semaphoreLock = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StoragePostgre"/> class.
@@ -105,7 +102,7 @@ namespace NWorkQueue.Sqlite
                         {
                             Id = transId,
                             State = state,
-                            EndDateTime = endDateTime?,
+                            EndDateTime = endDateTime,
                             EndReason = endReason
                         },
                         storageTrans.NpgsqlTransaction());
@@ -169,7 +166,7 @@ namespace NWorkQueue.Sqlite
             MessageState messageState)
         {
             const string sql = "INSERT INTO messages (queue_id, transaction_id, transaction_action, state, add_datetime, priority, max_attempts, attempts, expiry_datetime, payload, correlation_id, group_name, metadata) VALUES " +
-                      "(@QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxAttempts, 0, @ExpiryDateTime, @Payload, @CorrelationId, @GroupName, @Metadata) returning id;"
+                      "(@QueueId, @TransactionId, @TransactionAction, @State, @AddDateTime, @Priority, @MaxAttempts, 0, @ExpiryDateTime, @Payload, @CorrelationId, @GroupName, @Metadata) returning id;";
 
             return await this.ExecuteAsync<long>(async (connection) =>
             {
@@ -182,7 +179,7 @@ namespace NWorkQueue.Sqlite
                     AddDateTime = addDateTime,
                     Priority = priority,
                     MaxAttempts = maxAttempts,
-                    ExpiryDateTime = expiryDateTime?,
+                    ExpiryDateTime = expiryDateTime,
                     Payload = payload,
                     CorrelationId = correlation,
                     GroupName = groupName,
@@ -387,8 +384,9 @@ namespace NWorkQueue.Sqlite
         {
             //  USe select for no key updates here or select for share
             // Add skip locked to end of select.  It will avoid delays
-
+            // http://shiroyasha.io/selecting-for-share-and-update-in-postgresql.html
             // This routine is the bread and butter of the queue.  It must ensure only the next record is returned.
+
             var semaphore = this.GetSemaphore(queueId);
 
             return await this.ExecuteAsync<Message?>(async (connection) =>

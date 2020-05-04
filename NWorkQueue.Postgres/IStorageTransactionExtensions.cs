@@ -8,7 +8,7 @@ using System.Text;
 using Npgsql;
 using NWorkQueue.Server.Common;
 
-namespace NWorkQueue.Sqlite
+namespace NWorkQueue.Postgres
 {
     /// <summary>
     /// Extensions on the IStorageTransaction interface.
