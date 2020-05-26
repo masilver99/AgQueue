@@ -382,7 +382,7 @@ namespace NWorkQueue.Postgres
             long transId,
             long queueId)
         {
-            //  USe select for no key updates here or select for share
+            // USe select for no key updates here or select for share
             // Add skip locked to end of select.  It will avoid delays
             // http://shiroyasha.io/selecting-for-share-and-update-in-postgresql.html
             // This routine is the bread and butter of the queue.  It must ensure only the next record is returned.

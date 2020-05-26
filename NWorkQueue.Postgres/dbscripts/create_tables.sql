@@ -57,9 +57,21 @@ GRANT ALL ON ALL TABLES IN SCHEMA public TO nworkqueue_user;
 CREATE OR REPLACE PROCEDURE procedure_name()
 LANGUAGE plpgsql
 AS $$
+  DECLARE
+    messageId int;
   begin
     START TRANSACTION;
-    SELECT * FROM messages FOR UPDATE SKIP LOCKED LIMIT 1;
+      --SELECT * FROM messages FOR UPDATE SKIP LOCKED LIMIT 1;
+    SELECT id into messageId, queue_id, transaction_id, transaction_action, state as MessageState, add_datetime, close_datetime, 
+    priority, max_attempts, attempts, expiry_datetime, correlation_id, group_name, metadata, payload 
+    FROM messages WHERE state = @MessageState AND close_datetime IS NULL AND transaction_id IS NULL AND 
+    queue_id = @QueueId 
+    ORDER BY priority DESC, add_datetime 
+    FOR UPDATE SKIP LOCKED LIMIT 1; 
+
+    Update messages set state = @NewMessageState, transaction_id = @TransactionId, transaction_action = @TransactionAction 
+    WHERE id = messageId;
+
     COMMIT;
   end
 $$;
