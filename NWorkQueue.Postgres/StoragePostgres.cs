@@ -15,6 +15,7 @@ using NWorkQueue.Common.Extensions;
 using NWorkQueue.Common.Models;
 using NWorkQueue.Server.Common;
 using NWorkQueue.Server.Common.Models;
+using System.Data;
 
 namespace NWorkQueue.Postgres
 {
@@ -386,31 +387,14 @@ namespace NWorkQueue.Postgres
             // Add skip locked to end of select.  It will avoid delays
             // http://shiroyasha.io/selecting-for-share-and-update-in-postgresql.html
             // This routine is the bread and butter of the queue.  It must ensure only the next record is returned.
-
-            var semaphore = this.GetSemaphore(queueId);
-
             return await this.ExecuteAsync<Message?>(async (connection) =>
             {
-                try
-                {
-                    await semaphore.WaitAsync();
-
-                    // This will need to be moved into a stored proc
-
-                    // We shouldn't need a db transaction here since it only happends within a semaphore lock,
-                    var message = await this.GetNextMessage(connection, queueId);
-                    if (message == null)
-                    {
-                        return null;
-                    }
-
-                    await this.UpdateMessageWithTransaction(connection, message.Id, transId);
-                    return message;
-                }
-                finally
-                {
-                    semaphore.Release();
-                }
+                var sql = "dequeue_message";
+                var message = await connection.QuerySingleOrDefaultAsync<Message?>(
+                    sql,
+                    new { p_queue_id = queueId, p_transaction_id = transId },
+                    commandType: CommandType.StoredProcedure);
+                return message;
             });
         }
 

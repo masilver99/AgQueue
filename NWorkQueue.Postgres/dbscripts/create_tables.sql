@@ -54,23 +54,28 @@ GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO nworkqueue_user;
 GRANT ALL ON ALL TABLES IN SCHEMA public TO nworkqueue_user;
 
 --sample one.  Need to fill in with code to pull next and perform trans update.
-CREATE OR REPLACE PROCEDURE procedure_name()
+CREATE OR REPLACE PROCEDURE dequeue_message(
+p_queue_id integer,
+p_transaction_id integer
+)
 LANGUAGE plpgsql
 AS $$
   DECLARE
     messageId int;
   begin
     START TRANSACTION;
-      --SELECT * FROM messages FOR UPDATE SKIP LOCKED LIMIT 1;
-    SELECT id into messageId, queue_id, transaction_id, transaction_action, state as MessageState, add_datetime, close_datetime, 
+
+    SELECT id into messageId, id, queue_id, transaction_id, transaction_action, state as MessageState, add_datetime, close_datetime, 
     priority, max_attempts, attempts, expiry_datetime, correlation_id, group_name, metadata, payload 
-    FROM messages WHERE state = @MessageState AND close_datetime IS NULL AND transaction_id IS NULL AND 
-    queue_id = @QueueId 
+    FROM messages WHERE state = 1 /*Active*/ AND close_datetime IS NULL AND transaction_id IS NULL AND 
+    queue_id = p_queue_id 
     ORDER BY priority DESC, add_datetime 
     FOR UPDATE SKIP LOCKED LIMIT 1; 
 
-    Update messages set state = @NewMessageState, transaction_id = @TransactionId, transaction_action = @TransactionAction 
-    WHERE id = messageId;
+    IF messageId IS NOT NULL THEN 
+      Update messages set state = 2 /*InTransaction*/, transaction_id = p_transaction_id, transaction_action = 2 /*Pull*/ 
+      WHERE id = messageId;
+    END IF; 
 
     COMMIT;
   end
