@@ -1,7 +1,8 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿// <copyright file="DateTimeExtensions.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NWorkQueue.Common.Extensions
 {

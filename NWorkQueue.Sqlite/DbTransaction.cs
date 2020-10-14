@@ -3,6 +3,7 @@
 // </copyright>
 using Microsoft.Data.Sqlite;
 using NWorkQueue.Server.Common;
+//using System.Data.SQLite;
 
 namespace NWorkQueue.Sqlite
 {

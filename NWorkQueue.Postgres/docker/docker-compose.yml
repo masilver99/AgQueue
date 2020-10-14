@@ -1,0 +1,30 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+  db:
+    container_name: postgres
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: masilver@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: everex
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "5380:80"
+    links:
+      - "db:pgsql-server"
+#  adminer:
+#    image: adminer
+#    restart: always
+#    ports:
+#      - 8080:8080

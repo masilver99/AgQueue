@@ -38,7 +38,7 @@ Create table IF NOT EXISTS tags
  tag_name TEXT,
  tag_value TEXT);
 
-CREATE UNIQUE INDEX idx_tag_name ON tags(tag_name);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_tag_name ON tags(tag_name);
 
 Create table IF NOT EXISTS message_tags
 (tag_id INTEGER,
@@ -53,7 +53,7 @@ GRANT USAGE ON SCHEMA public to nworkqueue_user;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO nworkqueue_user;
 GRANT ALL ON ALL TABLES IN SCHEMA public TO nworkqueue_user;
 
---sample one.  Need to fill in with code to pull next and perform trans update.
+--This locks the next record in the DB, updates it to reflect that the record is active and returns the record
 CREATE OR REPLACE PROCEDURE dequeue_message(
 p_queue_id integer,
 p_transaction_id integer
@@ -65,8 +65,8 @@ AS $$
   begin
     START TRANSACTION;
 
-    SELECT id into messageId, id, queue_id, transaction_id, transaction_action, state as MessageState, add_datetime, close_datetime, 
-    priority, max_attempts, attempts, expiry_datetime, correlation_id, group_name, metadata, payload 
+    SELECT id into messageId /*, id, queue_id, transaction_id, transaction_action, state as MessageState, add_datetime, close_datetime, 
+    priority, max_attempts, attempts, expiry_datetime, correlation_id, group_name, metadata, payload */
     FROM messages WHERE state = 1 /*Active*/ AND close_datetime IS NULL AND transaction_id IS NULL AND 
     queue_id = p_queue_id 
     ORDER BY priority DESC, add_datetime 
@@ -76,6 +76,8 @@ AS $$
       Update messages set state = 2 /*InTransaction*/, transaction_id = p_transaction_id, transaction_action = 2 /*Pull*/ 
       WHERE id = messageId;
     END IF; 
+
+	SELECT * FROM messages where id = messageId;
 
     COMMIT;
   end

@@ -64,10 +64,12 @@ namespace NWorkQueue.Integration.Tests
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
+            /*
             if (File.Exists("SqliteTesting.db"))
             {
                 File.Delete("SqliteTesting.db");
             }
+            */
         }
 
         [TestMethod]

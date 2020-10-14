@@ -35,6 +35,10 @@ namespace NWorkQueue.Sqlite
         public StorageSqlite(string connectionString)
         {
             this.connectionString = connectionString;
+
+            //This will persist the in memory db
+            var masterConnection = new SqliteConnection(connectionString);
+            masterConnection.Open();
         }
 
         /// <inheritdoc/>
@@ -49,7 +53,7 @@ namespace NWorkQueue.Sqlite
                     }
 
                     await this.CreateTables(connection); // Non-destructive
-                }, new SqliteConnection(this.connectionString));
+                }, new SqliteConnection(connectionString));// SqliteConnection(connectionString));
         }
 
         /// <inheritdoc/>
@@ -530,7 +534,7 @@ namespace NWorkQueue.Sqlite
             }
             catch (Exception exc)
             {
-                throw exc;
+                throw;
 
                 // logger.Fatal(exc, "A fatal exception prevented this application from running to completion.");
             }
@@ -540,7 +544,7 @@ namespace NWorkQueue.Sqlite
                 if (connection == null)
                 {
                     liveConnection?.Close();
-                    liveConnection?.Dispose();
+                    //liveConnection?.Dispose();
                 }
 
                 // Log.CloseAndFlush();
@@ -566,6 +570,7 @@ namespace NWorkQueue.Sqlite
 
             try
             {
+                
                 if (connection == null)
                 {
                     liveConnection = new SqliteConnection(this.connectionString);
@@ -583,7 +588,7 @@ namespace NWorkQueue.Sqlite
             }
             catch (Exception exc)
             {
-                throw exc;
+                throw;
 
                 // logger.Fatal(exc, "A fatal exception prevented this application from running to completion.");
             }
@@ -593,7 +598,7 @@ namespace NWorkQueue.Sqlite
                 if (connection == null)
                 {
                     liveConnection?.Close();
-                    liveConnection?.Dispose();
+                    //liveConnection?.Dispose();
                 }
 
                 // Log.CloseAndFlush();
@@ -613,9 +618,9 @@ namespace NWorkQueue.Sqlite
                 // "PRAGMA SYNCHRONOUS = FULL;" +       //About 15x slower than NORMAL
                 "PRAGMA SYNCHRONOUS = NORMAL;" +
                 // Single-line comment must be preceded by blank line
-                "PRAGMA LOCKING_MODE = EXCLUSIVE;" +
+                //"PRAGMA LOCKING_MODE = EXCLUSIVE;" +
                 "PRAGMA journal_mode = WAL;" +
-                // "PRAGMA CACHE_SIZE = 500;" +
+                "PRAGMA CACHE_SIZE = 10000;" +
                 "Create table IF NOT EXISTS Transactions" +
                 "(Id INTEGER PRIMARY KEY," +
                 " State INTEGER NOT NULL," +

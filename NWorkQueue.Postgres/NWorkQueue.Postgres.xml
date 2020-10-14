@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NWorkQueue.Postgres</name>
+    </assembly>
+    <members>
+        <member name="T:NWorkQueue.Postgres.DbTransaction">
+            <summary>
+            Wrapper around SQLite transaction.  Used by storage classes.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Postgres.DbTransaction.#ctor(Npgsql.NpgsqlConnection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NWorkQueue.Postgres.DbTransaction"/> class.
+            </summary>
+            <param name="connection">SQLite connection.</param>
+        </member>
+        <member name="P:NWorkQueue.Postgres.DbTransaction.NpgsqlTransaction">
+            <summary>
+            Gets the internal SQLite transaction.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Postgres.DbTransaction.Commit">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.DbTransaction.Rollback">
+            <inheritdoc/>
+        </member>
+        <member name="T:NWorkQueue.Postgres.IStorageTransactionExtensions">
+            <summary>
+            Extensions on the IStorageTransaction interface.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Postgres.IStorageTransactionExtensions.NpgsqlTransaction(NWorkQueue.Server.Common.IStorageTransaction)">
+            <summary>
+            Converts the IStorageTransaction to a NpgsqlTransaction.
+            </summary>
+            <param name="iTrans">The IStorageTransaction to convert.</param>
+            <returns>SqliteTransaction.</returns>
+        </member>
+        <member name="T:NWorkQueue.Postgres.StoragePostgres">
+            <summary>
+            Implements the IStorage interface for storing and retriving queue date to SQLite.
+            </summary>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="!:StoragePostgre"/> class.
+            </summary>
+            <param name="connectionString">The Sqlite connection string.</param>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.InitializeStorage(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.StartTransaction(System.DateTime,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.ExtendTransaction(System.Int64,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.GetTransactionById(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.UpdateTransactionState(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionState,System.String,System.Nullable{System.DateTime})">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.AddQueue(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.DeleteQueue(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.GetQueueInfoByName(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.GetQueueInfoById(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.BeginStorageTransaction">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState,NWorkQueue.Common.MessageState,System.Nullable{System.DateTime})">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.UpdateMessageAttemptCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.DeleteAddedMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.DeleteAddedMessagesInExpiredTrans(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.UpdateMessageAttemptsInExpiredTrans(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.ExpireTransactions(NWorkQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.ExpireMessages(System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.CloseMaxAttemptsExceededMessages(System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.DequeueMessage(System.Int64,System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.PeekMessageByQueueId(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.PeekMessageByMessageId(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.ExecuteAsync``1(System.Func{Npgsql.NpgsqlConnection,System.Threading.Tasks.ValueTask{``0}},Npgsql.NpgsqlConnection)">
+            <summary>
+            Executes an anonymous method wrapped with robust logging, command line options loading, and error handling.
+            </summary>
+            <typeparam name="T">Options class to load from command line.</typeparam>
+            <param name="action">The anonymous method execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.</param>
+            <param name="connection">Sqlite connection.</param>
+            <returns>Returns generic object T.</returns>
+        </member>
+        <member name="M:NWorkQueue.Postgres.StoragePostgres.ExecuteAsync``1(System.Func{Npgsql.NpgsqlConnection,``0},Npgsql.NpgsqlConnection)">
+            <summary>
+            Executes an anonymous method wrapped with robust logging, command line options loading, and error handling.
+            </summary>
+            <typeparam name="T">Options class to load from command line.</typeparam>
+            <param name="action">The anonymous method execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.</param>
+            <param name="connection">Sqlite connection.</param>
+            <returns>Returns generic object T.</returns>
+        </member>
+    </members>
+</doc>

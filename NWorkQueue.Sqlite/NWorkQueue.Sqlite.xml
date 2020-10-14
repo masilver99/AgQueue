@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>NWorkQueue.Postgres</name>
+        <name>NWorkQueue.Sqlite</name>
     </assembly>
     <members>
         <member name="T:NWorkQueue.Sqlite.DbTransaction">
@@ -9,13 +9,13 @@
             Wrapper around SQLite transaction.  Used by storage classes.
             </summary>
         </member>
-        <member name="M:NWorkQueue.Sqlite.DbTransaction.#ctor(Npgsql.NpgsqlConnection)">
+        <member name="M:NWorkQueue.Sqlite.DbTransaction.#ctor(Microsoft.Data.Sqlite.SqliteConnection)">
             <summary>
             Initializes a new instance of the <see cref="T:NWorkQueue.Sqlite.DbTransaction"/> class.
             </summary>
             <param name="connection">SQLite connection.</param>
         </member>
-        <member name="P:NWorkQueue.Sqlite.DbTransaction.NpgsqlTransaction">
+        <member name="P:NWorkQueue.Sqlite.DbTransaction.SqliteTransaction">
             <summary>
             Gets the internal SQLite transaction.
             </summary>
@@ -31,58 +31,58 @@
             Extensions on the IStorageTransaction interface.
             </summary>
         </member>
-        <member name="M:NWorkQueue.Sqlite.IStorageTransactionExtensions.NpgsqlTransaction(NWorkQueue.Server.Common.IStorageTransaction)">
+        <member name="M:NWorkQueue.Sqlite.IStorageTransactionExtensions.SqliteTransaction(NWorkQueue.Server.Common.IStorageTransaction)">
             <summary>
-            Converts the IStorageTransaction to a NpgsqlTransaction.
+            Converts the IStorageTransaction to a SqliteTransaction.
             </summary>
             <param name="iTrans">The IStorageTransaction to convert.</param>
             <returns>SqliteTransaction.</returns>
         </member>
-        <member name="T:NWorkQueue.Sqlite.StoragePostgres">
+        <member name="T:NWorkQueue.Sqlite.StorageSqlite">
             <summary>
             Implements the IStorage interface for storing and retriving queue date to SQLite.
             </summary>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.#ctor(System.String)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="!:StoragePostgre"/> class.
+            Initializes a new instance of the <see cref="T:NWorkQueue.Sqlite.StorageSqlite"/> class.
             </summary>
             <param name="connectionString">The Sqlite connection string.</param>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.InitializeStorage(System.Boolean)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.InitializeStorage(System.Boolean)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.StartTransaction(System.DateTime,System.DateTime)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.StartTransaction(System.DateTime,System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.ExtendTransaction(System.Int64,System.DateTime)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.ExtendTransaction(System.Int64,System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.GetTransactionById(System.Int64)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetTransactionById(System.Int64)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.UpdateTransactionState(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionState,System.String,System.Nullable{System.DateTime})">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateTransactionState(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionState,System.String,System.Nullable{System.DateTime})">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.AddQueue(System.String)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.AddQueue(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.DeleteQueue(System.Int64)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.DeleteQueue(System.Int64)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.GetQueueInfoByName(System.String)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetQueueInfoByName(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.GetQueueInfoById(System.Int64)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.GetQueueInfoById(System.Int64)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">
             <inheritdoc/>
         </member>
-        <member name="M:NWorkQueue.Sqlite.StoragePostgres.BeginStorageTransaction">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.BeginStorageTransaction">
             <inheritdoc/>
         </member>
-        <m  <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState,NWorkQueue.Common.MessageState,System.Nullable{System.DateTime})">
+        <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessages(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState,NWorkQueue.Common.MessageState,System.Nullable{System.DateTime})">
             <inheritdoc/>
         </member>
         <member name="M:NWorkQueue.Sqlite.StorageSqlite.UpdateMessageAttemptCount(NWorkQueue.Server.Common.IStorageTransaction,System.Int64,NWorkQueue.Common.TransactionAction,NWorkQueue.Common.MessageState)">

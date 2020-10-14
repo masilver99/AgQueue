@@ -148,13 +148,6 @@
             Represents a Queue.
             </summary>
         </member>
-        <member name="M:NWorkQueue.Common.Models.Queue.#ctor(System.Int64,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:NWorkQueue.Common.Models.Queue"/> class.
-            </summary>
-            <param name="id">queue Id.</param>
-            <param name="name">queue name.</param>
-        </member>
         <member name="P:NWorkQueue.Common.Models.Queue.Id">
             <summary>
             Gets the unique queue id.

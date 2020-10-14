@@ -152,7 +152,6 @@ namespace NWorkQueue.Server.Common
         public void Dispose()
         {
             this.storage.Dispose();
-            // TODO: Need to add OnDsiapose action in case some storage services require disposal
         }
 
         /// <summary>

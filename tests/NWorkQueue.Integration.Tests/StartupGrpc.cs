@@ -31,7 +31,8 @@ namespace NWorkQueue.Integration.Tests
                 //config.ResponseCompressionLevel = System.IO.Compression.CompressionLevel.Optimal;
             });
 
-            services.AddSingleton<IStorage>(new StorageSqlite(@"Data Source=SqliteTesting.db;"));
+            //services.AddSingleton<IStorage>(new StorageSqlite(@"Data Source=Sharable;Mode=Memory;Cache=Shared;"));
+            services.AddSingleton<IStorage>(new StorageSqlite(@"Data Source=SqliteTesting.db;Cache=Shared;"));
             services.AddSingleton(typeof(InternalApi));
             services.AddLogging(logging =>
             {

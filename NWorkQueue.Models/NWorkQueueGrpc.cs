@@ -15,31 +15,61 @@ namespace NWorkQueue.Models {
   {
     static readonly string __ServiceName = "greet.QueueApi";
 
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.CreateQueueRequest> __Marshaller_greet_CreateQueueRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.CreateQueueRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.CreateQueueResponse> __Marshaller_greet_CreateQueueResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.CreateQueueResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.InitializeStorageRequest> __Marshaller_greet_InitializeStorageRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.InitializeStorageRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.InitializeStorageResponse> __Marshaller_greet_InitializeStorageResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.InitializeStorageResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByIdRequest> __Marshaller_greet_DeleteQueueByIdRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByIdRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByIdResponse> __Marshaller_greet_DeleteQueueByIdResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByIdResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByNameRequest> __Marshaller_greet_DeleteQueueByNameRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByNameRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByNameResponse> __Marshaller_greet_DeleteQueueByNameResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DeleteQueueByNameResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.GetQueueInfoByIdRequest> __Marshaller_greet_GetQueueInfoByIdRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.GetQueueInfoByIdRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.GetQueueInfoResponse> __Marshaller_greet_GetQueueInfoResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.GetQueueInfoResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.GetQueueInfoByNameRequest> __Marshaller_greet_GetQueueInfoByNameRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.GetQueueInfoByNameRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.StartTransactionRequest> __Marshaller_greet_StartTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.StartTransactionRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.StartTransactionResponse> __Marshaller_greet_StartTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.StartTransactionResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.CommitTransactionRequest> __Marshaller_greet_CommitTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.CommitTransactionRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.CommitTransactionResponse> __Marshaller_greet_CommitTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.CommitTransactionResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.RollbackTransactionRequest> __Marshaller_greet_RollbackTransactionRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.RollbackTransactionRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.RollbackTransactionResponse> __Marshaller_greet_RollbackTransactionResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.RollbackTransactionResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.QueueMessageRequest> __Marshaller_greet_QueueMessageRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.QueueMessageRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.QueueMessageResponse> __Marshaller_greet_QueueMessageResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.QueueMessageResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.DequeueMessageRequest> __Marshaller_greet_DequeueMessageRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DequeueMessageRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.DequeueMessageResponse> __Marshaller_greet_DequeueMessageResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.DequeueMessageResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.PeekMessageByQueueRequest> __Marshaller_greet_PeekMessageByQueueRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.PeekMessageByQueueRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.PeekMessageByQueueResponse> __Marshaller_greet_PeekMessageByQueueResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.PeekMessageByQueueResponse.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.PeekMessageByIdRequest> __Marshaller_greet_PeekMessageByIdRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.PeekMessageByIdRequest.Parser.ParseFrom);
-    static readonly grpc::Marshaller<global::NWorkQueue.Models.PeekMessageByIdResponse> __Marshaller_greet_PeekMessageByIdResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NWorkQueue.Models.PeekMessageByIdResponse.Parser.ParseFrom);
+    static void __Helper_SerializeMessage(global::Google.Protobuf.IMessage message, grpc::SerializationContext context)
+    {
+      #if !GRPC_DISABLE_PROTOBUF_BUFFER_SERIALIZATION
+      if (message is global::Google.Protobuf.IBufferMessage)
+      {
+        context.SetPayloadLength(message.CalculateSize());
+        global::Google.Protobuf.MessageExtensions.WriteTo(message, context.GetBufferWriter());
+        context.Complete();
+        return;
+      }
+      #endif
+      context.Complete(global::Google.Protobuf.MessageExtensions.ToByteArray(message));
+    }
+
+    static class __Helper_MessageCache<T>
+    {
+      public static readonly bool IsBufferMessage = global::System.Reflection.IntrospectionExtensions.GetTypeInfo(typeof(global::Google.Protobuf.IBufferMessage)).IsAssignableFrom(typeof(T));
+    }
+
+    static T __Helper_DeserializeMessage<T>(grpc::DeserializationContext context, global::Google.Protobuf.MessageParser<T> parser) where T : global::Google.Protobuf.IMessage<T>
+    {
+      #if !GRPC_DISABLE_PROTOBUF_BUFFER_SERIALIZATION
+      if (__Helper_MessageCache<T>.IsBufferMessage)
+      {
+        return parser.ParseFrom(context.PayloadAsReadOnlySequence());
+      }
+      #endif
+      return parser.ParseFrom(context.PayloadAsNewBuffer());
+    }
+
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.CreateQueueRequest> __Marshaller_greet_CreateQueueRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.CreateQueueRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.CreateQueueResponse> __Marshaller_greet_CreateQueueResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.CreateQueueResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.InitializeStorageRequest> __Marshaller_greet_InitializeStorageRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.InitializeStorageRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.InitializeStorageResponse> __Marshaller_greet_InitializeStorageResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.InitializeStorageResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByIdRequest> __Marshaller_greet_DeleteQueueByIdRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.DeleteQueueByIdRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByIdResponse> __Marshaller_greet_DeleteQueueByIdResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.DeleteQueueByIdResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByNameRequest> __Marshaller_greet_DeleteQueueByNameRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.DeleteQueueByNameRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.DeleteQueueByNameResponse> __Marshaller_greet_DeleteQueueByNameResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.DeleteQueueByNameResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.GetQueueInfoByIdRequest> __Marshaller_greet_GetQueueInfoByIdRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.GetQueueInfoByIdRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.GetQueueInfoResponse> __Marshaller_greet_GetQueueInfoResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.GetQueueInfoResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.GetQueueInfoByNameRequest> __Marshaller_greet_GetQueueInfoByNameRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.GetQueueInfoByNameRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.StartTransactionRequest> __Marshaller_greet_StartTransactionRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.StartTransactionRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.StartTransactionResponse> __Marshaller_greet_StartTransactionResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.StartTransactionResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.CommitTransactionRequest> __Marshaller_greet_CommitTransactionRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.CommitTransactionRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.CommitTransactionResponse> __Marshaller_greet_CommitTransactionResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.CommitTransactionResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.RollbackTransactionRequest> __Marshaller_greet_RollbackTransactionRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.RollbackTransactionRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.RollbackTransactionResponse> __Marshaller_greet_RollbackTransactionResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.RollbackTransactionResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.QueueMessageRequest> __Marshaller_greet_QueueMessageRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.QueueMessageRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.QueueMessageResponse> __Marshaller_greet_QueueMessageResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.QueueMessageResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.DequeueMessageRequest> __Marshaller_greet_DequeueMessageRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.DequeueMessageRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.DequeueMessageResponse> __Marshaller_greet_DequeueMessageResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.DequeueMessageResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.PeekMessageByQueueRequest> __Marshaller_greet_PeekMessageByQueueRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.PeekMessageByQueueRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.PeekMessageByQueueResponse> __Marshaller_greet_PeekMessageByQueueResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.PeekMessageByQueueResponse.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.PeekMessageByIdRequest> __Marshaller_greet_PeekMessageByIdRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.PeekMessageByIdRequest.Parser));
+    static readonly grpc::Marshaller<global::NWorkQueue.Models.PeekMessageByIdResponse> __Marshaller_greet_PeekMessageByIdResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::NWorkQueue.Models.PeekMessageByIdResponse.Parser));
 
     static readonly grpc::Method<global::NWorkQueue.Models.CreateQueueRequest, global::NWorkQueue.Models.CreateQueueResponse> __Method_CreateQueue = new grpc::Method<global::NWorkQueue.Models.CreateQueueRequest, global::NWorkQueue.Models.CreateQueueResponse>(
         grpc::MethodType.Unary,

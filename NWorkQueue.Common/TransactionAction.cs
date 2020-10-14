@@ -9,6 +9,9 @@ namespace NWorkQueue.Common
     /// </summary>
     public enum TransactionAction
     {
+        /// <summary>
+        /// This should never happen.
+        /// </summary>
         None = 0,
 
         /// <summary>
