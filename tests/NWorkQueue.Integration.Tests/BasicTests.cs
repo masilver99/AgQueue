@@ -122,6 +122,7 @@ namespace NWorkQueue.Integration.Tests
 
         [TestMethod]
         [DoNotParallelize]
+        [Ignore]
         public async Task TestExceptionInterceptor()
         {
             var client = await CreateBadClient();

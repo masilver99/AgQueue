@@ -25,6 +25,7 @@ namespace NWorkQueue.GrpcServer
 
         public override async Task<CreateQueueResponse> CreateQueue(CreateQueueRequest request, ServerCallContext context)
         {
+            // TODO: ensure the new queue name doesn't exist.
             var queueInfo = await this.internalApi.CreateQueue(request.QueueName);
             return new CreateQueueResponse { QueueId = queueInfo.Id, QueueName = queueInfo.Name };
         }

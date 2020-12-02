@@ -451,7 +451,7 @@ namespace NWorkQueue.Sqlite
                 "Priority, MaxAttempts, Attempts, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload " +
                 "FROM Messages WHERE State = @MessageState AND CloseDateTime IS NULL AND TransactionId IS NULL AND " +
                 "QueueId = @QueueId " +
-                "ORDER BY Priority DESC, AddDateTime " +
+                "ORDER BY Priority ASC, AddDateTime " +
                 "LIMIT 1 ";
             return await connection.QuerySingleOrDefaultAsync<Message?>(
                 sql,
@@ -570,7 +570,6 @@ namespace NWorkQueue.Sqlite
 
             try
             {
-                
                 if (connection == null)
                 {
                     liveConnection = new SqliteConnection(this.connectionString);

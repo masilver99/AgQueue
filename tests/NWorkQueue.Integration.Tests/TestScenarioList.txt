@@ -1,4 +1,7 @@
-﻿ExpiredMessage 
+﻿CreateQueue
+    -> Validate it exists
+	-> Create duplicate and variations of duplicate
+ExpiredMessage 
 	-> Attempt to dequeue
 	-> Peek (verify values)
 Message retry

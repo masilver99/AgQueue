@@ -1,0 +1,18 @@
+Queue:
+  AddQueue
+  DeleteQueue
+  RenameQueue
+  GetQueueStats (Message count by active, )
+Transactions:
+  StartTransaction
+  EndTransaction
+  ActiveTransactions
+  AbortTransaction
+Messages:
+  ListMessages
+  PullMessage
+  PeekMessage
+  DeleteMessage (abort transaction?)
+  AddMessage
+Admin
+  Roles (AddMessage, PeekMessage, PullMessage, CreateQueue, DeleteQueue, RenameQueue)

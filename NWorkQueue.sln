@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3D549DFA-1001-43E4-A70F-7FB55F222F0A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		ApiToDoList.txt = ApiToDoList.txt
 		NWorkQueue.Protos\greet.proto = NWorkQueue.Protos\greet.proto
 	EndProjectSection
 EndProject

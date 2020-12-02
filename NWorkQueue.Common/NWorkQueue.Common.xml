@@ -193,6 +193,11 @@
             Represents the action performed within a transaction.
             </summary>
         </member>
+        <member name="F:NWorkQueue.Common.TransactionAction.None">
+            <summary>
+            This should never happen.
+            </summary>
+        </member>
         <member name="F:NWorkQueue.Common.TransactionAction.Add">
             <summary>
             Item was added within a transaction (if rolledback, delete).

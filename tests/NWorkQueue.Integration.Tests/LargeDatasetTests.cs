@@ -94,6 +94,7 @@ namespace NWorkQueue.Integration.Tests
             }
             await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
         }
+
         [TestMethod]
         [DoNotParallelize]
         public async Task Add1000MessagesMultipleTransactions()
@@ -116,6 +117,80 @@ namespace NWorkQueue.Integration.Tests
                 await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
             }
         }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Pull1000MessagesInOrder()
+        {
+            var client = await CreateClient();
+
+            // Test Create quque
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
+
+            // Add Messages
+            var transResponse = await client.StartTransactionAsync(new StartTransactionRequest());
+            for (int i = 0; i < 1000; i++)
+            {
+                var inMessage = new MessageIn()
+                {
+                    MaxAttempts = 1,
+                    Payload = Google.Protobuf.ByteString.CopyFromUtf8(i.ToString())
+                };
+
+                var queueMessageResponse = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            }
+
+            await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
+
+            var pullTrans = await client.StartTransactionAsync(new StartTransactionRequest());
+
+            for (int i = 0; i < 1000; i++)
+            {
+                var message = await client.DequeueMessageAsync(new DequeueMessageRequest() { QueueId = createResponse.QueueId, TransId = pullTrans.TransId });
+                Assert.AreEqual(message.Message.Payload.ToStringUtf8(), i.ToString());
+            }
+
+            await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = pullTrans.TransId });
+        }
+
+        [TestMethod]
+        [DoNotParallelize]
+        public async Task Pull1000MessagesByPriority()
+        {
+            var client = await CreateClient();
+
+            // Test Create quque
+            var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
+
+            // Add Messages
+            var transResponse = await client.StartTransactionAsync(new StartTransactionRequest());
+            for (int i = 0; i < 1000; i++)
+            {
+                var priority = 1000 - 1;
+                var inMessage = new MessageIn()
+                {
+                    MaxAttempts = 1,
+                    Priority = priority,
+                    Payload = Google.Protobuf.ByteString.CopyFromUtf8(priority.ToString())
+
+                };
+
+                var queueMessageResponse = await client.QueueMessageAsync(new QueueMessageRequest { Message = inMessage, QueueId = 1, TransId = transResponse.TransId });
+            }
+
+            await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = transResponse.TransId });
+
+            var pullTrans = await client.StartTransactionAsync(new StartTransactionRequest());
+
+            for (int i = 0; i < 1000; i++)
+            {
+                var message = await client.DequeueMessageAsync(new DequeueMessageRequest() { QueueId = createResponse.QueueId, TransId = pullTrans.TransId });
+                Assert.AreEqual(message.Message.Payload.ToStringUtf8(), i.ToString());
+            }
+
+            await client.CommitTransactionAsync(new CommitTransactionRequest { TransId = pullTrans.TransId });
+        }
+
 
         private static async Task<QueueApi.QueueApiClient> CreateClient()
         {
