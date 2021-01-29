@@ -1,22 +1,22 @@
-# Development overview of NWorkQueue #
+# Development overview of AgQueue #
 
 This document serves as a collection of development notes and will grow substantially and become mroe organized over time.
 
 ## Project Descriptions: ##
 
-NWorkQueue.Library - The API library performing queue and message functions.  This is the core of the project.  This library will be exposed via REST or a TCP server.  It can use any storage library, although, currently only SQLite is supported.
+AgQueue.Library - The API library performing queue and message functions.  This is the core of the project.  This library will be exposed via REST or a TCP server.  It can use any storage library, although, currently only SQLite is supported.
 
-NWorkQueue.Library.Tests - unit and integration tests for the Library project
+AgQueue.Library.Tests - unit and integration tests for the Library project
 
-NWorkQueue.TcpClient - A TCP client to communicate with NWorkQueue.  This will be used to 
+AgQueue.TcpClient - A TCP client to communicate with AgQueue.  This will be used to 
 
-NWorkQueue - Project for Server process hosting the NWorkQueue.Library.  This will eventually be a TCP and REST server, configurable by a config file.
+AgQueue - Project for Server process hosting the AgQueue.Library.  This will eventually be a TCP and REST server, configurable by a config file.
 
-NWorkQueue.Common - Will eventually contain interfaces for the client libraries
+AgQueue.Common - Will eventually contain interfaces for the client libraries
 
 ## Expected Development Timeline: ##
 
-Complete NWorkQueue.Library project.  This should allow for the following functions:
+Complete AgQueue.Library project.  This should allow for the following functions:
 
  1) Create Transaction
  2) Commit Transaction

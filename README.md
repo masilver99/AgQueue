@@ -1,9 +1,9 @@
-# NWorkQueue
+# AgQueue
 A simple, opinionated, transactional work queue
 
-![.NET Core](https://github.com/masilver99/NWorkQueue/workflows/.NET%20Core/badge.svg?branch=master)
+![.NET Core](https://github.com/masilver99/AgQueue/workflows/.NET%20Core/badge.svg?branch=master)
 
-NWorkQueue is a server process that can use almost any database as it's back end.  It essentially turns any supported database into a full fledged work queue.
+AgQueue is a server process that can use almost any database as it's back end.  It essentially turns any supported database into a full fledged work queue.
 
 ## Purpose
 
@@ -23,7 +23,7 @@ Besides, for simple work queues, MSMQ may be overkill.  Same with RabbitMQ and o
 
 A classic example of when to use a work queue is sending email from a website.  When your users request a password change or any other activity that will send an email, you don't want their browsing experience to slow down while the email is sent, so you place a message into a queue, which is near instant.  In the background or on another machine, the message is picked up and and email is sent out.
 
-## NWorkQueue Features
+## AgQueue Features
 
 * Transactions.  Transactions are mandatory.  Transactions have expiry timespans.  Transactions can be explicitly extended for long running processes.
 * Priority.  Messages are returned based on Priority and then by first in.  Priority can be turned off my simply not setting it on each message.
@@ -38,10 +38,10 @@ A classic example of when to use a work queue is sending email from a website.  
 
 ## Additional Details
 
-NWorkQueue consists of a server process that contains a gRPC communication server and a gRPC client for communicating with the queue.  
+AgQueue consists of a server process that contains a gRPC communication server and a gRPC client for communicating with the queue.  
 
-NWorkQueue uses SQLite for storage.  While not as fast as using in-memory containers, it's HIGHLY resilient to machine failures, i.e. a spurious reboot won't cause your queue to disappear.  At a future date, we may offer different storage options, including memory-only, for those that don't want durable storage.
+AgQueue uses SQLite for storage.  While not as fast as using in-memory containers, it's HIGHLY resilient to machine failures, i.e. a spurious reboot won't cause your queue to disappear.  At a future date, we may offer different storage options, including memory-only, for those that don't want durable storage.
 
-NWorkQueue is built with C# in .NET Core 3.1.  This means it should run on Windows, Linux and Mac.  
+AgQueue is built with C# in .NET Core 3.1.  This means it should run on Windows, Linux and Mac.  
 
 We'll post benchmarks once the project is complete, but the goal is more durability and resilency than raw speed.

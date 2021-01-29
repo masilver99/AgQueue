@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AgQueue.Integration.Tests": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
