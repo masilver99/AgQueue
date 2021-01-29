@@ -5,6 +5,8 @@ A simple, opinionated, transactional work queue
 
 AgQueue is a server process that can use almost any database as it's back end.  It essentially turns any supported database into a full fledged work queue.
 
+AgQueue runs between the clients and the database and automatically provides features of an advanced work queue or messaging system. 
+
 ## Purpose
 
 To reliably deliver messages to a requestor/subscriber.  Successful messages are only delivered to one REQ/SUB.  In case of failure, the message will be redelivered, after a delay, unless the retry count is exceeded.
