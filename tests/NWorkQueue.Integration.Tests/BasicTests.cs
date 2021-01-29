@@ -142,7 +142,7 @@ namespace NWorkQueue.Integration.Tests
         {
             var client = await CreateClient();
 
-            // Test Create quque
+            // Test Create queue
             var createResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "DefaultDeququeTest" });
             Assert.AreEqual(1, createResponse.QueueId);
             var extraQueueResponse = await client.CreateQueueAsync(new CreateQueueRequest { QueueName = "ExtraQueue" });

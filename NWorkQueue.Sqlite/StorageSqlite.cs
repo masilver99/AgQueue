@@ -492,7 +492,7 @@ namespace NWorkQueue.Sqlite
                 semaphore = new SemaphoreSlim(1, 1);
                 if (!this.queueLocks.TryAdd(queueId, semaphore))
                 {
-                    throw new Exception("Unabled to add to new semaphore.");
+                    throw new Exception("Unable to add to new semaphore.");
                 }
                 return semaphore;
             }*/

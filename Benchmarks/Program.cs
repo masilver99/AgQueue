@@ -30,7 +30,9 @@ namespace Benchmarks
             var memStream3 = new MemoryStream();
             //MessagePack.MessagePackSerializer.SetDefaultResolver(MessagePack.Resolvers.ContractlessStandardResolver.Instance);
             MessagePack.MessagePackSerializer.Serialize(memStream3, message);
-            Console.WriteLine("Message Size: " + memStream3.Length);
+            Console.WriteLine("Lz4MessagePack");
+            Console.WriteLine("Message Size: " +
+                "" + memStream3.Length);
             memStream3.Position = 0;
             var obj1 = MessagePack.MessagePackSerializer.Deserialize<Message>(memStream3);
             //Console.WriteLine(obj1.Title);
@@ -44,6 +46,7 @@ namespace Benchmarks
             var memStream = new MemoryStream();
             var serializer = SerializationContext.Default.GetSerializer<Message>();
             serializer.Pack(memStream, message);
+            Console.WriteLine("MessagePack");
             Console.WriteLine("Message Size: " + memStream.Length);
             memStream.Position = 0;
             var unpackedObject = serializer.Unpack(memStream);
@@ -57,6 +60,7 @@ namespace Benchmarks
             var memStream2 = new MemoryStream();
             //MessagePack.MessagePackSerializer.SetDefaultResolver(MessagePack.Resolvers.ContractlessStandardResolver.Instance);
             MessagePack.MessagePackSerializer.Serialize(memStream2, message);
+            Console.WriteLine("MessagePack");
             Console.WriteLine("Message Size: " + memStream2.Length);
             memStream2.Position = 0;
             var obj = MessagePack.MessagePackSerializer.Deserialize<Message>(memStream2);

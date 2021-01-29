@@ -13,10 +13,11 @@ using Google.Protobuf;
 
 namespace NWorkQueue.GrpcServer
 {
-    public class NWorkQueueService : QueueApi.QueueApiBase
+    public partial class NWorkQueueService : QueueApi.QueueApiBase
     {
         private readonly ILogger<NWorkQueueService> _logger;
         private readonly InternalApi internalApi;
+ 
         public NWorkQueueService(ILogger<NWorkQueueService> logger, InternalApi internalApi)
         {
             _logger = logger;
