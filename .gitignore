@@ -163,6 +163,9 @@ PublishScripts/
 *.nuget.props
 *.nuget.targets
 
+# Generated XML documentation files
+*.xml
+
 # Microsoft Azure Build Output
 csx/
 *.build.csdef
