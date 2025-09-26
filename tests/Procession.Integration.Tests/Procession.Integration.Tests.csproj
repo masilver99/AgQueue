@@ -23,9 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AgQueue.GrpcServer\AgQueue.GrpcServer.csproj" />
-    <ProjectReference Include="..\..\AgQueue.Server.Common\AgQueue.Server.Common.csproj" />
-    <ProjectReference Include="..\..\AgQueue.Models\AgQueue.Models.csproj" />
+    <ProjectReference Include="..\..\Procession.GrpcServer\Procession.GrpcServer.csproj" />
+    <ProjectReference Include="..\..\Procession.Server.Common\Procession.Server.Common.csproj" />
+    <ProjectReference Include="..\..\Procession.Models\Procession.Models.csproj" />
   </ItemGroup>
 
 </Project>
