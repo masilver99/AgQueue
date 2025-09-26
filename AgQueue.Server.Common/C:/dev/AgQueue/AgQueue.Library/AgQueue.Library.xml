@@ -1,0 +1,503 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AgQueue.Server.Common</name>
+    </assembly>
+    <members>
+        <member name="T:AgQueue.Server.Common.InternalApi">
+            <summary>
+            Starting point for accessing all queue related APIS
+            This is mostly a factory for creating Queues and Transactions.
+            </summary>
+            <remarks>
+            Exceptions are not used unless there is an exceptional condition.  For example, if an items doesn't exist or a param is invalid,
+            this is handled without an exception.  This is mostly for speed and simplicity with the gRPC interface.
+            </remarks>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.#ctor(AgQueue.Server.Common.IStorage,AgQueue.Server.Common.QueueOptions,Microsoft.Extensions.Logging.ILogger{AgQueue.Server.Common.InternalApi})">
+            <summary>
+            Initializes a new instance of the <see cref="T:AgQueue.Server.Common.InternalApi"/> class.
+            </summary>
+            <param name="storage">The storage implementation to use for storage of queues and messages.</param>
+            <param name="options">The QueueOptions object passed in via DI.</param>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.CreateQueue(System.String)">
+            <summary>
+            Creates a new queue.
+            </summary>
+            <param name="queueName">The name of the queue.</param>
+            <returns>A Queue info object.  Note: the queueName is the stadnardized name.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.DeleteQueue(System.String)">
+            <summary>
+            Delete a queue and all messages in the queue.
+            Throws an exception if Queue doesn't exist.
+            </summary>
+            <param name="queueName">Name of the queue to delete.</param>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.GetQueueInfoById(System.Int64)">
+            <summary>
+            Returns information about the requested queue.
+            </summary>
+            <param name="queueId">The ID of the queue.</param>
+            <returns>QueueInfo object. Returns null if not found.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.GetQueueInfoByName(System.String)">
+            <summary>
+            Returns information about the requested queue.
+            </summary>
+            <param name="queueName">The Name of the queue to lookup.</param>
+            <returns>QueueInfo object.  Null if not found.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.DeleteQueue(System.Int64)">
+            <summary>
+            Deletes a queue and 1) rollsback any transaction related to the queue, 2) deletes all messages in the queue.
+            </summary>
+            <param name="queueId">Queue id.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.Dispose">
+            <summary>
+            Disposes of storage resources.
+            </summary>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.InitializeStorage(System.Boolean)">
+            <summary>
+            Creates underlying structure in the storage layer.
+            </summary>
+            <param name="deleteExistingData">Will delete and recreate underlying structures.</param>
+            <returns>Returns ValueTask.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.StartTrasaction(System.Int32)">
+            <summary>
+            Starts a transaction used my add message and pull message.
+            </summary>
+            <param name="expiryTimeInMinutes">Override default expiration time.</param>
+            <returns>Transaction ID.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.ExtendTransaction(System.Int64,System.Int32)">
+            <summary>
+            Extends the transaction by x number of minutes (from the current datetime).
+            </summary>
+            <param name="transId">The transaction to extend.</param>
+            <param name="expiryTimeInMinutes">How long to extend the transaction by.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.PeekMessageByQueueId(System.Int64)">
+            <summary>
+            View the next message in the spcified queue.
+            </summary>
+            <remarks>Keep in mind, this may change by the time of the dequeue call.</remarks>
+            <param name="queueId">The queue to peek from.</param>
+            <returns>Message object or null if no message available.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.PeekMessageById(System.Int64)">
+            <summary>
+            Retrieve a message by it's message ID.
+            </summary>
+            <remarks>Keep in mind, this may change by the time of the dequeue call.</remarks>
+            <param name="messageId">The ID of the message to retrieve.</param>
+            <returns>Message object or null if no message available.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.CommitTransaction(System.Int64)">
+            <summary>
+            Commits Transaction, updating all messages in transaction.
+            </summary>
+            <param name="transId">Transaction Id to commit.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.RollbackTransaction(System.Int64)">
+            <summary>
+            Rollsback a transaction, undoing any changes to messages in the transaction.
+            </summary>
+            <param name="transId">The transaction ID of the transaction to rollback.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.QueueMessage(System.Int64,System.Int64,System.Byte[],System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Adds a message to the specified queue.
+            </summary>
+            <param name="transId">The transaction to add the message in.</param>
+            <param name="queueId">The queue the message will be placed in.</param>
+            <param name="payload">The message payload.</param>
+            <param name="metaData">Message metadata.</param>
+            <param name="priority">The message priority.  Higher numbers will have higher priority.</param>
+            <param name="maxRetries">How many times should the message pull fail before being retired.</param>
+            <param name="expiryInMinutes">How long in minutes before the message will expire before it's pulled.  0 = no expiration.</param>
+            <param name="correlation">Correlation number.</param>
+            <param name="groupName">Group name applied to message.</param>
+            <returns>Return the message id.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.DequeueMessage(System.Int64,System.Int64)">
+            <summary>
+            Dequeues a message from a specific queue.
+            </summary>
+            <param name="transId">The transaction ID of the transaction the message will be dequeued in.</param>
+            <param name="queueId">The queue to pull the messge from.</param>
+            <returns>Returns a message object or null if there is no message to dequeue.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.InternalApi.PerformTransactionHouseCleaning(System.DateTime)">
+            <summary>
+            Expires transactions, message and checks message counts, maybe.
+            </summary>
+            <param name="currentTime">The current time is passed in so it is consistent with the time used in the calling procedure.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="T:AgQueue.Server.Common.IStorage">
+            <summary>
+            The interface for storing and retrieving queue information from a storage mechinism, usually a database.
+            When implementing IStorage, use the StorageSqlite as an example.  There should be no business logic in
+            classes that implement IStorage.
+            </summary>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.InitializeStorage(System.Boolean)">
+            <summary>
+            Called when Queue process starts.  Connections to the storage should be made here, etc.
+            </summary>
+            <param name="deleteExistingData">Should all existing queues and messages be deleted.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.AddQueue(System.String)">
+            <summary>
+            Create a new Queue in storage.
+            </summary>
+            <param name="name">Queue name.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.DeleteQueue(System.Int64)">
+            <summary>
+            Delete a Queue and ALL messages in the Queue.
+            </summary>
+            <param name="id">Queue Id of the queue to delete.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.GetTransactionById(System.Int64)">
+            <summary>
+            Returns a Transaction object or null value if not found.
+            </summary>
+            <param name="transId">The Id of the transaction to lookup.</param>
+            <returns>Transaction object or null if not found.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,AgQueue.Common.TransactionAction,AgQueue.Common.MessageState)">
+            <summary>
+            Add a message to the storage.
+            </summary>
+            <param name="transId">Queue Transaction ID.</param>
+            <param name="queueId">ID of the storage queue.</param>
+            <param name="payload">Message data.</param>
+            <param name="addDateTime">Datetime the message was added.</param>
+            <param name="metaData">String metadata on message data.</param>
+            <param name="priority">Message priority.</param>
+            <param name="maxAttempts">How many retries before expires.</param>
+            <param name="expiryDateTime">Datetime the message will expire.</param>
+            <param name="correlation">Correlation ID.</param>
+            <param name="groupName">Group name.</param>
+            <param name="transactionAction">Always will be "add".</param>
+            <param name="messageState">"Always will be in transaction.</param>
+            <returns>Message ID.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.GetQueueInfoByName(System.String)">
+            <summary>
+            Returns the id and name of the Queue.  If no queue is found, returns null.
+            </summary>
+            <remarks>
+            This search should be case sensitive, only use LIKE with SQLite.
+            </remarks>
+            <param name="name">Name of the queue to lookup.</param>
+            <returns>QueueInfo containing ID and Name of queue.  Null if not found.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.GetQueueInfoById(System.Int64)">
+            <summary>
+            Returns the id and name of the Queue.  If no queue is found, returns null.
+            </summary>
+            <remarks>
+            This search should be case sensitive, only use LIKE with SQLite.
+            </remarks>
+            <param name="queueId">ID of the queue to lookup.</param>
+            <returns>QueueInfo containing ID and Name of queue.  Null if not found.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.StartTransaction(System.DateTime,System.DateTime)">
+            <summary>
+            Starts a transaction for use when adding or pulling messages.
+            </summary>
+            <param name="startDateTime">When the transaction started.</param>
+            <param name="expiryDateTime">When the transaction will end.</param>
+            <returns>Returns transaction ID.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.UpdateMessages(AgQueue.Server.Common.IStorageTransaction,System.Int64,AgQueue.Common.TransactionAction,AgQueue.Common.MessageState,AgQueue.Common.MessageState,System.Nullable{System.DateTime})">
+            <summary>
+            Updates a set of messages.
+            </summary>
+            <param name="storageTrans">The storage transaction to make change within.</param>
+            <param name="transId">The transaction the messages are associated with.</param>
+            <param name="transactionAction">The TransactionAction to search for.</param>
+            <param name="oldMessageState">Current message state.</param>
+            <param name="newMessageState">Update the message state to this value.</param>
+            <returns>Returns the number of messages updated.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.UpdateMessageAttemptCount(AgQueue.Server.Common.IStorageTransaction,System.Int64,AgQueue.Common.TransactionAction,AgQueue.Common.MessageState)">
+            <summary>
+            Updates the message retry cuont based on transactionAction and MessageState.
+            </summary>
+            <param name="storageTrans">The storage transaction to run the query under.</param>
+            <param name="transId">The messages must be in this transaction.</param>
+            <param name="transactionAction">The transactionAction the message must be in.</param>
+            <param name="messageState">The messageState the message must be in. </param>
+            <returns>Number of messages updated.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.DeleteAddedMessages(AgQueue.Server.Common.IStorageTransaction,System.Int64)">
+            <summary>
+            Delete messages that were added in the specified transtacion.
+            </summary>
+            <param name="storageTrans">The storage transaction to run the query in.</param>
+            <param name="transId">The transaction the messages must be in.</param>
+            <returns>Number of records deleted.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.ExtendTransaction(System.Int64,System.DateTime)">
+            <summary>
+            Extends the transaction's expiration datetime.
+            </summary>
+            <param name="transId">The id of the transaction to update.</param>
+            <param name="expiryDateTime">The new expiration datetime.</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.UpdateTransactionState(AgQueue.Server.Common.IStorageTransaction,System.Int64,AgQueue.Common.TransactionState,System.String,System.Nullable{System.DateTime})">
+            <summary>
+            Update the transaction's state and end datetime.
+            </summary>
+            <param name="storageTrans">The storage transaction to make change within.</param>
+            <param name="transId">The id of the transaction to update.</param>
+            <param name="state">The new state of the transaction.</param>
+            <param name="endReason">Reason the transaction was ended.  Optional.</param>
+            <param name="endDateTime">Datetime the transaction was closed (or null if not closed).</param>
+            <returns>ValueTask.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.BeginStorageTransaction">
+            <summary>
+            Starts a storage (database) transaction, not a queue transaction.
+            </summary>
+            <remarks>
+            Not all Storage classes will have internal transactions, so this can return a dummy class that performs no actions.
+            </remarks>
+            <returns>Returns a class represented by IStorageTransaction which can commit or rollbacl the transaction.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.DeleteAddedMessagesInExpiredTrans(AgQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <summary>
+            Deletes added messages in an expired transaction.
+            </summary>
+            <param name="storageTrans">Storage Transaction to run under.</param>
+            <param name="currentDateTime">DateTime to expire against.</param>
+            <returns>Returns the count of the deleted records.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.UpdateMessageAttemptsInExpiredTrans(AgQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <summary>
+            Updates the retry counts for messages in an expired transaction.
+            </summary>
+            <param name="storageTrans">Storage Transaction to run under.</param>
+            <param name="currentDateTime">DateTime to expire against.</param>
+            <returns>Number of records updated.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.ExpireTransactions(AgQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <summary>
+            Expires transactions whose expiry date time is past the currentDateTime.
+            </summary>
+            <param name="storagetrans">Storage Transaction to run under.</param>
+            <param name="currentDateTime">DateTime to expire against.</param>
+            <returns>Returns the number of transactions expired.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.ExpireMessages(System.DateTime)">
+            <summary>
+            Expire messages that are past their expiration date.
+            </summary>
+            <param name="currentDateTime">Date used to validate expiration date against.  Also to be used as the close datetime.</param>
+            <returns>Number of messages updated.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.CloseMaxAttemptsExceededMessages(System.DateTime)">
+            <summary>
+            Close message that are beyond their retry count.
+            </summary>
+            <param name="currentDateTime">DateTime to use a close datetime.</param>
+            <returns>Number of messages closed.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.DequeueMessage(System.Int64,System.Int64)">
+            <summary>
+            Dequeue the next message in the queue and flag the message with the transaction id.
+            </summary>
+            <param name="transId">The transaction id to add to the message.</param>
+            <param name="queueId">The queue to pull the message frrom.</param>
+            <returns>Message object or null of no message to pull.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.PeekMessageByQueueId(System.Int64)">
+            <summary>
+            View the next message in the queue, without removing it from queue.
+            </summary>
+            <param name="queueId">The queue to pull the message from.</param>
+            <returns>Message object or null of no message to pull.</returns>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorage.PeekMessageByMessageId(System.Int64)">
+            <summary>
+            View a message by the message ID.
+            </summary>
+            <param name="messageId">The ID of the message to view.</param>
+            <returns>Message object or null of no message to view.</returns>
+        </member>
+        <member name="T:AgQueue.Server.Common.IStorageTransaction">
+            <summary>
+            Represents a transaction used by the storage (usually a database transaction).
+            </summary>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorageTransaction.Commit">
+            <summary>
+            Commits the transaction, usually this reprents a database transaction.
+            </summary>
+        </member>
+        <member name="M:AgQueue.Server.Common.IStorageTransaction.Rollback">
+            <summary>
+            Rollsback the transaction, usually this reprents a database transaction.
+            </summary>
+        </member>
+        <member name="T:AgQueue.Server.Common.Models.QueueInfo">
+            <summary>
+            Contains information a specific queue.
+            </summary>
+        </member>
+        <member name="P:AgQueue.Server.Common.Models.QueueInfo.Name">
+            <summary>
+            Gets or sets queue name.
+            </summary>
+        </member>
+        <member name="P:AgQueue.Server.Common.Models.QueueInfo.Id">
+            <summary>
+            Gets or sets queue ID.
+            </summary>
+        </member>
+        <member name="T:AgQueue.Server.Common.QueueOptions">
+            <summary>
+            Options used by the queue server.
+            </summary>
+        </member>
+        <member name="P:AgQueue.Server.Common.QueueOptions.DefaultMessageTimeoutInMinutes">
+            <summary>
+            How many minutes until a message expires.  Will be overriden by the value in the message, unless it's zero.
+            0 = max message timeout.  0 in the message, means use the detault here..
+            </summary>
+        </member>
+        <member name="P:AgQueue.Server.Common.QueueOptions.DefaultTranactionTimeoutInMinutes">
+            <summary>
+            How long until a transaction expires in minutes.  The value in the transaction will override this value, 
+            unless it zero.  If this is zero as well, transactions won't expire.
+            </summary>
+        </member>
+        <member name="T:AgQueue.Server.Common.ResultCode">
+            <summary>
+            Result codes from internal API calls.  This currently map directly to gRPC status codes, but
+            the internal api may be used with another protocol, hence it can't depend on gRPC status codes.
+            Most of these are not used by the Internal API.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.Ok">
+            <summary>
+            Not an error; returned on success.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.Cancelled">
+            <summary>
+            The operation was cancelled (typically by the caller).
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.Unknown">
+            <summary>
+            Unknown error. An example of where this error may be returned is if a Status
+            value received from another address space belongs to an error-space that is not
+            known in this address space. Also errors raised by APIs that do not return enough
+            error information may be converted to this error.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.InvalidArgument">
+            <summary>
+            Client specified an invalid argument. Note that this differs from FAILED_PRECONDITION.
+            INVALID_ARGUMENT indicates arguments that are problematic regardless of the state
+            of the system (e.g., a malformed file name).
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.DeadlineExceeded">
+            <summary>
+            Deadline expired before operation could complete. For operations that change
+            the state of the system, this error may be returned even if the operation has
+            completed successfully. For example, a successful response from a server could
+            have been delayed long enough for the deadline to expire.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.NotFound">
+            <summary>
+            Some requested entity (e.g., file or directory) was not found.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.AlreadyExists">
+            <summary>
+            Some entity that we attempted to create (e.g., file or directory) already exists.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.PermissionDenied">
+            <summary>
+            The caller does not have permission to execute the specified operation. PERMISSION_DENIED
+            must not be used for rejections caused by exhausting some resource (use RESOURCE_EXHAUSTED
+            instead for those errors). PERMISSION_DENIED must not be used if the caller can
+            not be identified (use UNAUTHENTICATED instead for those errors).
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.ResourceExhausted">
+            <summary>
+                Some resource has been exhausted, perhaps a per-user quota, or perhaps the entire
+                file system is out of space.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.FailedPrecondition">
+            <summary>
+            Operation was rejected because the system is not in a state required for the
+            operation's execution. For example, directory to be deleted may be non-empty,
+            an rmdir operation is applied to a non-directory, etc.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.Aborted">
+            <summary>
+            The operation was aborted, typically due to a concurrency issue like sequencer
+            check failures, transaction aborts, etc.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.OutOfRange">
+            <summary>
+            Operation was attempted past the valid range. E.g., seeking or reading past end
+            of file.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.Unimplemented">
+            <summary>
+            Operation is not implemented or not supported/enabled in this service.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.Internal">
+            <summary>
+            Internal errors. Means some invariants expected by underlying system has been
+            broken. If you see one of these errors, something is very broken.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.Unavailable">
+            <summary>
+            The service is currently unavailable. This is a most likely a transient condition
+            and may be corrected by retrying with a backoff. Note that it is not always safe
+            to retry non-idempotent operations.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.DataLoss">
+            <summary>
+            Unrecoverable data loss or corruption.
+            </summary>
+        </member>
+        <member name="F:AgQueue.Server.Common.ResultCode.Unauthenticated">
+            <summary>
+            The request does not have valid authentication credentials for the operation.
+            </summary>
+        </member>
+    </members>
+</doc>
