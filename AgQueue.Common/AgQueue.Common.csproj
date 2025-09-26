@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
 
@@ -10,16 +10,16 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\dev\AgQueue\AgQueue.Common\AgQueue.Common.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.13.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.32.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />
   </ItemGroup>
 
   <ItemGroup>

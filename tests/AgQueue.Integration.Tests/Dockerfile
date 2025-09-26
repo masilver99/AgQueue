@@ -12,13 +12,13 @@ RUN #set -eux; \
 	apt-get update; \
 	apt-get install -y apt-transport-https \
 	apt-get update \
-	apt-get install -y dotnet-sdk-5.
+	apt-get install -y dotnet-sdk-9.0
 	
 
-#FROM mcr.microsoft.com/dotnet/runtime:5.0-buster-slim AS base
+#FROM mcr.microsoft.com/dotnet/runtime:9.0-bookworm-slim AS base
 WORKDIR /app
 
-#FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+#FROM mcr.microsoft.com/dotnet/sdk:9.0-bookworm-slim AS build
 FROM postgres:13 AS build
 WORKDIR /src
 COPY ["tests/AgQueue.Integration.Tests/AgQueue.Integration.Tests.csproj", "tests/AgQueue.Integration.Tests/"]

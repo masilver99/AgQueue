@@ -44,6 +44,6 @@ AgQueue consists of a server process that contains a gRPC communication server a
 
 AgQueue uses SQLite for storage.  While not as fast as using in-memory containers, it's HIGHLY resilient to machine failures, i.e. a spurious reboot won't cause your queue to disappear.  At a future date, we may offer different storage options, including memory-only, for those that don't want durable storage.
 
-AgQueue is built with C# in .NET Core 3.1.  This means it should run on Windows, Linux and Mac.  
+AgQueue is built with C# in .NET 9.  This means it should run on Windows, Linux and Mac.  
 
 We'll post benchmarks once the project is complete, but the goal is more durability and resilency than raw speed.
