@@ -3,8 +3,8 @@ using Grpc.Net.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using AgQueue.Common.Extensions;
-using AgQueue.Models;
+using Procession.Common.Extensions;
+using Procession.Models;
 using System.Threading.Tasks;
 using Grpc.Net.ClientFactory;
 using System;
@@ -12,10 +12,10 @@ using System.IO;
 using System.Collections.Concurrent;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
-using AgQueue.Server.Common;
+using Procession.Server.Common;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AgQueue.Integration.Tests
+namespace Procession.Integration.Tests
 {
     [TestClass]
     public class ContentionTests

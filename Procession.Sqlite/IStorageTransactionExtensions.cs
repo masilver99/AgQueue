@@ -7,9 +7,9 @@ using System.Collections.Generic;
 //using System.Data.SQLite;
 using System.Text;
 using Microsoft.Data.Sqlite;
-using AgQueue.Server.Common;
+using Procession.Server.Common;
 
-namespace AgQueue.Sqlite
+namespace Procession.Sqlite
 {
     /// <summary>
     /// Extensions on the IStorageTransaction interface.

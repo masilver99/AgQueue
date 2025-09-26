@@ -4,7 +4,7 @@ using NUnit;
 using NUnit.Framework;
 using AgQueue.Library;
 
-namespace AgQueue.Library.Tests
+namespace Procession.Library.Tests
 {
     [TestFixture]
     public class MessageTests

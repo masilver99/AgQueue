@@ -13,14 +13,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using AgQueue.Common;
-using AgQueue.Common.Extensions;
-using AgQueue.Common.Models;
-using AgQueue.Server.Common.Models;
+using Procession.Common;
+using Procession.Common.Extensions;
+using Procession.Common.Models;
+using Procession.Server.Common.Models;
 
 [assembly: InternalsVisibleTo("AgQueue.Tests")]
 
-namespace AgQueue.Server.Common
+namespace Procession.Server.Common
 {
     /// <summary>
     /// Starting point for accessing all queue related APIS

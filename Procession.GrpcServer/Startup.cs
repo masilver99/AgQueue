@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using AgQueue.Common;
-using AgQueue.GrpcServer.Interceptors;
-using AgQueue.Server.Common;
-using AgQueue.Sqlite;
+using Procession.Common;
+using Procession.GrpcServer.Interceptors;
+using Procession.Server.Common;
+using Procession.Sqlite;
 
-namespace AgQueue.GrpcServer
+namespace Procession.GrpcServer
 {
     public class Startup
     {
@@ -45,7 +45,7 @@ namespace AgQueue.GrpcServer
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<AgQueueService>();
+                endpoints.MapGrpcService<ProcessionService>();
 
                 endpoints.MapGet("/", async context =>
                 {

@@ -2,7 +2,7 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace AgQueue.Common.Models
+namespace Procession.Common.Models
 {
     using System;
     using System.Collections.Generic;

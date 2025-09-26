@@ -4,7 +4,7 @@
 
 using System;
 
-namespace AgQueue.Common.Extensions
+namespace Procession.Common.Extensions
 {
     public static class DateTimeExtensions
     {

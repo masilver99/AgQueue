@@ -2,7 +2,7 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace AgQueue.Common.Extensions
+namespace Procession.Common.Extensions
 {
     /// <summary>
     /// Extensions methods to be used on stings.

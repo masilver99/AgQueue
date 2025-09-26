@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using AgQueue.Common;
-using AgQueue.Server.Common;
-using AgQueue.Sqlite;
+using Procession.Common;
+using Procession.Server.Common;
+using Procession.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgQueue.GrpcServer;
-using AgQueue.GrpcServer.Interceptors;
+using Procession.GrpcServer;
+using Procession.GrpcServer.Interceptors;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.Extensions.Logging;
 
-namespace AgQueue.Integration.Tests
+namespace Procession.Integration.Tests
 {
     class StartupGrpc
     {

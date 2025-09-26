@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AgQueue.Common.Extensions
+namespace Procession.Common.Extensions
 {
     /// <summary>
     /// Extensions methods for use on Objects.

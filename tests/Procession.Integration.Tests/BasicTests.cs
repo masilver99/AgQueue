@@ -3,17 +3,17 @@ using Grpc.Net.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using AgQueue.Common.Extensions;
+using Procession.Common.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using AgQueue.Models;
+using Procession.Models;
 using System.Threading.Tasks;
 using Grpc.Net.ClientFactory;
 using System;
 using Grpc.Core;
 using System.IO;
-using AgQueue.Server.Common;
+using Procession.Server.Common;
 
-namespace AgQueue.Integration.Tests
+namespace Procession.Integration.Tests
 {
     [TestClass]
     public class BasicTests

@@ -2,7 +2,7 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace AgQueue.Server.Common
+namespace Procession.Server.Common
 {/*
     public class ApiResult
     {

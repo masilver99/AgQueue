@@ -5,11 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AgQueue.Common;
-using AgQueue.Common.Models;
-using AgQueue.Server.Common.Models;
+using Procession.Common;
+using Procession.Common.Models;
+using Procession.Server.Common.Models;
 
-namespace AgQueue.Server.Common
+namespace Procession.Server.Common
 {
     /// <summary>
     /// The interface for storing and retrieving queue information from a storage mechinism, usually a database.

@@ -2,10 +2,10 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 using Microsoft.Data.Sqlite;
-using AgQueue.Server.Common;
+using Procession.Server.Common;
 //using System.Data.SQLite;
 
-namespace AgQueue.Sqlite
+namespace Procession.Sqlite
 {
     /// <summary>
     /// Wrapper around SQLite transaction.  Used by storage classes.

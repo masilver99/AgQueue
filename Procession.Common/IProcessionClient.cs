@@ -1,13 +1,13 @@
-﻿// <copyright file="IAgQueueClient.cs" company="Michael Silver">
+﻿// <copyright file="IProcessionClient.cs" company="Michael Silver">
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace AgQueue.Common
+namespace Procession.Common
 {
     /// <summary>
     /// Interface for Client to implement.
     /// </summary>
-    public interface IAgQueueClient
+    public interface IProcessionClient
     {
     }
 }

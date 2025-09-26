@@ -1,6 +1,6 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "AgQueue.Models";
+option csharp_namespace = "Procession.Models";
 
 import "google/protobuf/timestamp.proto";
 

@@ -2,7 +2,7 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace AgQueue.Server.Common
+namespace Procession.Server.Common
 {
     /// <summary>
     /// Result codes from internal API calls.  This currently map directly to gRPC status codes, but

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AgQueue.GrpcServer.Interceptors
+namespace Procession.GrpcServer.Interceptors
 {
     public class LoggingInterceptor
     {

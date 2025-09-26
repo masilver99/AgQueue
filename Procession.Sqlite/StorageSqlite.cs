@@ -10,13 +10,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using AgQueue.Common;
-using AgQueue.Common.Extensions;
-using AgQueue.Common.Models;
-using AgQueue.Server.Common;
-using AgQueue.Server.Common.Models;
+using Procession.Common;
+using Procession.Common.Extensions;
+using Procession.Common.Models;
+using Procession.Server.Common;
+using Procession.Server.Common.Models;
 
-namespace AgQueue.Sqlite
+namespace Procession.Sqlite
 {
     /// <summary>
     /// Implements the IStorage interface for storing and retriving queue date to SQLite.

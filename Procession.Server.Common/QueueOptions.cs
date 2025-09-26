@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AgQueue.Server.Common
+namespace Procession.Server.Common
 {
     /// <summary>
     /// Options used by the queue server.

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AgQueue.Common
+namespace Procession.Common
 {
     /// <summary>
     /// Exception thrown for unique WorkQueue exceptions.

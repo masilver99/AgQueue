@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MessagePack;
-using AgQueue.Common;
+using Procession.Common;
 
-namespace AgQueue.Server.Common
+namespace Procession.Server.Common
 {
     /*
 

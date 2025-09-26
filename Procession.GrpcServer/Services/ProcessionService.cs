@@ -4,21 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
-using AgQueue.Common.Extensions;
-using AgQueue.Server.Common;
-using AgQueue.Models;
-using AgQueue.Common;
+using Procession.Common.Extensions;
+using Procession.Server.Common;
+using Procession.Models;
+using Procession.Common;
 using Google.Protobuf.WellKnownTypes;
 using Google.Protobuf;
 
-namespace AgQueue.GrpcServer
+namespace Procession.GrpcServer
 {
-    public partial class AgQueueService : QueueApi.QueueApiBase
+    public partial class ProcessionService : QueueApi.QueueApiBase
     {
-        private readonly ILogger<AgQueueService> _logger;
+        private readonly ILogger<ProcessionService> _logger;
         private readonly InternalApi internalApi;
  
-        public AgQueueService(ILogger<AgQueueService> logger, InternalApi internalApi)
+        public ProcessionService(ILogger<ProcessionService> logger, InternalApi internalApi)
         {
             _logger = logger;
             this.internalApi = internalApi;

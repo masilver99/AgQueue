@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AgQueue.Server.Common.Models
+namespace Procession.Server.Common.Models
 {
     /// <summary>
     /// Contains information a specific queue.

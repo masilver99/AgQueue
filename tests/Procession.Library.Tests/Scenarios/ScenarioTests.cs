@@ -1,4 +1,4 @@
-namespace AgQueue.Library.Tests.Scenarios
+namespace Procession.Library.Tests.Scenarios
 {
     using NUnit;
     using NUnit.Framework;

@@ -2,7 +2,7 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace AgQueue.Common
+namespace Procession.Common
 {
     /// <summary>
     /// Represents the action performed within a transaction.

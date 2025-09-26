@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Npgsql;
-using AgQueue.Server.Common;
+using Procession.Server.Common;
 
-namespace AgQueue.Postgres
+namespace Procession.Postgres
 {
     /// <summary>
     /// Extensions on the IStorageTransaction interface.

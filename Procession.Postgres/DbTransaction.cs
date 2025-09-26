@@ -2,9 +2,9 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 using Npgsql;
-using AgQueue.Server.Common;
+using Procession.Server.Common;
 
-namespace AgQueue.Postgres
+namespace Procession.Postgres
 {
     /// <summary>
     /// Wrapper around SQLite transaction.  Used by storage classes.

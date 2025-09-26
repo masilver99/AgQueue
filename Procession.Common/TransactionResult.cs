@@ -2,7 +2,7 @@
 // Copyright (c) Michael Silver. All rights reserved.
 // </copyright>
 
-namespace AgQueue.Common
+namespace Procession.Common
 {
     /// <summary>
     /// Result of transaction commital.
