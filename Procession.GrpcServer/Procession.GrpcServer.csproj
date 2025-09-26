@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Protobuf Include="**/*.proto" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Procession.Common\Procession.Common.csproj" />
+    <ProjectReference Include="..\Procession.Server.Common\Procession.Server.Common.csproj" />
+    <ProjectReference Include="..\Procession.Models\Procession.Models.csproj" />
+    <ProjectReference Include="..\Procession.Sqlite\Procession.Sqlite.csproj" />
+  </ItemGroup>
+
+</Project>
