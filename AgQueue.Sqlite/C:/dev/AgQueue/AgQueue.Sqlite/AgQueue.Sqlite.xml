@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AgQueue.Sqlite</name>
+    </assembly>
+    <members>
+        <member name="T:AgQueue.Sqlite.DbTransaction">
+            <summary>
+            Wrapper around SQLite transaction.  Used by storage classes.
+            </summary>
+        </member>
+        <member name="M:AgQueue.Sqlite.DbTransaction.#ctor(Microsoft.Data.Sqlite.SqliteConnection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AgQueue.Sqlite.DbTransaction"/> class.
+            </summary>
+            <param name="connection">SQLite connection.</param>
+        </member>
+        <member name="P:AgQueue.Sqlite.DbTransaction.SqliteTransaction">
+            <summary>
+            Gets the internal SQLite transaction.
+            </summary>
+        </member>
+        <member name="M:AgQueue.Sqlite.DbTransaction.Commit">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.DbTransaction.Rollback">
+            <inheritdoc/>
+        </member>
+        <member name="T:AgQueue.Sqlite.IStorageTransactionExtensions">
+            <summary>
+            Extensions on the IStorageTransaction interface.
+            </summary>
+        </member>
+        <member name="M:AgQueue.Sqlite.IStorageTransactionExtensions.SqliteTransaction(AgQueue.Server.Common.IStorageTransaction)">
+            <summary>
+            Converts the IStorageTransaction to a SqliteTransaction.
+            </summary>
+            <param name="iTrans">The IStorageTransaction to convert.</param>
+            <returns>SqliteTransaction.</returns>
+        </member>
+        <member name="T:AgQueue.Sqlite.StorageSqlite">
+            <summary>
+            Implements the IStorage interface for storing and retriving queue date to SQLite.
+            </summary>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AgQueue.Sqlite.StorageSqlite"/> class.
+            </summary>
+            <param name="connectionString">The Sqlite connection string.</param>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.InitializeStorage(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.StartTransaction(System.DateTime,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.ExtendTransaction(System.Int64,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.GetTransactionById(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.UpdateTransactionState(AgQueue.Server.Common.IStorageTransaction,System.Int64,AgQueue.Common.TransactionState,System.String,System.Nullable{System.DateTime})">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.AddQueue(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.DeleteQueue(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.GetQueueInfoByName(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.GetQueueInfoById(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.AddMessage(System.Int64,System.Int64,System.Byte[],System.DateTime,System.String,System.Int32,System.Int32,System.Nullable{System.DateTime},System.Int32,System.String,AgQueue.Common.TransactionAction,AgQueue.Common.MessageState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.BeginStorageTransaction">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.UpdateMessages(AgQueue.Server.Common.IStorageTransaction,System.Int64,AgQueue.Common.TransactionAction,AgQueue.Common.MessageState,AgQueue.Common.MessageState,System.Nullable{System.DateTime})">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.UpdateMessageAttemptCount(AgQueue.Server.Common.IStorageTransaction,System.Int64,AgQueue.Common.TransactionAction,AgQueue.Common.MessageState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.DeleteAddedMessages(AgQueue.Server.Common.IStorageTransaction,System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.DeleteAddedMessagesInExpiredTrans(AgQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.UpdateMessageAttemptsInExpiredTrans(AgQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.ExpireTransactions(AgQueue.Server.Common.IStorageTransaction,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.ExpireMessages(System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.CloseMaxAttemptsExceededMessages(System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.DequeueMessage(System.Int64,System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.PeekMessageByQueueId(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.PeekMessageByMessageId(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.ExecuteAsync``1(System.Func{Microsoft.Data.Sqlite.SqliteConnection,System.Threading.Tasks.ValueTask{``0}},Microsoft.Data.Sqlite.SqliteConnection)">
+            <summary>
+            Executes an anonymous method wrapped with robust logging, command line options loading, and error handling.
+            </summary>
+            <typeparam name="T">Options class to load from command line.</typeparam>
+            <param name="action">The anonymous method execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.</param>
+            <param name="connection">Sqlite connection.</param>
+            <returns>Returns generic object T.</returns>
+        </member>
+        <member name="M:AgQueue.Sqlite.StorageSqlite.ExecuteAsync``1(System.Func{Microsoft.Data.Sqlite.SqliteConnection,``0},Microsoft.Data.Sqlite.SqliteConnection)">
+            <summary>
+            Executes an anonymous method wrapped with robust logging, command line options loading, and error handling.
+            </summary>
+            <typeparam name="T">Options class to load from command line.</typeparam>
+            <param name="action">The anonymous method execute. Contains a logging object and the options object, both of which can be accessed in the anonymous method.</param>
+            <param name="connection">Sqlite connection.</param>
+            <returns>Returns generic object T.</returns>
+        </member>
+    </members>
+</doc>
