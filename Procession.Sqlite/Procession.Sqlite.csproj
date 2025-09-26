@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AgQueue.Server.Common\AgQueue.Server.Common.csproj" />
+    <ProjectReference Include="..\Procession.Server.Common\Procession.Server.Common.csproj" />
   </ItemGroup>
 
 </Project>

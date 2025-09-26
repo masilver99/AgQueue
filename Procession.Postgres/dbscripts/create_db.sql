@@ -1,13 +1,13 @@
---This is run by the admin in the default database (the agqueue database will not have existed yet)
-DROP OWNED BY agqueue_user;
-DROP DATABASE IF EXISTS agqueue;
+--This is run by the admin in the default database (the procession database will not have existed yet)
+DROP OWNED BY procession_user;
+DROP DATABASE IF EXISTS procession;
 
-DROP USER IF EXISTS agqueue_user;
+DROP USER IF EXISTS procession_user;
 
-CREATE DATABASE agqueue;
+CREATE DATABASE procession;
 
-CREATE USER agqueue_user PASSWORD 'everex';
-GRANT ALL PRIVILEGES ON DATABASE agqueue to agqueue_user;
+CREATE USER procession_user PASSWORD 'everex';
+GRANT ALL PRIVILEGES ON DATABASE procession to procession_user;
 
 SET timezone TO 'America/New_York';
 

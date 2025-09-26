@@ -1,22 +1,22 @@
-# Development overview of AgQueue #
+# Development overview of Procession #
 
-This document serves as a collection of development notes and will grow substantially and become mroe organized over time.
+This document serves as a collection of development notes and will grow substantially and become more organized over time.
 
 ## Project Descriptions: ##
 
-AgQueue.Library - The API library performing queue and message functions.  This is the core of the project.  This library will be exposed via REST or a TCP server.  It can use any storage library, although, currently only SQLite is supported.
+Procession.Library - The API library performing queue and message functions.  This is the core of the project.  This library will be exposed via REST or a TCP server.  It can use any storage library, although, currently only SQLite is supported.
 
-AgQueue.Library.Tests - unit and integration tests for the Library project
+Procession.Library.Tests - unit and integration tests for the Library project
 
-AgQueue.TcpClient - A TCP client to communicate with AgQueue.  This will be used to 
+Procession.TcpClient - A TCP client to communicate with Procession.  This will be used to 
 
-AgQueue - Project for Server process hosting the AgQueue.Library.  This will eventually be a TCP and REST server, configurable by a config file.
+Procession - Project for Server process hosting the Procession.Library.  This will eventually be a TCP and REST server, configurable by a config file.
 
-AgQueue.Common - Will eventually contain interfaces for the client libraries
+Procession.Common - Will eventually contain interfaces for the client libraries
 
 ## Expected Development Timeline: ##
 
-Complete AgQueue.Library project.  This should allow for the following functions:
+Complete Procession.Library project.  This should allow for the following functions:
 
  1) Create Transaction
  2) Commit Transaction
@@ -30,7 +30,7 @@ Complete AgQueue.Library project.  This should allow for the following functions
 10) Delete Message - Deletes a message without marking it as processed
 11) GetMessageCount - Get the number of message queued
 
-As each function is completed, unit tests should be created to comfirm functionality
+As each function is completed, unit tests should be created to confirm functionality
 
 ## Developer Expectations ##
 
@@ -38,7 +38,7 @@ Code should follow style cop recommendations.  The style cop analyzer is checked
 
 There should be no warnings in a Pull Requests.
 
-All public methods and properties should be well documented using the documentaion comment: ///
+All public methods and properties should be well documented using the documentation comment: ///
 
 ## Design Decisions ##
 
@@ -46,7 +46,7 @@ All public methods and properties should be well documented using the documentai
 
 Primary keys are int64s. They are created by the application, instead of the database or storage mechanism.  This allows for handling of storage that doesn't provide a way to increment the primary key.    
 
-While using something like a GUID would come with certain advantages, I've seen problems with using them.  Many databases don't index them effeciently when they aren't sequential. Performance could be impacted with a great deal of lookups by the primary key.  I've seen SQLServer suffer when using GUIDs as the primary key.
+While using something like a GUID would come with certain advantages, I've seen problems with using them.  Many databases don't index them efficiently when they aren't sequential. Performance could be impacted with a great deal of lookups by the primary key.  I've seen SQLServer suffer when using GUIDs as the primary key.
 
 Not using GUID has some serious tradeoffs.  Only one process can use the storage, since multiple processes would cause primary key conflicts.
 

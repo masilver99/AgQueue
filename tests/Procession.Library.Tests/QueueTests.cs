@@ -2,7 +2,7 @@ using System;
 using System.Net.Sockets;
 using NUnit;
 using NUnit.Framework;
-using AgQueue.Library;
+using Procession.Library;
 
 namespace Procession.Library.Tests
 {

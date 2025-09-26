@@ -1,4 +1,4 @@
---This is run by the admin in the agqueue database
+--This is run by the admin in the procession database
 
 CREATE EXTENSION IF NOT EXISTS citext;
 
@@ -47,11 +47,11 @@ Create table IF NOT EXISTS message_tags
  FOREIGN KEY(tag_id) REFERENCES tags(id) ON DELETE CASCADE,
  FOREIGN KEY(message_id) REFERENCES messages(id) ON DELETE CASCADE);
 
-GRANT ALL PRIVILEGES ON DATABASE agqueue TO agqueue_user;
-GRANT USAGE ON SCHEMA public to agqueue_user;
+GRANT ALL PRIVILEGES ON DATABASE procession TO procession_user;
+GRANT USAGE ON SCHEMA public to procession_user;
 --Not needed, yet
-GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO agqueue_user;
-GRANT ALL ON ALL TABLES IN SCHEMA public TO agqueue_user;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO procession_user;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO procession_user;
 
 --This locks the next record in the DB, updates it to reflect that the record is active and returns the record
 CREATE OR REPLACE PROCEDURE dequeue_message(

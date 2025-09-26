@@ -47,7 +47,7 @@ namespace Procession.Integration.Tests
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<AgQueueService>();
+                endpoints.MapGrpcService<ProcessionService>();
             });
         }
     }

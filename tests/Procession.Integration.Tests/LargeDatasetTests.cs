@@ -5,7 +5,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Procession.Common.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using AgQueue.Models;
+using Procession.Models;
 using System.Threading.Tasks;
 using Grpc.Net.ClientFactory;
 using System;

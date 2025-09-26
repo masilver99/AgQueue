@@ -2,7 +2,7 @@ namespace Procession.Library.Tests.Scenarios
 {
     using NUnit;
     using NUnit.Framework;
-    using AgQueue.Library;
+    using Procession.Library;
 
     /// <summary>
     /// Scenarios define the precisie expections of AgQueue with certain workflows.  The build upon simple unit tests in many cases.  They go from simple to complex.
