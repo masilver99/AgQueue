@@ -4,14 +4,10 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET 
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.102
-    - name: Build with dotnet
-      run: dotnet build --configuration Release
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.9'   # or 7.0.x
+      - run: dotnet build --configuration Release
