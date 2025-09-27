@@ -42,10 +42,9 @@ The main service `QueueApi` provides these operations:
 ## Development Guidelines
 
 ### Code Standards
-- Follow StyleCop Analyzers recommendations (configured in stylecop.json)
 - **Zero warnings policy**: Pull requests must have no compiler warnings
 - Use XML documentation (`///`) for all public methods and properties
-- Company name: "Michael Silver" (configured in stylecop.json)
+- Company name: "Michael Silver" 
 - Copyright: "Copyright (c) Michael Silver. All rights reserved."
 
 ### Coding Conventions
