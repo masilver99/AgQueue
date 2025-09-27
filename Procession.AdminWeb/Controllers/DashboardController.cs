@@ -33,16 +33,16 @@ public class DashboardController : Controller
     {
         var model = new DashboardViewModel
         {
-            Queues = await adminService.GetAllQueuesAsync(),
-            MessageStatistics = await adminService.GetMessageStatisticsAsync(),
-            DatabaseType = adminService.GetDatabaseType(),
-            RecentMessages = await adminService.GetMessagesAsync(1, 20), // Get 20 most recent messages
-            TotalMessageCount = await adminService.GetMessageCountAsync(),
-            ActiveMessageCount = await adminService.GetMessageCountAsync(processedOnly: false),
-            ProcessedMessageCount = await adminService.GetMessageCountAsync(processedOnly: true)
+            Queues = await this.adminService.GetAllQueuesAsync(),
+            MessageStatistics = await this.adminService.GetMessageStatisticsAsync(),
+            DatabaseType = this.adminService.GetDatabaseType(),
+            RecentMessages = await this.adminService.GetMessagesAsync(1, 20), // Get 20 most recent messages
+            TotalMessageCount = await this.adminService.GetMessageCountAsync(),
+            ActiveMessageCount = await this.adminService.GetMessageCountAsync(processedOnly: false),
+            ProcessedMessageCount = await this.adminService.GetMessageCountAsync(processedOnly: true)
         };
 
-        return View(model);
+        return this.View(model);
     }
 
     /// <summary>
@@ -52,6 +52,6 @@ public class DashboardController : Controller
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return this.View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
     }
 }

@@ -16,12 +16,12 @@ public class DashboardViewModel
     /// <summary>
     /// Gets or sets the list of all queues.
     /// </summary>
-    public List<QueueInfo> Queues { get; set; } = new();
+    public List<QueueInfo> Queues { get; set; } = new List<QueueInfo>();
 
     /// <summary>
     /// Gets or sets message statistics by state.
     /// </summary>
-    public Dictionary<MessageState, int> MessageStatistics { get; set; } = new();
+    public Dictionary<MessageState, int> MessageStatistics { get; set; } = new Dictionary<MessageState, int>();
 
     /// <summary>
     /// Gets or sets the database type being used.
@@ -31,7 +31,7 @@ public class DashboardViewModel
     /// <summary>
     /// Gets or sets recent messages for the summary list.
     /// </summary>
-    public List<Message> RecentMessages { get; set; } = new();
+    public List<Message> RecentMessages { get; set; } = new List<Message>();
 
     /// <summary>
     /// Gets or sets the total message count.

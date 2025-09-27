@@ -41,12 +41,12 @@ public class MessagesController : Controller
             PageSize = pageSize,
             SelectedQueueId = queueId,
             ProcessedOnly = processedOnly,
-            Messages = await adminService.GetMessagesAsync(page, pageSize, queueId, processedOnly),
-            TotalCount = await adminService.GetMessageCountAsync(queueId, processedOnly),
-            AvailableQueues = await adminService.GetAllQueuesAsync()
+            Messages = await this.adminService.GetMessagesAsync(page, pageSize, queueId, processedOnly),
+            TotalCount = await this.adminService.GetMessageCountAsync(queueId, processedOnly),
+            AvailableQueues = await this.adminService.GetAllQueuesAsync()
         };
 
-        return View(model);
+        return this.View(model);
     }
 
     /// <summary>
@@ -57,13 +57,13 @@ public class MessagesController : Controller
     /// <returns>Message detail view.</returns>
     public async Task<IActionResult> Details(long id, bool showPayload = false)
     {
-        var message = await adminService.GetMessageByIdAsync(id);
+        var message = await this.adminService.GetMessageByIdAsync(id);
         if (message == null)
         {
-            return NotFound();
+            return this.NotFound();
         }
 
-        var queue = await adminService.GetQueueByIdAsync(message.QueueId);
+        var queue = await this.adminService.GetQueueByIdAsync(message.QueueId);
 
         var model = new MessageDetailViewModel
         {
@@ -72,6 +72,6 @@ public class MessagesController : Controller
             ShowPayload = showPayload
         };
 
-        return View(model);
+        return this.View(model);
     }
 }

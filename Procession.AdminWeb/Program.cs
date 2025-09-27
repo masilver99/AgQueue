@@ -1,7 +1,11 @@
-using Procession.Server.Common;
-using Procession.Sqlite;
+// <copyright file="Program.cs" company="Michael Silver">
+// Copyright (c) Michael Silver. All rights reserved.
+// </copyright>
+
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Procession.AdminWeb.Services;
+using Procession.Server.Common;
+using Procession.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Add Procession services
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Data Source=procession_admin.db;Cache=Shared";
 
 builder.Services.TryAddSingleton<IStorage>(provider => new StorageSqlite(connectionString));
@@ -30,6 +34,7 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+
 app.UseRouting();
 
 app.UseAuthorization();

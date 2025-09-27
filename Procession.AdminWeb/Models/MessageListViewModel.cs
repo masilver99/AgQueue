@@ -15,7 +15,7 @@ public class MessageListViewModel
     /// <summary>
     /// Gets or sets the list of messages for the current page.
     /// </summary>
-    public List<Message> Messages { get; set; } = new();
+    public List<Message> Messages { get; set; } = new List<Message>();
 
     /// <summary>
     /// Gets or sets the current page number (1-based).
@@ -45,20 +45,20 @@ public class MessageListViewModel
     /// <summary>
     /// Gets or sets the list of available queues for the filter dropdown.
     /// </summary>
-    public List<QueueInfo> AvailableQueues { get; set; } = new();
+    public List<QueueInfo> AvailableQueues { get; set; } = new List<QueueInfo>();
 
     /// <summary>
     /// Gets the total number of pages.
     /// </summary>
-    public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
+    public int TotalPages => (int)Math.Ceiling((double)this.TotalCount / this.PageSize);
 
     /// <summary>
     /// Gets a value indicating whether there is a previous page.
     /// </summary>
-    public bool HasPreviousPage => CurrentPage > 1;
+    public bool HasPreviousPage => this.CurrentPage > 1;
 
     /// <summary>
     /// Gets a value indicating whether there is a next page.
     /// </summary>
-    public bool HasNextPage => CurrentPage < TotalPages;
+    public bool HasNextPage => this.CurrentPage < this.TotalPages;
 }

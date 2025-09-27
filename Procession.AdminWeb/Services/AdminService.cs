@@ -31,7 +31,7 @@ public class AdminService
     /// <returns>List of all queues.</returns>
     public async Task<List<QueueInfo>> GetAllQueuesAsync()
     {
-        return await storage.GetAllQueues();
+        return await this.storage.GetAllQueues();
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public class AdminService
     /// <returns>Dictionary with message states and counts.</returns>
     public async Task<Dictionary<MessageState, int>> GetMessageStatisticsAsync()
     {
-        return await storage.GetMessageStatistics();
+        return await this.storage.GetMessageStatistics();
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ public class AdminService
     public async Task<List<Message>> GetMessagesAsync(int page, int pageSize, long? queueId = null, bool? processedOnly = null)
     {
         var offset = (page - 1) * pageSize;
-        return await storage.GetMessages(offset, pageSize, queueId, processedOnly);
+        return await this.storage.GetMessages(offset, pageSize, queueId, processedOnly);
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class AdminService
     /// <returns>Total count of matching messages.</returns>
     public async Task<int> GetMessageCountAsync(long? queueId = null, bool? processedOnly = null)
     {
-        return await storage.GetMessageCount(queueId, processedOnly);
+        return await this.storage.GetMessageCount(queueId, processedOnly);
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class AdminService
     /// <returns>The message or null if not found.</returns>
     public async Task<Message?> GetMessageByIdAsync(long messageId)
     {
-        return await storage.PeekMessageByMessageId(messageId);
+        return await this.storage.PeekMessageByMessageId(messageId);
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ public class AdminService
     /// <returns>Queue information or null if not found.</returns>
     public async Task<QueueInfo?> GetQueueByIdAsync(long queueId)
     {
-        return await storage.GetQueueInfoById(queueId);
+        return await this.storage.GetQueueInfoById(queueId);
     }
 
     /// <summary>
@@ -94,7 +94,7 @@ public class AdminService
     /// <returns>String describing the database type.</returns>
     public string GetDatabaseType()
     {
-        var storageType = storage.GetType().Name;
+        var storageType = this.storage.GetType().Name;
         return storageType switch
         {
             "StorageSqlite" => "SQLite",

@@ -34,16 +34,18 @@ public class MessageDetailViewModel
     {
         get
         {
-            if (Message?.Payload == null)
+            if (this.Message?.Payload == null)
+            {
                 return string.Empty;
+            }
 
             try
             {
-                return System.Text.Encoding.UTF8.GetString(Message.Payload);
+                return System.Text.Encoding.UTF8.GetString(this.Message.Payload);
             }
             catch
             {
-                return BitConverter.ToString(Message.Payload).Replace("-", " ");
+                return BitConverter.ToString(this.Message.Payload).Replace("-", " ");
             }
         }
     }
@@ -51,19 +53,19 @@ public class MessageDetailViewModel
     /// <summary>
     /// Gets the formatted add date time.
     /// </summary>
-    public DateTime AddDateTime => DateTimeOffset.FromUnixTimeSeconds(Message?.AddDateTime ?? 0).DateTime;
+    public DateTime AddDateTime => DateTimeOffset.FromUnixTimeSeconds(this.Message?.AddDateTime ?? 0).DateTime;
 
     /// <summary>
     /// Gets the formatted close date time, if available.
     /// </summary>
-    public DateTime? CloseDateTime => Message?.CloseDateTime.HasValue == true 
-        ? DateTimeOffset.FromUnixTimeSeconds(Message.CloseDateTime.Value).DateTime 
+    public DateTime? CloseDateTime => this.Message?.CloseDateTime.HasValue == true
+        ? DateTimeOffset.FromUnixTimeSeconds(this.Message.CloseDateTime.Value).DateTime
         : null;
 
     /// <summary>
     /// Gets the formatted expiry date time, if available.
     /// </summary>
-    public DateTime? ExpiryDateTime => Message?.ExpiryDateTime.HasValue == true 
-        ? DateTimeOffset.FromUnixTimeSeconds(Message.ExpiryDateTime.Value).DateTime 
+    public DateTime? ExpiryDateTime => this.Message?.ExpiryDateTime.HasValue == true
+        ? DateTimeOffset.FromUnixTimeSeconds(this.Message.ExpiryDateTime.Value).DateTime
         : null;
 }
