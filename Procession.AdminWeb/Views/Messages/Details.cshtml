@@ -1,0 +1,269 @@
+@model MessageDetailViewModel
+@{
+    ViewData["Title"] = $"Message {Model.Message?.Id}";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Message Details - ID: @Model.Message?.Id</h1>
+        <div>
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary me-2">Back to Messages</a>
+            <a href="@Url.Action("Index", "Dashboard")" class="btn btn-outline-secondary">Dashboard</a>
+        </div>
+    </div>
+
+    @if (Model.Message == null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Message Not Found</h4>
+            <p>The requested message could not be found.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <!-- Message Information -->
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Message Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Message ID:</th>
+                                            <td>@Model.Message.Id</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Queue ID:</th>
+                                            <td>@Model.Message.QueueId</td>
+                                        </tr>
+                                        @if (Model.Queue != null)
+                                        {
+                                            <tr>
+                                                <th scope="row">Queue Name:</th>
+                                                <td>@Model.Queue.Name</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <th scope="row">State:</th>
+                                            <td>
+                                                @{
+                                                    var badgeClass = Model.Message.MessageState switch
+                                                    {
+                                                        Procession.Common.MessageState.Active => "badge bg-primary",
+                                                        Procession.Common.MessageState.Processed => "badge bg-success",
+                                                        Procession.Common.MessageState.InTransaction => "badge bg-warning text-dark",
+                                                        Procession.Common.MessageState.Expired => "badge bg-danger",
+                                                        Procession.Common.MessageState.AttemptsExceeded => "badge bg-danger",
+                                                        _ => "badge bg-secondary"
+                                                    };
+                                                }
+                                                <span class="@badgeClass">@Model.Message.MessageState</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Priority:</th>
+                                            <td>@Model.Message.Priority</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Attempts:</th>
+                                            <td>@Model.Message.Attempts / @Model.Message.MaxAttempts</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Correlation ID:</th>
+                                            <td>@Model.Message.CorrelationId</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Added:</th>
+                                            <td>@Model.AddDateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Closed:</th>
+                                            <td>
+                                                @if (Model.CloseDateTime.HasValue)
+                                                {
+                                                    @Model.CloseDateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Not closed</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Expires:</th>
+                                            <td>
+                                                @if (Model.ExpiryDateTime.HasValue)
+                                                {
+                                                    @Model.ExpiryDateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">No expiration</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Transaction ID:</th>
+                                            <td>
+                                                @if (Model.Message.TransactionId != 0)
+                                                {
+                                                    @Model.Message.TransactionId
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">None</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Transaction Action:</th>
+                                            <td>@Model.Message.TransactionAction</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Group Name:</th>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(Model.Message.GroupName))
+                                                {
+                                                    @Model.Message.GroupName
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">None</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metadata -->
+                @if (!string.IsNullOrEmpty(Model.Message.Metadata))
+                {
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Metadata</h5>
+                        </div>
+                        <div class="card-body">
+                            <pre class="bg-light p-3 rounded">@Model.Message.Metadata</pre>
+                        </div>
+                    </div>
+                }
+
+                <!-- Payload -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Payload</h5>
+                        <div>
+                            @if (Model.Message.Payload?.Length > 0)
+                            {
+                                <span class="badge bg-info me-2">@Model.Message.Payload.Length bytes</span>
+                                @if (!Model.ShowPayload)
+                                {
+                                    <a href="@Url.Action("Details", new { id = Model.Message.Id, showPayload = true })" class="btn btn-sm btn-outline-primary">Show Payload</a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Details", new { id = Model.Message.Id, showPayload = false })" class="btn btn-sm btn-outline-secondary">Hide Payload</a>
+                                }
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">No payload</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Message.Payload == null || Model.Message.Payload.Length == 0)
+                        {
+                            <p class="text-muted">This message has no payload data.</p>
+                        }
+                        else if (!Model.ShowPayload)
+                        {
+                            <p class="text-muted">Payload is hidden. Click "Show Payload" to view the content.</p>
+                        }
+                        else
+                        {
+                            <div class="mt-3">
+                                <h6>Payload Content:</h6>
+                                <pre class="bg-light p-3 rounded" style="max-height: 400px; overflow-y: auto;">@Model.PayloadString</pre>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions and Quick Info -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="@Url.Action("Index", new { queueId = Model.Message.QueueId })" class="btn btn-outline-primary">View Queue Messages</a>
+                            <a href="@Url.Action("Index", new { processedOnly = Model.Message.MessageState == Procession.Common.MessageState.Processed })" class="btn btn-outline-info">View Similar State</a>
+                        </div>
+                        
+                        <hr />
+                        
+                        <h6>Message Summary</h6>
+                        <ul class="list-unstyled small">
+                            <li><strong>Age:</strong> 
+                                @{
+                                    var age = DateTime.Now - Model.AddDateTime;
+                                    if (age.TotalDays >= 1)
+                                    {
+                                        @($"{age.Days} days, {age.Hours} hours")
+                                    }
+                                    else if (age.TotalHours >= 1)
+                                    {
+                                        @($"{age.Hours} hours, {age.Minutes} minutes")
+                                    }
+                                    else
+                                    {
+                                        @($"{age.Minutes} minutes")
+                                    }
+                                }
+                            </li>
+                            @if (Model.CloseDateTime.HasValue)
+                            {
+                                <li><strong>Processing Time:</strong>
+                                    @{
+                                        var processingTime = Model.CloseDateTime.Value - Model.AddDateTime;
+                                        if (processingTime.TotalHours >= 1)
+                                        {
+                                            @($"{processingTime.Hours}h {processingTime.Minutes}m")
+                                        }
+                                        else if (processingTime.TotalMinutes >= 1)
+                                        {
+                                            @($"{processingTime.Minutes}m {processingTime.Seconds}s")
+                                        }
+                                        else
+                                        {
+                                            @($"{processingTime.Seconds}s")
+                                        }
+                                    }
+                                </li>
+                            }
+                            <li><strong>Retry Status:</strong> @(Model.Message.MaxAttempts - Model.Message.Attempts) retries remaining</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

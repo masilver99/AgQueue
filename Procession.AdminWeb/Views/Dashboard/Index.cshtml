@@ -1,0 +1,204 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Procession Admin Dashboard";
+}
+
+<div class="container-fluid">
+    <h1 class="mb-4">Procession Administration Dashboard</h1>
+
+    <!-- Configuration Information -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">System Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Database Type:</strong> @Model.DatabaseType</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Total Queues:</strong> @Model.Queues.Count</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Messages</h5>
+                    <h2 class="card-text">@Model.TotalMessageCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Processed</h5>
+                    <h2 class="card-text">@Model.ProcessedMessageCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Active/Pending</h5>
+                    <h2 class="card-text">@Model.ActiveMessageCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Queues</h5>
+                    <h2 class="card-text">@Model.Queues.Count</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Statistics by State -->
+    @if (Model.MessageStatistics.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Message Statistics by State</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var stat in Model.MessageStatistics)
+                            {
+                                <div class="col-md-2 mb-2">
+                                    <div class="text-center">
+                                        <div class="h4 text-muted">@stat.Value</div>
+                                        <div class="text-muted">@stat.Key</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Queues List -->
+    @if (Model.Queues.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Available Queues</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Queue ID</th>
+                                        <th>Queue Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var queue in Model.Queues.OrderBy(q => q.Name))
+                                    {
+                                        <tr>
+                                            <td>@queue.Id</td>
+                                            <td>@queue.Name</td>
+                                            <td>
+                                                <a href="@Url.Action("Index", "Messages", new { queueId = queue.Id })" class="btn btn-sm btn-outline-primary">View Messages</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Recent Messages -->
+    @if (Model.RecentMessages.Any())
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Recent Messages</h5>
+                        <a href="@Url.Action("Index", "Messages")" class="btn btn-sm btn-outline-primary">View All Messages</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Message ID</th>
+                                        <th>Queue ID</th>
+                                        <th>State</th>
+                                        <th>Added</th>
+                                        <th>Priority</th>
+                                        <th>Metadata</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var message in Model.RecentMessages)
+                                    {
+                                        <tr>
+                                            <td>@message.Id</td>
+                                            <td>@message.QueueId</td>
+                                            <td>
+                                                @{
+                                                    var badgeClass = message.MessageState switch
+                                                    {
+                                                        Procession.Common.MessageState.Active => "badge bg-primary",
+                                                        Procession.Common.MessageState.Processed => "badge bg-success",
+                                                        Procession.Common.MessageState.InTransaction => "badge bg-warning",
+                                                        Procession.Common.MessageState.Expired => "badge bg-danger",
+                                                        Procession.Common.MessageState.AttemptsExceeded => "badge bg-danger",
+                                                        _ => "badge bg-secondary"
+                                                    };
+                                                }
+                                                <span class="@badgeClass">@message.MessageState</span>
+                                            </td>
+                                            <td>@DateTimeOffset.FromUnixTimeSeconds(message.AddDateTime).ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                            <td>@message.Priority</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(message.Metadata))
+                                                {
+                                                    @(message.Metadata.Length > 50 ? message.Metadata.Substring(0, 50) + "..." : message.Metadata)
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Details", "Messages", new { id = message.Id })" class="btn btn-sm btn-outline-info">Details</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">No Messages Found</h4>
+            <p>There are no messages in the system yet. Messages will appear here when they are added to queues.</p>
+        </div>
+    }
+</div>
