@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
@@ -441,6 +442,104 @@ namespace Procession.Sqlite
                     {
                         MessageId = messageId
                     });
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<List<QueueInfo>> GetAllQueues()
+        {
+            return await this.ExecuteAsync<List<QueueInfo>>(async (connection) =>
+            {
+                const string sql = "SELECT Id, Name FROM Queues ORDER BY Name;";
+                var result = await connection.QueryAsync<QueueInfo>(sql);
+                return result.ToList();
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<List<Message>> GetMessages(int offset, int limit, long? queueId = null, bool? processedOnly = null)
+        {
+            return await this.ExecuteAsync<List<Message>>(async (connection) =>
+            {
+                var whereClause = "1=1";
+                var parameters = new Dictionary<string, object>();
+
+                if (queueId.HasValue)
+                {
+                    whereClause += " AND QueueId = @QueueId";
+                    parameters["QueueId"] = queueId.Value;
+                }
+
+                if (processedOnly.HasValue)
+                {
+                    if (processedOnly.Value)
+                    {
+                        whereClause += " AND State = @ProcessedState";
+                        parameters["ProcessedState"] = MessageState.Processed;
+                    }
+                    else
+                    {
+                        whereClause += " AND State != @ProcessedState";
+                        parameters["ProcessedState"] = MessageState.Processed;
+                    }
+                }
+
+                parameters["Offset"] = offset;
+                parameters["Limit"] = limit;
+
+                var sql =
+                    "SELECT Id, QueueId, TransactionId, TransactionAction, State as MessageState, AddDateTime, CloseDateTime, " +
+                    "Priority, MaxAttempts, Attempts, ExpiryDateTime, CorrelationId, GroupName, Metadata, Payload " +
+                    $"FROM Messages WHERE {whereClause} " +
+                    "ORDER BY AddDateTime DESC " +
+                    "LIMIT @Limit OFFSET @Offset;";
+
+                var result = await connection.QueryAsync<Message>(sql, parameters);
+                return result.ToList();
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<Dictionary<MessageState, int>> GetMessageStatistics()
+        {
+            return await this.ExecuteAsync<Dictionary<MessageState, int>>(async (connection) =>
+            {
+                const string sql = "SELECT State as MessageState, COUNT(*) as Count FROM Messages GROUP BY State;";
+                var result = await connection.QueryAsync<(MessageState MessageState, int Count)>(sql);
+                return result.ToDictionary(x => x.MessageState, x => x.Count);
+            });
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask<int> GetMessageCount(long? queueId = null, bool? processedOnly = null)
+        {
+            return await this.ExecuteAsync<int>(async (connection) =>
+            {
+                var whereClause = "1=1";
+                var parameters = new Dictionary<string, object>();
+
+                if (queueId.HasValue)
+                {
+                    whereClause += " AND QueueId = @QueueId";
+                    parameters["QueueId"] = queueId.Value;
+                }
+
+                if (processedOnly.HasValue)
+                {
+                    if (processedOnly.Value)
+                    {
+                        whereClause += " AND State = @ProcessedState";
+                        parameters["ProcessedState"] = MessageState.Processed;
+                    }
+                    else
+                    {
+                        whereClause += " AND State != @ProcessedState";
+                        parameters["ProcessedState"] = MessageState.Processed;
+                    }
+                }
+
+                var sql = $"SELECT COUNT(*) FROM Messages WHERE {whereClause};";
+                return await connection.ExecuteScalarAsync<int>(sql, parameters);
             });
         }
 

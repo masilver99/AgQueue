@@ -220,5 +220,35 @@ namespace Procession.Server.Common
         /// <param name="messageId">The ID of the message to view.</param>
         /// <returns>Message object or null of no message to view.</returns>
         ValueTask<Message?> PeekMessageByMessageId(long messageId);
+
+        /// <summary>
+        /// Get all queues in the storage.
+        /// </summary>
+        /// <returns>List of all QueueInfo objects.</returns>
+        ValueTask<List<QueueInfo>> GetAllQueues();
+
+        /// <summary>
+        /// Get messages with paging and filtering support.
+        /// </summary>
+        /// <param name="offset">Number of records to skip.</param>
+        /// <param name="limit">Maximum number of records to return.</param>
+        /// <param name="queueId">Optional queue ID to filter by. If null, gets messages from all queues.</param>
+        /// <param name="processedOnly">Optional filter: true for processed only, false for unprocessed only, null for all.</param>
+        /// <returns>List of messages.</returns>
+        ValueTask<List<Message>> GetMessages(int offset, int limit, long? queueId = null, bool? processedOnly = null);
+
+        /// <summary>
+        /// Get message count statistics by state.
+        /// </summary>
+        /// <returns>Dictionary with MessageState as key and count as value.</returns>
+        ValueTask<Dictionary<MessageState, int>> GetMessageStatistics();
+
+        /// <summary>
+        /// Get total count of messages matching the filter criteria.
+        /// </summary>
+        /// <param name="queueId">Optional queue ID to filter by. If null, counts messages from all queues.</param>
+        /// <param name="processedOnly">Optional filter: true for processed only, false for unprocessed only, null for all.</param>
+        /// <returns>Total count of matching messages.</returns>
+        ValueTask<int> GetMessageCount(long? queueId = null, bool? processedOnly = null);
     }
 }

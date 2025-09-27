@@ -1,0 +1,233 @@
+@model MessageListViewModel
+@{
+    ViewData["Title"] = "Messages";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Messages</h1>
+        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-outline-secondary">Back to Dashboard</a>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Filters</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="queueId" class="form-label">Queue</label>
+                    <select name="queueId" id="queueId" class="form-select">
+                        <option value="">All Queues</option>
+                        @foreach (var queue in Model.AvailableQueues)
+                        {
+                            var isSelected = Model.SelectedQueueId == queue.Id;
+                            <option value="@queue.Id" selected="@isSelected">
+                                @queue.Name (ID: @queue.Id)
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="processedOnly" class="form-label">Status</label>
+                    <select name="processedOnly" id="processedOnly" class="form-select">
+                        <option value="">All Messages</option>
+                        <option value="false" selected="@(Model.ProcessedOnly == false)">Unprocessed Only</option>
+                        <option value="true" selected="@(Model.ProcessedOnly == true)">Processed Only</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Apply Filters</button>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results Summary -->
+    <div class="mb-3">
+        <p class="text-muted">
+            Showing @((Model.CurrentPage - 1) * Model.PageSize + 1) to @Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount) of @Model.TotalCount messages
+            @if (Model.SelectedQueueId.HasValue)
+            {
+                @:for queue @Model.SelectedQueueId
+            }
+            @if (Model.ProcessedOnly.HasValue)
+            {
+                @:(showing @(Model.ProcessedOnly.Value ? "processed" : "unprocessed") only)
+            }
+        </p>
+    </div>
+
+    <!-- Messages Table -->
+    @if (Model.Messages.Any())
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Message ID</th>
+                                <th>Queue ID</th>
+                                <th>State</th>
+                                <th>Added</th>
+                                <th>Closed</th>
+                                <th>Priority</th>
+                                <th>Attempts</th>
+                                <th>Correlation ID</th>
+                                <th>Metadata</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var message in Model.Messages)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("Details", new { id = message.Id })" class="text-decoration-none">
+                                            @message.Id
+                                        </a>
+                                    </td>
+                                    <td>@message.QueueId</td>
+                                    <td>
+                                        @{
+                                            var badgeClass = message.MessageState switch
+                                            {
+                                                Procession.Common.MessageState.Active => "badge bg-primary",
+                                                Procession.Common.MessageState.Processed => "badge bg-success",
+                                                Procession.Common.MessageState.InTransaction => "badge bg-warning text-dark",
+                                                Procession.Common.MessageState.Expired => "badge bg-danger",
+                                                Procession.Common.MessageState.AttemptsExceeded => "badge bg-danger",
+                                                _ => "badge bg-secondary"
+                                            };
+                                        }
+                                        <span class="@badgeClass">@message.MessageState</span>
+                                    </td>
+                                    <td>@DateTimeOffset.FromUnixTimeSeconds(message.AddDateTime).ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    <td>
+                                        @if (message.CloseDateTime.HasValue)
+                                        {
+                                            @DateTimeOffset.FromUnixTimeSeconds(message.CloseDateTime.Value).ToString("yyyy-MM-dd HH:mm:ss")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>@message.Priority</td>
+                                    <td>@message.Attempts / @message.MaxAttempts</td>
+                                    <td>@message.CorrelationId</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(message.Metadata))
+                                        {
+                                            <span title="@message.Metadata">
+                                                @(message.Metadata.Length > 30 ? message.Metadata.Substring(0, 30) + "..." : message.Metadata)
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Details", new { id = message.Id })" class="btn btn-sm btn-outline-info">Details</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        @if (Model.TotalPages > 1)
+        {
+            <nav aria-label="Messages pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    @if (Model.HasPreviousPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage - 1, queueId = Model.SelectedQueueId, processedOnly = Model.ProcessedOnly })">Previous</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                    }
+
+                    @{
+                        var startPage = Math.Max(1, Model.CurrentPage - 2);
+                        var endPage = Math.Min(Model.TotalPages, Model.CurrentPage + 2);
+                    }
+
+                    @if (startPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = 1, queueId = Model.SelectedQueueId, processedOnly = Model.ProcessedOnly })">1</a>
+                        </li>
+                        @if (startPage > 2)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                    }
+
+                    @for (var i = startPage; i <= endPage; i++)
+                    {
+                        if (i == Model.CurrentPage)
+                        {
+                            <li class="page-item active">
+                                <span class="page-link">@i</span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { page = i, queueId = Model.SelectedQueueId, processedOnly = Model.ProcessedOnly })">@i</a>
+                            </li>
+                        }
+                    }
+
+                    @if (endPage < Model.TotalPages)
+                    {
+                        @if (endPage < Model.TotalPages - 1)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = Model.TotalPages, queueId = Model.SelectedQueueId, processedOnly = Model.ProcessedOnly })">@Model.TotalPages</a>
+                        </li>
+                    }
+
+                    @if (Model.HasNextPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage + 1, queueId = Model.SelectedQueueId, processedOnly = Model.ProcessedOnly })">Next</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">No Messages Found</h4>
+            <p>No messages match the selected filters.</p>
+        </div>
+    }
+</div>
